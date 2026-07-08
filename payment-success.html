@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تم الدفع بنجاح | فروستا</title>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Tajawal',sans-serif; background:#FBF7EF; color:#12222B;
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .card{
+    background:#fff; border-radius:22px; padding:48px 36px; max-width:460px; width:100%;
+    text-align:center; box-shadow:0 20px 50px rgba(14,42,61,.12);
+  }
+  .icon{
+    width:74px;height:74px;border-radius:50%; margin:0 auto 24px; background:#E7F6EE;
+    display:flex;align-items:center;justify-content:center; font-size:34px; color:#1f5c40;
+  }
+  h1{font-family:'Aref Ruqaa',serif; color:#0E2A3D; font-size:26px; margin-bottom:14px;}
+  p{color:#5C7080; font-size:15px; line-height:1.8; margin-bottom:8px;}
+  #status{font-weight:700; color:#C79A4B;}
+  a.btn{
+    display:inline-block; margin-top:26px; background:#0E2A3D; color:#fff; text-decoration:none;
+    padding:14px 30px; border-radius:100px; font-weight:700; font-size:14px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">✓</div>
+    <h1>شكراً لك، طلبك قيد التأكيد</h1>
+    <p>رقم الفاتورة: <b id="invoiceId">—</b></p>
+    <p>حالة الدفع: <span id="status">جاري التحقق...</span></p>
+    <a href="/" class="btn">العودة إلى المتجر</a>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://your-backend-domain.com';
+
+    const params = new URLSearchParams(window.location.search);
+    const paymentId = params.get('paymentId');
+    if(paymentId){
+      fetch(`${API_BASE_URL}/api/payment-status/${paymentId}`)
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('invoiceId').textContent = data.Data?.InvoiceId ?? '—';
+          document.getElementById('status').textContent =
+            data.Data?.InvoiceStatus === 'Paid' ? 'تم الدفع بنجاح ✅' : (data.Data?.InvoiceStatus || 'غير معروف');
+        })
+        .catch(() => {
+          document.getElementById('status').textContent = 'تعذر التحقق التلقائي، سيتم تأكيد الطلب يدوياً.';
+        });
+    } else {
+      document.getElementById('status').textContent = 'تم استلام الطلب.';
+    }
+  </script>
+</body>
+</html>
