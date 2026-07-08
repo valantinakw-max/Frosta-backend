@@ -121,9 +121,8 @@ app.get('/api/orders', (req, res) => {
   res.json(Array.from(orders.values()));
 });
 
-app.get('/', (req, res) => {
-  res.send('خادم فروستا يعمل ✅ — استخدم /api/checkout لإنشاء عملية دفع.');
-});
+app.use(express.static('public'));
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 خادم فروستا يعمل على المنفذ ${PORT}`));
