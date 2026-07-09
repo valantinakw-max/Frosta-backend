@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فروزينا | نكهة الفخامة في كل قطرة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0E2A3D;
+    --navy-deep:#081A26;
+    --mint:#A9DFC7;
+    --mint-soft:#E7F6EE;
+    --cream:#FBF7EF;
+    --gold:#C79A4B;
+    --gold-soft:#E7D2A2;
+    --berry:#7C2D3B;
+    --text-dark:#12222B;
+    --text-muted:#5C7080;
+    --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Tajawal',sans-serif;
+    background:var(--cream);
+    color:var(--text-dark);
+    overflow-x:hidden;
+  }
+  /* ===== ambient cold atmosphere ===== */
+  .frost-vignette{
+    position:fixed; inset:0; z-index:998; pointer-events:none;
+    background:
+      radial-gradient(ellipse 60% 40% at 0% 0%, rgba(169,223,199,.16), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(199,154,75,.10), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(14,42,61,.10), transparent 65%);
+    mix-blend-mode:screen;
+  }
+  #snowLayer{
+    position:fixed; inset:0; z-index:999; pointer-events:none; overflow:hidden;
+  }
+  .snowflake-p{
+    position:absolute; top:-5vh; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,.95), rgba(255,255,255,0) 70%);
+    animation:snow-fall linear infinite;
+  }
+  @keyframes snow-fall{
+    0%{transform:translate(0,-5vh) translateX(0);}
+    50%{transform:translate(0,55vh) translateX(18px);}
+    100%{transform:translate(0,105vh) translateX(-10px);}
+  }
+  h1,h2,h3,.display{
+    font-family:'Aref Ruqaa',serif;
+    font-weight:700;
+  }
+  a{text-decoration:none;color:inherit;}
+  ul{list-style:none;}
+  img{max-width:100%;display:block;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;}
+  .container{max-width:1200px;margin:0 auto;padding:0 24px;}
+
+  /* ===== focus visibility ===== */
+  a:focus-visible, button:focus-visible{
+    outline:3px solid var(--gold);
+    outline-offset:3px;
+    border-radius:6px;
+  }
+
+  /* ===== header ===== */
+  header{
+    position:fixed; top:0; right:0; left:0; z-index:100;
+    background:rgba(14,42,61,0.0);
+    transition:background .4s ease, box-shadow .4s ease, padding .3s ease;
+    padding:22px 0;
+  }
+  header.scrolled{
+    background:rgba(14,42,61,0.94);
+    backdrop-filter:blur(10px);
+    box-shadow:0 8px 30px rgba(0,0,0,.15);
+    padding:12px 0;
+  }
+  .nav-wrap{display:flex;align-items:center;justify-content:space-between;}
+  .logo{
+    font-family:'Aref Ruqaa',serif;
+    font-size:28px;
+    color:#fff;
+    display:flex;align-items:center;gap:8px;
+  }
+  .logo svg{flex-shrink:0;}
+  nav ul{display:flex;gap:34px;}
+  nav a{
+    color:#fff; opacity:.85; font-size:15px; font-weight:500;
+    position:relative; padding:4px 0;
+  }
+  nav a::after{
+    content:'';position:absolute;bottom:0;right:0;width:0;height:2px;
+    background:var(--gold);transition:width .3s ease;
+  }
+  nav a:hover{opacity:1;}
+  nav a:hover::after{width:100%;}
+  .header-actions{display:flex;align-items:center;gap:18px;}
+  .icon-btn{
+    position:relative; width:42px;height:42px;border-radius:50%;
+    background:rgba(255,255,255,.08); display:flex;align-items:center;justify-content:center;
+    color:#fff; transition:background .25s ease;
+  }
+  .icon-btn:hover{background:rgba(255,255,255,.18);}
+  .cart-count{
+    position:absolute; top:-4px; left:-4px; background:var(--gold); color:var(--navy-deep);
+    font-size:11px; font-weight:900; width:19px;height:19px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .menu-toggle{display:none;color:#fff;}
+
+  /* ===== hero ===== */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    background:
+      linear-gradient(180deg, rgba(8,26,38,.94) 0%, rgba(14,42,61,.78) 22%, rgba(14,42,61,.35) 48%, rgba(14,42,61,.12) 68%, rgba(14,42,61,.05) 100%),
+      url('https://images.unsplash.com/photo-1723401045004-7d489d0be033?auto=format&fit=crop&w=1800&q=70');
+    background-size:cover;
+    background-position:center 65%;
+    display:flex;align-items:center;
+    padding-top:110px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    pointer-events:none;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;
+    position:relative; z-index:2; width:100%;
+  }
+  .hero-iceberg{
+    position:absolute; right:0; bottom:0; left:0; z-index:1;
+    pointer-events:none; line-height:0;
+  }
+  .hero-iceberg svg{width:100%; height:auto; display:block;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    color:var(--mint); font-size:14px; letter-spacing:.5px; font-weight:500;
+    background:rgba(169,223,199,.1); padding:8px 16px; border-radius:100px;
+    margin-bottom:24px; border:1px solid rgba(169,223,199,.25);
+  }
+  .hero h1{
+    color:#fff; font-size:clamp(38px,5.5vw,68px); line-height:1.25; margin-bottom:22px;
+  }
+  .hero h1 span{color:var(--gold);}
+  .hero p{
+    color:rgba(255,255,255,.72); font-size:17px; line-height:1.9; max-width:520px; margin-bottom:36px;
+  }
+  .btn-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:16px 32px; border-radius:100px; font-size:15px; font-weight:700;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .btn-primary{background:var(--gold); color:var(--navy-deep);}
+  .btn-primary:hover{transform:translateY(-3px); box-shadow:0 14px 30px rgba(199,154,75,.35);}
+  .btn-ghost{border:1.5px solid rgba(255,255,255,.35); color:#fff;}
+  .btn-ghost:hover{background:rgba(255,255,255,.08); transform:translateY(-3px);}
+
+  .hero-visual{position:relative; display:flex; align-items:center; justify-content:center;}
+  .hero-snowflake{
+    filter:drop-shadow(0 0 22px rgba(199,154,75,.35)) drop-shadow(0 0 50px rgba(169,223,199,.15));
+    animation:flake-spin 34s linear infinite;
+  }
+  .hero-snowflake svg{display:block;}
+  @keyframes flake-spin{to{transform:rotate(360deg);}}
+
+  /* drip divider - signature element */
+  .drip{
+    position:relative; width:100%; height:64px; line-height:0;
+    margin-top:-2px;
+  }
+  .drip svg{width:100%;height:100%;display:block;}
+
+  /* ===== trust bar ===== */
+  .trust{
+    background:var(--navy-deep); padding:0 0 46px;
+  }
+  .trust-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
+  }
+  .trust-item{
+    display:flex; align-items:center; gap:14px; color:#fff;
+  }
+  .trust-item .ic{
+    width:46px;height:46px;border-radius:12px;background:rgba(169,223,199,.12);
+    display:flex;align-items:center;justify-content:center; color:var(--mint); flex-shrink:0;
+  }
+  .trust-item h4{font-size:14.5px; font-weight:700; margin-bottom:3px;}
+  .trust-item p{font-size:12.5px; color:rgba(255,255,255,.55);}
+
+  /* ===== section basics ===== */
+  section{padding:100px 0;}
+  .sec-head{text-align:center; max-width:640px; margin:0 auto 60px;}
+  .sec-eyebrow{
+    color:var(--berry); font-weight:700; font-size:13px; letter-spacing:1px;
+    display:block; margin-bottom:14px;
+  }
+  .sec-head h2{font-size:clamp(30px,4vw,44px); color:var(--navy); line-height:1.3; margin-bottom:16px;}
+  .sec-head p{color:var(--text-muted); font-size:16px; line-height:1.8;}
+
+  .reveal{opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* ===== categories ===== */
+  .categories{background:var(--mint-soft);}
+  .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .cat-card{
+    background:#fff; border-radius:var(--radius); padding:34px 22px; text-align:center;
+    box-shadow:0 10px 30px rgba(14,42,61,.06); transition:transform .3s ease, box-shadow .3s ease;
+    border:1px solid rgba(14,42,61,.05);
+  }
+  .cat-card:hover{transform:translateY(-8px); box-shadow:0 20px 40px rgba(14,42,61,.12);}
+  .cat-icon{
+    width:64px;height:64px;border-radius:50%;margin:0 auto 18px;
+    background:linear-gradient(145deg, var(--mint-soft), #fff);
+    display:flex;align-items:center;justify-content:center;color:var(--navy);
+  }
+  .cat-card h3{font-size:18px;color:var(--navy); margin-bottom:8px; font-family:'Tajawal'; font-weight:700;}
+  .cat-card p{font-size:13px;color:var(--text-muted);}
+
+  /* ===== products ===== */
+  .filter-tabs{display:flex;justify-content:center;gap:12px;margin-bottom:48px;flex-wrap:wrap;}
+  .tab-btn{
+    padding:11px 26px;border-radius:100px;font-size:14px;font-weight:700;
+    border:1.5px solid rgba(14,42,61,.15); color:var(--navy); transition:all .25s ease;
+  }
+  .tab-btn.active, .tab-btn:hover{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  .prod-card{
+    background:#fff;border-radius:var(--radius);overflow:hidden;
+    box-shadow:0 10px 30px rgba(14,42,61,.06); transition:transform .3s ease, box-shadow .3s ease;
+    display:flex;flex-direction:column;
+  }
+  .prod-card:hover{transform:translateY(-6px); box-shadow:0 22px 40px rgba(14,42,61,.13);}
+  .prod-thumb{
+    height:190px; position:relative;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .prod-thumb .seal{
+    position:absolute; top:14px; left:14px; background:var(--gold); color:var(--navy-deep);
+    font-size:11px; font-weight:900; padding:5px 12px; border-radius:100px;
+  }
+  .prod-body{padding:22px; display:flex;flex-direction:column;gap:10px; flex:1;}
+  .prod-cat{color:var(--berry); font-size:11.5px; font-weight:700; letter-spacing:.5px;}
+  .prod-body h3{font-size:18px; color:var(--navy); font-family:'Tajawal'; font-weight:700;}
+  .prod-body p{font-size:13px;color:var(--text-muted); line-height:1.7;}
+  .prod-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px;}
+  .price{font-weight:900;color:var(--navy);font-size:18px;}
+  .price small{font-size:12px;font-weight:500;color:var(--text-muted);}
+  .add-btn{
+    width:42px;height:42px;border-radius:50%;background:var(--navy);color:#fff;
+    display:flex;align-items:center;justify-content:center; transition:background .25s ease, transform .2s ease;
+  }
+  .add-btn:hover{background:var(--gold); color:var(--navy-deep);}
+  .add-btn.added{background:var(--mint); color:var(--navy-deep); transform:scale(1.1);}
+
+  /* ===== story ===== */
+  .story{background:var(--navy); color:#fff; position:relative; overflow:hidden;}
+  .story-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px; align-items:center;}
+  .story-badge{
+    width:210px;height:210px;border-radius:50%;border:1.5px dashed rgba(199,154,75,.5);
+    display:flex;align-items:center;justify-content:center;margin:0 auto;position:relative;
+  }
+  .story-badge::before{
+    content:'';position:absolute;inset:20px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #123249, var(--navy-deep));
+  }
+  .story-badge .inner{position:relative;z-index:2;text-align:center;}
+  .story-badge .inner .yr{font-family:'Aref Ruqaa'; font-size:34px; color:var(--gold);}
+  .story-badge .inner span{font-size:12px; color:rgba(255,255,255,.6);}
+  .story h2{color:#fff; font-size:clamp(28px,3.6vw,40px); margin-bottom:22px;}
+  .story p{color:rgba(255,255,255,.7); line-height:2; font-size:15.5px; margin-bottom:18px;}
+  .story-points{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px;}
+  .story-point{display:flex;gap:12px;align-items:flex-start;}
+  .story-point .ic{color:var(--mint); flex-shrink:0; margin-top:2px;}
+  .story-point h4{font-size:14.5px; margin-bottom:3px;}
+  .story-point p{font-size:12.5px; color:rgba(255,255,255,.55); margin:0;}
+
+  /* ===== testimonials ===== */
+  .testi-wrap{max-width:760px;margin:0 auto;text-align:center;position:relative;}
+  .testi-slide{display:none;}
+  .testi-slide.active{display:block; animation:fadein .6s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .stars{color:var(--gold); font-size:18px; letter-spacing:4px; margin-bottom:22px;}
+  .testi-slide q{
+    font-family:'Aref Ruqaa'; font-size:26px; line-height:1.8; color:var(--navy); display:block; margin-bottom:24px;
+  }
+  .testi-name{font-weight:700; color:var(--navy);}
+  .testi-role{font-size:13px;color:var(--text-muted);}
+  .testi-dots{display:flex;justify-content:center;gap:10px;margin-top:34px;}
+  .dot{width:9px;height:9px;border-radius:50%;background:rgba(14,42,61,.2); transition:background .25s ease, width .25s ease;}
+  .dot.active{background:var(--navy); width:26px; border-radius:6px;}
+
+  /* ===== CTA ===== */
+  .cta{
+    background:linear-gradient(120deg, var(--berry), #5c1f29);
+    border-radius:28px; padding:64px 40px; text-align:center; color:#fff;
+    margin:0 24px; position:relative; overflow:hidden;
+  }
+  .cta h2{color:#fff; font-size:clamp(26px,3.4vw,38px); margin-bottom:16px;}
+  .cta p{color:rgba(255,255,255,.8); margin-bottom:32px; font-size:15.5px;}
+
+  /* ===== footer ===== */
+  footer{background:var(--navy-deep); color:rgba(255,255,255,.65); padding:70px 0 30px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:40px;margin-bottom:50px;}
+  .foot-logo{font-family:'Aref Ruqaa'; font-size:26px; color:#fff; margin-bottom:16px;}
+  .foot-grid p{font-size:14px; line-height:1.9;}
+  .foot-col h4{color:#fff; font-size:15px; margin-bottom:18px; font-weight:700;}
+  .foot-col ul li{margin-bottom:12px; font-size:14px;}
+  .foot-col ul li a:hover{color:var(--gold);}
+  .foot-social{display:flex;gap:12px;margin-top:18px;}
+  .foot-social a{
+    width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.06);
+    display:flex;align-items:center;justify-content:center; transition:background .25s ease;
+  }
+  .foot-social a:hover{background:var(--gold); color:var(--navy-deep);}
+  .foot-bottom{
+    border-top:1px solid rgba(255,255,255,.08); padding-top:26px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:13px;
+  }
+
+  /* ===== cart drawer ===== */
+  .overlay{
+    position:fixed;inset:0;background:rgba(8,26,38,.5); opacity:0; pointer-events:none;
+    transition:opacity .35s ease; z-index:200;
+  }
+  .overlay.show{opacity:1; pointer-events:auto;}
+  .drawer{
+    position:fixed; top:0; left:-420px; width:400px; max-width:88vw; height:100%;
+    background:#fff; z-index:201; transition:left .4s cubic-bezier(.4,0,.2,1);
+    display:flex; flex-direction:column; box-shadow:20px 0 60px rgba(0,0,0,.2);
+  }
+  .drawer.show{left:0;}
+  .drawer-head{
+    padding:24px; display:flex;justify-content:space-between;align-items:center;
+    border-bottom:1px solid rgba(14,42,61,.08);
+  }
+  .drawer-head h3{font-family:'Tajawal';font-weight:700;color:var(--navy);font-size:19px;}
+  .drawer-body{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px;}
+  .drawer-empty{text-align:center;color:var(--text-muted);margin-top:60px;font-size:14px;}
+  .cart-item{display:flex;gap:14px;align-items:center;padding-bottom:16px;border-bottom:1px solid rgba(14,42,61,.06);}
+  .cart-item .thumb{width:56px;height:56px;border-radius:12px;flex-shrink:0;}
+  .cart-item h5{font-size:14.5px;color:var(--navy);margin-bottom:4px;}
+  .cart-item .p{font-size:13px;color:var(--text-muted);}
+  .cart-item .rm{color:var(--berry);font-size:12px;font-weight:700;}
+  .drawer-foot{padding:24px;border-top:1px solid rgba(14,42,61,.08);}
+  .drawer-foot .row{display:flex;justify-content:space-between;margin-bottom:18px;font-weight:700;color:var(--navy);}
+  .close-x{width:36px;height:36px;border-radius:50%;background:var(--mint-soft);display:flex;align-items:center;justify-content:center;color:var(--navy);}
+
+  /* whatsapp float */
+  .wa-float{
+    position:fixed; bottom:28px; left:28px; z-index:150;
+    width:60px;height:60px;border-radius:50%;background:#25D366;color:#fff;
+    display:flex;align-items:center;justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,.25);
+    animation:pulse 2.4s infinite;
+  }
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.45);}70%{box-shadow:0 0 0 16px rgba(37,211,102,0);}100%{box-shadow:0 0 0 0 rgba(37,211,102,0);}}
+
+  /* ===== suppliers portal ===== */
+  .suppliers-sec{background:var(--cream);}
+  .role-switch{display:flex;justify-content:center;gap:12px;margin-bottom:40px;flex-wrap:wrap;}
+  .role-btn{padding:11px 26px;border-radius:100px;font-size:14px;font-weight:700;border:1.5px solid rgba(14,42,61,.15);color:var(--navy);transition:all .25s ease;}
+  .role-btn.active,.role-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .portal-card{background:#fff;border-radius:var(--radius);padding:36px;box-shadow:0 10px 30px rgba(14,42,61,.06);max-width:900px;margin:0 auto;}
+  .sup-login-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;}
+  .sup-field{display:flex;flex-direction:column;gap:6px;min-width:200px;}
+  .sup-field label{font-size:13px;font-weight:700;color:var(--navy);}
+  .sup-field select,.sup-field input,.sup-field textarea{
+    padding:12px 14px;border-radius:10px;border:1.5px solid rgba(14,42,61,.15);font-family:inherit;font-size:14px;color:var(--text-dark);
+  }
+  .sup-field textarea{resize:vertical;min-height:70px;width:100%;}
+  .sup-dash-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid rgba(14,42,61,.08);}
+  .sup-dash-head h3{font-family:'Tajawal';font-weight:700;color:var(--navy);font-size:20px;}
+  .sup-dash-head span{font-size:13px;color:var(--text-muted);}
+  .sup-logout{font-size:13px;font-weight:700;color:var(--berry);}
+  .sup-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
+  .sup-stat{background:var(--mint-soft);border-radius:14px;padding:18px;text-align:center;}
+  .sup-stat b{display:block;font-family:'Tajawal';font-size:22px;color:var(--navy);font-weight:900;}
+  .sup-stat span{font-size:12.5px;color:var(--text-muted);}
+  .sup-table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+  .sup-table th,.sup-table td{padding:12px 10px;text-align:right;font-size:13.5px;border-bottom:1px solid rgba(14,42,61,.06);}
+  .sup-table th{color:var(--text-muted);font-weight:700;font-size:12.5px;}
+  .sup-table td{color:var(--text-dark);}
+  .status-badge{display:inline-block;padding:5px 14px;border-radius:100px;font-size:12px;font-weight:700;white-space:nowrap;}
+  .status-pending{background:rgba(199,154,75,.15);color:#8a6a2f;}
+  .status-confirmed{background:rgba(169,223,199,.35);color:#1f5c40;}
+  .status-prep{background:rgba(124,45,59,.12);color:var(--berry);}
+  .status-shipped{background:rgba(14,42,61,.1);color:var(--navy);}
+  .mini-btn{padding:7px 14px;border-radius:100px;font-size:12px;font-weight:700;border:1.5px solid rgba(14,42,61,.15);color:var(--navy);transition:all .2s ease;}
+  .mini-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .sup-block-title{font-size:15px;font-weight:700;color:var(--navy);margin:28px 0 14px;font-family:'Tajawal';}
+  @media(max-width:700px){
+    .sup-stats{grid-template-columns:1fr;}
+    .sup-table thead{display:none;}
+    .sup-table tr{display:block;margin-bottom:14px;border-bottom:1px solid rgba(14,42,61,.1);padding-bottom:10px;}
+    .sup-table td{display:flex;justify-content:space-between;border:none;padding:6px 0;text-align:left;}
+    .sup-table td::before{content:attr(data-label);font-weight:700;color:var(--text-muted);}
+    .portal-card{padding:24px;}
+  }
+
+  /* ===== responsive ===== */
+  @media (max-width:980px){
+    nav, .header-actions .icon-btn:first-child{display:none;}
+    .menu-toggle{display:block;}
+    .hero-grid{grid-template-columns:1fr; text-align:center;}
+    .hero p{margin:0 auto 36px;}
+    .btn-row{justify-content:center;}
+    .hero-visual{order:-1; margin-bottom:20px;}
+    .hero-snowflake svg{width:200px;height:200px;}
+    .trust-grid{grid-template-columns:1fr 1fr;}
+    .cat-grid{grid-template-columns:1fr 1fr;}
+    .prod-grid{grid-template-columns:1fr 1fr;}
+    .story-grid{grid-template-columns:1fr;}
+    .story-points{grid-template-columns:1fr 1fr;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:600px){
+    .trust-grid{grid-template-columns:1fr;}
+    .cat-grid{grid-template-columns:1fr;}
+    .prod-grid{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr;}
+    section{padding:70px 0;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="frost-vignette"></div>
+<div id="snowLayer"></div>
+
+<!-- ================= HEADER ================= -->
+<header id="siteHeader">
+  <div class="container nav-wrap">
+    <div class="logo">
+      <span class="logo-icon-wrap">
+        <svg class="logo-icon" width="30" height="30" viewBox="0 0 24 24" fill="none">
+          <defs>
+            <linearGradient id="iceGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#C79A4B"/>
+              <stop offset=".55" stop-color="#E7D2A2"/>
+              <stop offset="1" stop-color="#A9DFC7"/>
+            </linearGradient>
+          </defs>
+          <g stroke="url(#iceGrad)" stroke-width="1.3" stroke-linecap="round">
+            <g id="flakeBranch">
+              <line x1="12" y1="12" x2="12" y2="2.3"/>
+              <line x1="12" y1="4.6" x2="9.3" y2="2.6"/>
+              <line x1="12" y1="4.6" x2="14.7" y2="2.6"/>
+              <line x1="12" y1="7.6" x2="9.9" y2="6"/>
+              <line x1="12" y1="7.6" x2="14.1" y2="6"/>
+            </g>
+            <use href="#flakeBranch" transform="rotate(60 12 12)"/>
+            <use href="#flakeBranch" transform="rotate(120 12 12)"/>
+            <use href="#flakeBranch" transform="rotate(180 12 12)"/>
+            <use href="#flakeBranch" transform="rotate(240 12 12)"/>
+            <use href="#flakeBranch" transform="rotate(300 12 12)"/>
+          </g>
+          <circle cx="12" cy="12" r="1.7" fill="url(#iceGrad)"/>
+        </svg>
+      </span>
+      فروزينا
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#categories">التصنيفات</a></li>
+        <li><a href="#products">المنتجات</a></li>
+        <li><a href="#story">قصتنا</a></li>
+        <li><a href="#testimonials">آراء العملاء</a></li>
+        <li><a href="#suppliers">بوابة الموردين</a></li>
+        <li><a href="#contact">تواصل معنا</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" aria-label="بحث">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" id="cartBtn" aria-label="سلة الطلبات">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l2.4 12.4a2 2 0 002 1.6h8.2a2 2 0 002-1.6L21 8H6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="menu-toggle" aria-label="القائمة">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">❄ توصيل بارد إلى جميع مناطق الكويت</span>
+      <h1>الثلج والبراد... <br> <span>هذا مكانه</span></h1>
+      <p>نصنع لحظات البرودة الفاخرة؛ آيس كريم وحلويات مثلجة تُحضَّر بعناية وتصل إلى بابك محافظةً على نضارتها وبرودتها الأولى.</p>
+      <div class="btn-row">
+        <a href="#products" class="btn btn-primary">تصفّح المنتجات</a>
+        <a href="#story" class="btn btn-ghost">تعرّف على فروزينا</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-snowflake">
+        <svg width="280" height="280" viewBox="0 0 24 24" fill="none">
+          <defs>
+            <linearGradient id="heroFlakeGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#C79A4B"/>
+              <stop offset=".55" stop-color="#E7D2A2"/>
+              <stop offset="1" stop-color="#C79A4B"/>
+            </linearGradient>
+          </defs>
+          <g stroke="url(#heroFlakeGrad)" stroke-width="1" stroke-linecap="round">
+            <g id="heroFlakeBranch">
+              <line x1="12" y1="12" x2="12" y2="2.3"/>
+              <line x1="12" y1="4.6" x2="9.3" y2="2.6"/>
+              <line x1="12" y1="4.6" x2="14.7" y2="2.6"/>
+              <line x1="12" y1="7.6" x2="9.9" y2="6"/>
+              <line x1="12" y1="7.6" x2="14.1" y2="6"/>
+            </g>
+            <use href="#heroFlakeBranch" transform="rotate(60 12 12)"/>
+            <use href="#heroFlakeBranch" transform="rotate(120 12 12)"/>
+            <use href="#heroFlakeBranch" transform="rotate(180 12 12)"/>
+            <use href="#heroFlakeBranch" transform="rotate(240 12 12)"/>
+            <use href="#heroFlakeBranch" transform="rotate(300 12 12)"/>
+          </g>
+          <circle cx="12" cy="12" r="1.4" fill="url(#heroFlakeGrad)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ================= TRUST BAR ================= -->
+<section class="trust" style="padding-top:0;">
+  <div class="container trust-grid">
+    <div class="trust-item reveal">
+      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13h11V6H3v7zM14 9h4l3 4v4h-7V9z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg></div>
+      <div><h4>توصيل مبرّد</h4><p>لكل مناطق الكويت خلال ساعات</p></div>
+    </div>
+    <div class="trust-item reveal">
+      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg></div>
+      <div><h4>تغليف يحفظ البرودة</h4><p>حتى وصولها إلى باب منزلك</p></div>
+    </div>
+    <div class="trust-item reveal">
+      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 11-4-7.2M21 4v5h-5"/></svg></div>
+      <div><h4>طلب سهل وسريع</h4><p>عبر الموقع أو واتساب مباشرة</p></div>
+    </div>
+    <div class="trust-item reveal">
+      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg></div>
+      <div><h4>ضمان الجودة</h4><p>استرجاع سهل عند أي ملاحظة</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CATEGORIES ================= -->
+<section class="categories" id="categories">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">تصنيفاتنا</span>
+      <h2>اختر عالمك المثلّج</h2>
+      <p>من الآيس كريم الفاخر إلى الحلويات المثلجة والفواكه الطازجة، كل صنف يُحضَّر بمعايير راقية تليق بذوقك.</p>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card reveal">
+        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E2A3D" stroke-width="1.7"><path d="M12 3c3 3 5 6 5 9a5 5 0 01-10 0c0-3 2-6 5-9z"/></svg></div>
+        <h3>آيس كريم</h3>
+        <p>نكهات كلاسيكية وفاخرة</p>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E2A3D" stroke-width="1.7"><rect x="4" y="8" width="16" height="10" rx="2"/><path d="M4 8l8-5 8 5"/></svg></div>
+        <h3>حلويات مثلجة</h3>
+        <p>كنافة، تشيز كيك وسوربيه</p>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E2A3D" stroke-width="1.7"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M9 4l1.5 2M15 4l-1.5 2"/></svg></div>
+        <h3>فواكه مجمّدة</h3>
+        <p>طازجة ومحفوظة بعناية</p>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E2A3D" stroke-width="1.7"><path d="M7 3h10l-1 6a6 6 0 01-8 0L7 3z"/><path d="M9 21h6M12 15v6"/></svg></div>
+        <h3>مشروبات مثلجة</h3>
+        <p>موهيتو وعصائر منعشة</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+<section id="products">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">الأكثر طلباً</span>
+      <h2>منتجاتنا المميّزة</h2>
+      <p>تشكيلة مختارة بعناية، تجمع بين جودة المكونات وأناقة التقديم.</p>
+    </div>
+    <div class="filter-tabs">
+      <button class="tab-btn active" data-filter="all">الكل</button>
+      <button class="tab-btn" data-filter="icecream">آيس كريم</button>
+      <button class="tab-btn" data-filter="dessert">حلويات مثلجة</button>
+      <button class="tab-btn" data-filter="fruit">فواكه مجمدة</button>
+      <button class="tab-btn" data-filter="drink">مشروبات</button>
+    </div>
+    <div class="prod-grid" id="prodGrid"></div>
+  </div>
+</section>
+
+<!-- ================= STORY ================= -->
+<section class="story" id="story">
+  <div class="container story-grid">
+    <div class="reveal">
+      <div class="story-badge">
+        <div class="inner"><div class="yr">١٠٠٪</div><span>مكونات طبيعية</span></div>
+      </div>
+    </div>
+    <div class="reveal">
+      <h2>فخامة الطعم، ثقة الجودة</h2>
+      <p>بدأت فروزينا من الكويت بفكرة بسيطة: أن يصل الثلج إلى بيتك بنفس البرودة والفخامة التي يستحقها ذوقك. نختار مكوناتنا بعناية، ونراقب سلسلة التبريد من التحضير حتى باب منزلك.</p>
+      <p>كل منتج يمر بمعايير جودة صارمة، لتشعر بالثقة والراحة مع كل طلب.</p>
+      <div class="story-points">
+        <div class="story-point">
+          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg></div>
+          <div><h4>رقابة جودة يومية</h4><p>فحص دقيق لكل دفعة إنتاج</p></div>
+        </div>
+        <div class="story-point">
+          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13h11V6H3v7zM14 9h4l3 4v4h-7V9z"/></svg></div>
+          <div><h4>سلسلة تبريد كاملة</h4><p>من المصنع حتى بابك مباشرة</p></div>
+        </div>
+        <div class="story-point">
+          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="13" r="7"/><path d="M12 6V3"/></svg></div>
+          <div><h4>مكوّنات طبيعية</h4><p>بلا إضافات صناعية</p></div>
+        </div>
+        <div class="story-point">
+          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg></div>
+          <div><h4>ضمان الرضا</h4><p>استرجاع سهل بلا تعقيد</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section id="testimonials">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">ثقة عملائنا</span>
+      <h2>ماذا يقول عملاؤنا</h2>
+    </div>
+    <div class="testi-wrap reveal">
+      <div class="testi-slide active">
+        <div class="stars">★★★★★</div>
+        <q>طعم راقي فعلاً، ويوصل بارد بالضبط زي ما لازم. أول مرة أطلب آيس كريم أونلاين وأحس بجودته زي المحل.</q>
+        <div class="testi-name">أم فهد</div>
+        <div class="testi-role">حولي، الكويت</div>
+      </div>
+      <div class="testi-slide">
+        <div class="stars">★★★★★</div>
+        <q>أسرع توصيل جربته بالكويت للمنتجات المثلجة، والتغليف يخليك تحس بالفخامة من أول لحظة.</q>
+        <div class="testi-name">سلطان العتيبي</div>
+        <div class="testi-role">السالمية، الكويت</div>
+      </div>
+      <div class="testi-slide">
+        <div class="stars">★★★★★</div>
+        <q>ذوق عالي بكل شي، من التغليف للنكهات. صارت فروزينا خياري الأول بكل مناسبة.</q>
+        <div class="testi-name">دانة الرشيدي</div>
+        <div class="testi-role">مدينة الكويت</div>
+      </div>
+      <div class="testi-dots">
+        <span class="dot active" data-i="0"></span>
+        <span class="dot" data-i="1"></span>
+        <span class="dot" data-i="2"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SUPPLIERS PORTAL ================= -->
+<section id="suppliers" class="suppliers-sec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">شراكة الإمداد</span>
+      <h2>بوابة الموردين</h2>
+      <p>مساحة خاصة تربط فروزينا بشركائها من الموردين؛ متابعة الكميات المتوفرة، وتبادل طلبات التوريد بشفافية ودون تعقيد.</p>
+    </div>
+
+    <div class="role-switch reveal in">
+      <button class="role-btn active" data-role="supplier">دخول كمورّد</button>
+      <button class="role-btn" data-role="admin">لوحة تحكم فروزينا</button>
+    </div>
+
+    <p id="supLoadStatus" style="text-align:center;color:var(--text-muted);font-size:13.5px;margin-bottom:24px;">جاري تحميل بيانات الطلبات المحفوظة...</p>
+
+    <!-- Supplier login -->
+    <div class="portal-card reveal in" id="supplierLogin">
+      <div class="sup-login-row">
+        <div class="sup-field">
+          <label>اسم المستخدم</label>
+          <input type="text" id="supplierUsername" placeholder="مثال: wadi">
+        </div>
+        <div class="sup-field" style="min-width:160px;">
+          <label>كلمة المرور</label>
+          <input type="password" id="supplierPassword" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary" id="supplierEnterBtn" style="height:46px;">دخول لوحة المورد</button>
+      </div>
+      <p id="supplierLoginError" style="color:var(--berry);font-size:13px;margin-top:14px;display:none;">اسم المستخدم أو كلمة المرور غير صحيحة.</p>
+    </div>
+
+    <!-- Supplier dashboard -->
+    <div class="portal-card reveal in" id="supplierDashboard" hidden>
+      <div class="sup-dash-head">
+        <div>
+          <h3 id="supDashName"></h3>
+          <span id="supDashMeta"></span>
+        </div>
+        <button class="sup-logout" id="supplierLogout">تسجيل الخروج ←</button>
+      </div>
+      <div class="sup-stats" id="supStats"></div>
+      <div class="sup-block-title" style="margin-top:0;">الكميات المتوفرة لديكم حالياً</div>
+      <table class="sup-table">
+        <thead><tr><th>المنتج</th><th>الكمية المتوفرة</th><th>الوحدة</th></tr></thead>
+        <tbody id="supProductsBody"></tbody>
+      </table>
+      <div class="sup-block-title">طلبات التوريد المرسلة من فروزينا</div>
+      <table class="sup-table">
+        <thead><tr><th>الطلب</th><th>المنتج</th><th>الكمية</th><th>التاريخ</th><th>الحالة</th><th></th></tr></thead>
+        <tbody id="supOrdersBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Admin login gate -->
+    <div class="portal-card reveal in" id="adminLoginGate" hidden>
+      <div class="sup-login-row">
+        <div class="sup-field" style="min-width:220px;">
+          <label>كلمة مرور لوحة تحكم فروزينا</label>
+          <input type="password" id="adminPassword" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary" id="adminEnterBtn" style="height:46px;">دخول اللوحة</button>
+      </div>
+      <p id="adminLoginError" style="color:var(--berry);font-size:13px;margin-top:14px;display:none;">كلمة المرور غير صحيحة.</p>
+    </div>
+
+    <!-- Admin panel -->
+    <div class="portal-card reveal in" id="adminPanel" hidden>
+      <div class="sup-block-title" style="margin-top:0;">إرسال طلب توريد جديد</div>
+      <div class="sup-login-row">
+        <div class="sup-field">
+          <label>المورّد</label>
+          <select id="adminSupplierSelect"></select>
+        </div>
+        <div class="sup-field">
+          <label>المنتج</label>
+          <select id="adminProductSelect"></select>
+        </div>
+        <div class="sup-field" style="min-width:110px;">
+          <label>الكمية</label>
+          <input type="number" id="adminQty" min="1" value="50">
+        </div>
+      </div>
+      <div class="sup-field" style="margin-top:14px;">
+        <label>ملاحظات (اختياري)</label>
+        <textarea id="adminNote" placeholder="مثال: نحتاجها قبل نهاية الأسبوع"></textarea>
+      </div>
+      <button class="btn btn-primary" id="adminSendBtn" style="margin-top:16px;">إرسال الطلب للمورّد</button>
+
+      <div class="sup-block-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>جميع طلبات التوريد</span>
+        <button class="mini-btn" id="resetDataBtn" style="font-weight:500;">إعادة تعيين البيانات التجريبية</button>
+      </div>
+      <table class="sup-table">
+        <thead><tr><th>الطلب</th><th>المورّد</th><th>المنتج</th><th>الكمية</th><th>التاريخ</th><th>الحالة</th></tr></thead>
+        <tbody id="adminOrdersBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section style="padding-top:0;">
+  <div class="cta reveal">
+    <h2>جاهز تطلب لحظتك المثلّجة؟</h2>
+    <p>تواصل معنا الآن عبر واتساب واحصل على طلبك خلال ساعات، بارداً كما يجب.</p>
+    <a href="#" class="btn btn-primary" id="ctaWhatsapp">اطلب عبر واتساب</a>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="contact">
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">فروزينا</div>
+        <p>نكهة الفخامة في كل قطرة. نوصلك الثلج الفاخر أينما كنت في الكويت.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="انستغرام"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="#" aria-label="تويتر"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 4.01c-1 .49-1.98.69-3 .84 1.06-.63 1.9-1.63 2.28-2.83-1 .59-2.1 1-3.28 1.24C17.06 2.11 15.7 1.5 14.2 1.5c-2.8 0-5.06 2.26-5.06 5.06 0 .4.05.78.14 1.15C5.2 7.5 2.7 6.1.9 3.98c-.44.75-.7 1.63-.7 2.56 0 1.76.9 3.32 2.26 4.23-.83-.02-1.62-.26-2.3-.63v.06c0 2.46 1.75 4.5 4.06 4.97-.42.11-.87.17-1.33.17-.32 0-.64-.03-.94-.09.64 2.01 2.5 3.48 4.7 3.52A10.13 10.13 0 010 19.54 14.28 14.28 0 007.75 22c9.3 0 14.4-7.7 14.4-14.4 0-.22 0-.44-.02-.65C21 6.5 22 5.32 22 4.01z"/></svg></a>
+          <a href="#" aria-label="واتساب"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 11-4-7.2M21 4v5h-5"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>روابط سريعة</h4>
+        <ul>
+          <li><a href="#categories">التصنيفات</a></li>
+          <li><a href="#products">المنتجات</a></li>
+          <li><a href="#story">قصتنا</a></li>
+          <li><a href="#testimonials">آراء العملاء</a></li>
+          <li><a href="#suppliers">بوابة الموردين</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>خدمة العملاء</h4>
+        <ul>
+          <li><a href="#">سياسة التوصيل</a></li>
+          <li><a href="#">الاسترجاع والاستبدال</a></li>
+          <li><a href="#">الأسئلة الشائعة</a></li>
+          <li><a href="#">تواصل معنا</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>تواصل معنا</h4>
+        <ul>
+          <li>📍 الكويت — توصيل لجميع المناطق</li>
+          <li>📞 +965 XXXX XXXX</li>
+          <li>✉️ info@frozina.com</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© ٢٠٢٦ فروزينا. جميع الحقوق محفوظة.</span>
+      <span>صُنع بحب في الكويت ❄</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= CART DRAWER ================= -->
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>سلة الطلبات</h3>
+    <button class="close-x" id="closeDrawer" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody">
+    <div class="drawer-empty">سلتك فارغة حالياً. أضف منتجاً لتبدأ طلبك.</div>
+  </div>
+  <div class="drawer-foot">
+    <div class="row"><span>الإجمالي</span><span id="drawerTotal">٠.٠٠٠ د.ك</span></div>
+    <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;" id="checkoutBtn">إتمام الطلب عبر واتساب</a>
+  </div>
+</div>
+
+<a class="wa-float" href="https://wa.me/96500000000" target="_blank" aria-label="راسلنا عبر واتساب">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.3A8.9 8.9 0 0012 3.6a8.94 8.94 0 00-7.7 13.4L3 21l4.1-1.3A8.9 8.9 0 0012 20.9a8.94 8.94 0 006.3-15.2 8.9 8.9 0 00-.7-.4zM12 19.2a7.6 7.6 0 01-3.9-1.1l-.3-.2-2.4.8.8-2.3-.2-.3A7.6 7.6 0 1119.6 12 7.6 7.6 0 0112 19.2zm4.2-5.7c-.2-.1-1.3-.6-1.5-.7s-.4-.1-.5.1-.6.7-.7.9-.3.2-.5.1a6.2 6.2 0 01-3-2.6c-.2-.4.2-.4.5-1.2a.4.4 0 000-.5c-.1-.1-.5-1.2-.7-1.7s-.4-.4-.5-.4h-.5a.9.9 0 00-.6.3 2.7 2.7 0 00-.8 2 4.7 4.7 0 00.9 2.5c.1.2 1.6 2.5 3.9 3.4s2.3.7 2.7.7a2.3 2.3 0 001.5-1 1.9 1.9 0 00.1-1.1c-.1-.1-.2-.2-.4-.3z"/></svg>
+</a>
+
+<script>
+  // ⚠️ عدّل هذا الرابط ليطابق رابط الخادم الخلفي بعد نشره (راجع ملف README في مشروع الخادم)
+  const API_BASE_URL = 'https://frozina.com';
+
+  // ---------- data ----------
+  const products = [
+    {id:1, cat:'icecream', name:'آيس كريم فانيليا مدغشقر', desc:'فانيليا طبيعية فاخرة بقوام حريري', price:2.500, badge:'الأكثر مبيعاً'},
+    {id:2, cat:'dessert', name:'كنافة مثلجة بالقشطة', desc:'مزيج راقٍ بين الكنافة والقشطة الطازجة', price:3.750, badge:'جديد'},
+    {id:3, cat:'dessert', name:'سوربيه المانجو الطازج', desc:'منعش وخفيف بنكهة المانجو الحقيقية', price:2.250, badge:null},
+    {id:4, cat:'icecream', name:'شوكولاتة بلجيكية مثلجة', desc:'شوكولاتة داكنة غنية بالطعم', price:2.900, badge:null},
+    {id:5, cat:'fruit', name:'فراولة مجمدة عضوية 500غ', desc:'مقطوفة ومجمدة بذروة نضجها', price:1.800, badge:'عضوي'},
+    {id:6, cat:'drink', name:'موهيتو مثلج بالنعناع', desc:'منعش ومثالي لأيام الصيف الحارة', price:1.500, badge:null},
+    {id:7, cat:'fruit', name:'مزيج فواكه استوائية مجمدة', desc:'مانجو، أناناس وباشن فروت', price:2.100, badge:null},
+    {id:8, cat:'icecream', name:'آيس كريم فستق حلبي', desc:'فستق حلبي أصلي محمّص طازجاً', price:3.200, badge:'مميز'},
+    {id:9, cat:'drink', name:'عصير مثلج بالتوت الأزرق', desc:'غني بمضادات الأكسدة ومنعش', price:1.650, badge:null},
+  ];
+  const thumbColors = ['#0E2A3D,#17435f','#7C2D3B,#9c3f4d','#A9DFC7,#7fc4a4','#C79A4B,#e0bd82'];
+
+  const grid = document.getElementById('prodGrid');
+  function renderProducts(filter){
+    grid.innerHTML = '';
+    products.filter(p => filter === 'all' || p.cat === filter).forEach((p, i) => {
+      const grad = thumbColors[i % thumbColors.length];
+      const card = document.createElement('div');
+      card.className = 'prod-card reveal in';
+      card.innerHTML = `
+        <div class="prod-thumb" style="background:linear-gradient(140deg, ${grad});">
+          ${p.badge ? `<span class="seal">${p.badge}</span>` : ''}
+          <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.3" opacity=".85"><path d="M12 3c3 3 5 6 5 9a5 5 0 01-10 0c0-3 2-6 5-9z"/></svg>
+        </div>
+        <div class="prod-body">
+          <span class="prod-cat">${catLabel(p.cat)}</span>
+          <h3>${p.name}</h3>
+          <p>${p.desc}</p>
+          <div class="prod-foot">
+            <div class="price">${p.price.toFixed(3)} <small>د.ك</small></div>
+            <button class="add-btn" data-id="${p.id}" aria-label="إضافة للسلة">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+    document.querySelectorAll('.add-btn').forEach(btn => btn.addEventListener('click', onAdd));
+  }
+  function catLabel(c){
+    return {icecream:'آيس كريم', dessert:'حلويات مثلجة', fruit:'فواكه مجمدة', drink:'مشروبات مثلجة'}[c] || '';
+  }
+  renderProducts('all');
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderProducts(btn.dataset.filter);
+    });
+  });
+
+  // ---------- cart ----------
+  let cart = [];
+  const cartCount = document.getElementById('cartCount');
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('overlay');
+  const drawerBody = document.getElementById('drawerBody');
+  const drawerTotal = document.getElementById('drawerTotal');
+
+  function onAdd(e){
+    const btn = e.currentTarget;
+    const id = parseInt(btn.dataset.id);
+    const prod = products.find(p => p.id === id);
+    cart.push(prod);
+    btn.classList.add('added');
+    setTimeout(() => btn.classList.remove('added'), 500);
+    updateCart();
+  }
+
+  function updateCart(){
+    cartCount.textContent = cart.length;
+    if(cart.length === 0){
+      drawerBody.innerHTML = '<div class="drawer-empty">سلتك فارغة حالياً. أضف منتجاً لتبدأ طلبك.</div>';
+      drawerTotal.textContent = '٠.٠٠٠ د.ك';
+      return;
+    }
+    let total = 0;
+    drawerBody.innerHTML = cart.map((p, idx) => {
+      total += p.price;
+      const grad = thumbColors[idx % thumbColors.length];
+      return `<div class="cart-item">
+        <div class="thumb" style="background:linear-gradient(140deg, ${grad});"></div>
+        <div style="flex:1;">
+          <h5>${p.name}</h5>
+          <div class="p">${p.price.toFixed(3)} د.ك</div>
+        </div>
+        <button class="rm" data-idx="${idx}">إزالة</button>
+      </div>`;
+    }).join('');
+    drawerTotal.textContent = total.toFixed(3) + ' د.ك';
+    document.querySelectorAll('.rm').forEach(btn => {
+      btn.addEventListener('click', () => {
+        cart.splice(parseInt(btn.dataset.idx), 1);
+        updateCart();
+      });
+    });
+  }
+
+  document.getElementById('cartBtn').addEventListener('click', () => {
+    drawer.classList.add('show'); overlay.classList.add('show');
+  });
+  document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+  function closeDrawer(){ drawer.classList.remove('show'); overlay.classList.remove('show'); }
+
+  function buildWhatsappOrder(){
+    if(cart.length === 0) return 'مرحباً، أرغب بالاستفسار عن منتجاتكم المثلجة.';
+    let msg = 'مرحباً، أرغب بطلب التالي من فروزينا:%0A';
+    cart.forEach(p => msg += `- ${p.name} (${p.price.toFixed(3)} د.ك)%0A`);
+    const total = cart.reduce((s,p)=>s+p.price,0);
+    msg += `الإجمالي: ${total.toFixed(3)} د.ك`;
+    return msg;
+  }
+  document.getElementById('checkoutBtn').addEventListener('click', async (e) => {
+    e.preventDefault();
+    if(cart.length === 0){
+      alert('سلتك فارغة، أضف منتجاً أولاً.');
+      return;
+    }
+    const btn = e.currentTarget;
+    const originalText = btn.textContent;
+    btn.textContent = 'جاري تجهيز صفحة الدفع...';
+
+    try{
+      const res = await fetch(`${API_BASE_URL}/api/checkout`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          items: cart.map(p => ({name: p.name, price: p.price}))
+        })
+      });
+      const data = await res.json();
+      if(!res.ok || !data.paymentUrl) throw new Error(data.error || 'فشل إنشاء الفاتورة');
+
+      // تحويل العميل فعلياً لصفحة الدفع الحقيقية في مايفاتورة (KNET / بطاقات)
+      window.location.href = data.paymentUrl;
+
+    }catch(err){
+      console.error('تعذّر الدفع الإلكتروني:', err);
+      btn.textContent = originalText;
+      alert('تعذّر فتح صفحة الدفع الإلكتروني حالياً، سيتم تحويلك لإتمام الطلب عبر واتساب.');
+      window.open('https://wa.me/96500000000?text=' + buildWhatsappOrder(), '_blank');
+    }
+  });
+  document.getElementById('ctaWhatsapp').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.open('https://wa.me/96500000000?text=' + encodeURIComponent('مرحباً، أرغب بالاستفسار عن منتجاتكم المثلجة.'), '_blank');
+  });
+
+  // ---------- suppliers portal (persistent + real accounts) ----------
+  (async function(){
+    const STORAGE_KEY = 'frosta-supplier-orders';
+    const ADMIN_PASSWORD = 'frosta-admin-2026';
+
+    const suppliers = [
+      {id:'s1', name:'مزارع الوادي الأخضر', username:'wadi', password:'wadi2026', category:'فواكه وخضروات مجمدة', contact:'ريم القحطاني', products:[
+        {name:'فراولة مجمدة', qty:480, unit:'كجم'},
+        {name:'مانجو مجمد', qty:210, unit:'كجم'},
+        {name:'توت أزرق مجمد', qty:95, unit:'كجم'}
+      ]},
+      {id:'s2', name:'شركة ألفا للألبان الطازجة', username:'alfa', password:'alfa2026', category:'مكوّنات الآيس كريم', contact:'محمد الحربي', products:[
+        {name:'قشطة طازجة', qty:340, unit:'لتر'},
+        {name:'حليب كامل الدسم', qty:600, unit:'لتر'}
+      ]},
+      {id:'s3', name:'مصنع الجليد الفاخر للتغليف', username:'jaleed', password:'jaleed2026', category:'مواد تغليف وتبريد', contact:'سارة العجمي', products:[
+        {name:'عبوات معزولة حرارياً', qty:1200, unit:'قطعة'},
+        {name:'أكياس تبريد جل', qty:850, unit:'قطعة'}
+      ]}
+    ];
+
+    const seedData = {
+      orderSeq: 1042,
+      supplierOrders: [
+        {id:'FR-1041', supplierId:'s1', product:'فراولة مجمدة', qty:150, unit:'كجم', date:'2026-07-01', status:'confirmed', note:''},
+        {id:'FR-1040', supplierId:'s2', product:'قشطة طازجة', qty:80, unit:'لتر', date:'2026-06-28', status:'shipped', note:''}
+      ]
+    };
+
+    let orderSeq = seedData.orderSeq;
+    let supplierOrders = seedData.supplierOrders;
+    let currentSupplierId = null;
+    let adminAuthenticated = false;
+
+    // ---- persistence helpers (shared: true = نفس البيانات لأي شخص يفتح هذه الصفحة، مورّداً كان أو إدارة) ----
+    async function saveData(){
+      try{
+        await window.storage.set(STORAGE_KEY, JSON.stringify({orderSeq, supplierOrders}), true);
+      }catch(err){
+        console.error('تعذّر حفظ البيانات:', err);
+      }
+    }
+    async function loadData(){
+      const statusEl = document.getElementById('supLoadStatus');
+      try{
+        const result = await window.storage.get(STORAGE_KEY, true);
+        if(result && result.value){
+          const parsed = JSON.parse(result.value);
+          orderSeq = parsed.orderSeq ?? seedData.orderSeq;
+          supplierOrders = Array.isArray(parsed.supplierOrders) ? parsed.supplierOrders : seedData.supplierOrders;
+        }else{
+          await saveData();
+        }
+      }catch(err){
+        await saveData();
+      }
+      if(statusEl) statusEl.remove();
+    }
+
+    const statusLabels = {pending:'قيد المراجعة', confirmed:'تم التأكيد', prep:'قيد التجهيز', shipped:'تم الشحن'};
+    const statusClass  = {pending:'status-pending', confirmed:'status-confirmed', prep:'status-prep', shipped:'status-shipped'};
+    const nextStatus   = {pending:'confirmed', confirmed:'prep', prep:'shipped', shipped:'shipped'};
+    const nextLabel    = {pending:'تأكيد الطلب', confirmed:'بدء التجهيز', prep:'تسجيل الشحن', shipped:'تم الشحن'};
+
+    const adminSupplierSelect = document.getElementById('adminSupplierSelect');
+    const adminProductSelect = document.getElementById('adminProductSelect');
+
+    function fillSelects(){
+      const opts = suppliers.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      adminSupplierSelect.innerHTML = opts;
+      fillAdminProducts(adminSupplierSelect.value);
+    }
+    function fillAdminProducts(supplierId){
+      const supplier = suppliers.find(s => s.id === supplierId);
+      adminProductSelect.innerHTML = supplier.products.map(p => `<option value="${p.name}" data-unit="${p.unit}">${p.name}</option>`).join('');
+    }
+    adminSupplierSelect.addEventListener('change', e => fillAdminProducts(e.target.value));
+
+    function renderSupplierDashboard(){
+      const supplier = suppliers.find(s => s.id === currentSupplierId);
+      document.getElementById('supDashName').textContent = supplier.name;
+      document.getElementById('supDashMeta').textContent = `${supplier.category} · مسؤول الحساب: ${supplier.contact}`;
+
+      const myOrders = supplierOrders.filter(o => o.supplierId === currentSupplierId);
+      const pendingCount = myOrders.filter(o => o.status !== 'shipped').length;
+      const totalQty = supplier.products.reduce((s,p) => s + p.qty, 0);
+
+      document.getElementById('supStats').innerHTML = `
+        <div class="sup-stat"><b>${totalQty}</b><span>إجمالي الوحدات المتوفرة</span></div>
+        <div class="sup-stat"><b>${pendingCount}</b><span>طلبات قيد المتابعة</span></div>
+        <div class="sup-stat"><b>${myOrders.length}</b><span>إجمالي الطلبات المستلمة</span></div>`;
+
+      document.getElementById('supProductsBody').innerHTML = supplier.products.map(p => `
+        <tr><td data-label="المنتج">${p.name}</td><td data-label="الكمية المتوفرة">${p.qty}</td><td data-label="الوحدة">${p.unit}</td></tr>`
+      ).join('');
+
+      document.getElementById('supOrdersBody').innerHTML = myOrders.length ? myOrders.map(o => `
+        <tr>
+          <td data-label="الطلب">${o.id}</td>
+          <td data-label="المنتج">${o.product}</td>
+          <td data-label="الكمية">${o.qty} ${o.unit}</td>
+          <td data-label="التاريخ">${o.date}</td>
+          <td data-label="الحالة"><span class="status-badge ${statusClass[o.status]}">${statusLabels[o.status]}</span></td>
+          <td>${o.status !== 'shipped' ? `<button class="mini-btn" data-order="${o.id}">${nextLabel[o.status]}</button>` : ''}</td>
+        </tr>`).join('') : `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);">لا توجد طلبات حالياً</td></tr>`;
+
+      document.querySelectorAll('#supOrdersBody .mini-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const order = supplierOrders.find(o => o.id === btn.dataset.order);
+          order.status = nextStatus[order.status];
+          await saveData();
+          renderSupplierDashboard();
+          renderAdminOrders();
+        });
+      });
+    }
+
+    function renderAdminOrders(){
+      document.getElementById('adminOrdersBody').innerHTML = supplierOrders.map(o => {
+        const supplier = suppliers.find(s => s.id === o.supplierId);
+        return `<tr>
+          <td data-label="الطلب">${o.id}</td>
+          <td data-label="المورّد">${supplier.name}</td>
+          <td data-label="المنتج">${o.product}</td>
+          <td data-label="الكمية">${o.qty} ${o.unit}</td>
+          <td data-label="التاريخ">${o.date}</td>
+          <td data-label="الحالة"><span class="status-badge ${statusClass[o.status]}">${statusLabels[o.status]}</span></td>
+        </tr>`;
+      }).join('');
+    }
+
+    // ---- supplier login ----
+    document.getElementById('supplierEnterBtn').addEventListener('click', () => {
+      const username = document.getElementById('supplierUsername').value.trim();
+      const password = document.getElementById('supplierPassword').value;
+      const match = suppliers.find(s => s.username === username && s.password === password);
+      const errEl = document.getElementById('supplierLoginError');
+      if(!match){
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+      currentSupplierId = match.id;
+      document.getElementById('supplierLogin').hidden = true;
+      document.getElementById('supplierDashboard').hidden = false;
+      renderSupplierDashboard();
+    });
+    document.getElementById('supplierLogout').addEventListener('click', () => {
+      currentSupplierId = null;
+      document.getElementById('supplierPassword').value = '';
+      document.getElementById('supplierDashboard').hidden = true;
+      document.getElementById('supplierLogin').hidden = false;
+    });
+
+    // ---- admin login ----
+    document.getElementById('adminEnterBtn').addEventListener('click', () => {
+      const pass = document.getElementById('adminPassword').value;
+      const errEl = document.getElementById('adminLoginError');
+      if(pass !== ADMIN_PASSWORD){
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+      adminAuthenticated = true;
+      document.getElementById('adminLoginGate').hidden = true;
+      document.getElementById('adminPanel').hidden = false;
+    });
+
+    document.getElementById('adminSendBtn').addEventListener('click', async () => {
+      const supplierId = adminSupplierSelect.value;
+      const product = adminProductSelect.value;
+      const unit = adminProductSelect.selectedOptions[0].dataset.unit;
+      const qty = parseInt(document.getElementById('adminQty').value) || 1;
+      orderSeq++;
+      supplierOrders.unshift({
+        id: 'FR-' + orderSeq, supplierId, product, qty, unit,
+        date: new Date().toISOString().slice(0,10), status: 'pending',
+        note: document.getElementById('adminNote').value
+      });
+      document.getElementById('adminNote').value = '';
+      await saveData();
+      renderAdminOrders();
+      if(currentSupplierId === supplierId) renderSupplierDashboard();
+    });
+
+    document.getElementById('resetDataBtn').addEventListener('click', async () => {
+      if(!confirm('سيتم حذف كل الطلبات المحفوظة والرجوع للبيانات الافتراضية. متابعة؟')) return;
+      orderSeq = seedData.orderSeq;
+      supplierOrders = JSON.parse(JSON.stringify(seedData.supplierOrders));
+      await saveData();
+      renderAdminOrders();
+      if(currentSupplierId) renderSupplierDashboard();
+    });
+
+    document.querySelectorAll('.role-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const role = btn.dataset.role;
+
+        if(role === 'admin'){
+          document.getElementById('supplierLogin').hidden = true;
+          document.getElementById('supplierDashboard').hidden = true;
+          document.getElementById('adminLoginGate').hidden = adminAuthenticated;
+          document.getElementById('adminPanel').hidden = !adminAuthenticated;
+        }else{
+          document.getElementById('adminLoginGate').hidden = true;
+          document.getElementById('adminPanel').hidden = true;
+          document.getElementById('supplierLogin').hidden = !!currentSupplierId;
+          document.getElementById('supplierDashboard').hidden = !currentSupplierId;
+        }
+      });
+    });
+
+    await loadData();
+    fillSelects();
+    renderAdminOrders();
+  })();
+
+  // ---------- ambient snow particles ----------
+  (function(){
+    const layer = document.getElementById('snowLayer');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const count = reduceMotion ? 0 : (window.innerWidth < 700 ? 16 : 28);
+    for(let i = 0; i < count; i++){
+      const s = document.createElement('div');
+      s.className = 'snowflake-p';
+      const size = (Math.random() * 3 + 1.5).toFixed(1);
+      const left = Math.random() * 100;
+      const duration = (Math.random() * 10 + 14).toFixed(1);
+      const delay = (Math.random() * 18).toFixed(1);
+      const opacity = (Math.random() * 0.4 + 0.35).toFixed(2);
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = left + 'vw';
+      s.style.opacity = opacity;
+      s.style.animationDuration = duration + 's';
+      s.style.animationDelay = '-' + delay + 's';
+      layer.appendChild(s);
+    }
+  })();
+
+  // ---------- header scroll ----------
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ---------- testimonial slider ----------
+  const slides = document.querySelectorAll('.testi-slide');
+  const dots = document.querySelectorAll('.dot');
+  let ti = 0;
+  function showSlide(i){
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    slides[i].classList.add('active');
+    dots[i].classList.add('active');
+    ti = i;
+  }
+  dots.forEach(d => d.addEventListener('click', () => showSlide(parseInt(d.dataset.i))));
+  setInterval(() => showSlide((ti + 1) % slides.length), 5500);
+
+  // ---------- reveal on scroll ----------
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('in'); });
+  }, {threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
