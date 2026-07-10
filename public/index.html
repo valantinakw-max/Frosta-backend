@@ -22,9 +22,10 @@
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
+  html{background:var(--navy-deep);}
   body{
     font-family:'Tajawal',sans-serif;
-    background:#FFFFFF;
+    background:var(--navy-deep);
     color:var(--text-dark);
     overflow-x:hidden;
   }
@@ -150,10 +151,10 @@
     position:relative;
     min-height:100vh;
     background:
-      linear-gradient(180deg, rgba(8,26,38,.94) 0%, rgba(14,42,61,.78) 22%, rgba(14,42,61,.35) 48%, rgba(14,42,61,.12) 68%, rgba(14,42,61,.05) 100%),
+      linear-gradient(180deg, rgba(8,26,38,.85) 0%, rgba(14,42,61,.6) 25%, rgba(14,42,61,.4) 50%, rgba(8,26,38,.6) 75%, rgba(8,26,38,.9) 92%, var(--navy-deep) 100%),
       url('https://images.unsplash.com/photo-1723401045004-7d489d0be033?auto=format&fit=crop&w=1800&q=70');
     background-size:cover;
-    background-position:center 15%;
+    background-position:center 20%;
     display:flex;align-items:stretch;
     padding-top:110px;
     overflow:hidden;
@@ -244,30 +245,31 @@
 
   /* ===== section basics ===== */
   section{padding:100px 0;}
+  #categories, #bestsellers, #new-arrivals, #offers, #trust, #fleet, .cta-sec{background:var(--navy-deep);}
   #bestsellers, #new-arrivals, #offers{padding:22px 0;}
   #categories + #bestsellers{padding-top:0;}
   .sec-head{text-align:center; max-width:640px; margin:0 auto 60px;}
   .sec-eyebrow{
-    color:var(--berry); font-weight:700; font-size:13px; letter-spacing:1px;
+    color:var(--gold); font-weight:700; font-size:13px; letter-spacing:1px;
     display:block; margin-bottom:14px;
   }
-  .sec-head h2{font-size:clamp(30px,4vw,44px); color:var(--navy); line-height:1.3; margin-bottom:16px;}
-  .sec-head p{color:var(--text-muted); font-size:16px; line-height:1.8;}
+  .sec-head h2{font-size:clamp(30px,4vw,44px); color:#fff; line-height:1.3; margin-bottom:16px;}
+  .sec-head p{color:rgba(255,255,255,.65); font-size:16px; line-height:1.8;}
 
   .reveal{opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease;}
   .reveal.in{opacity:1; transform:translateY(0);}
 
   /* ===== categories ===== */
-  .categories{background:#FFFFFF;}
+  .categories{background:transparent;}
   .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
   .products-wrap{
-    background:linear-gradient(135deg, var(--navy), var(--navy-deep)); border:1px solid rgba(199,154,75,.25); border-radius:calc(var(--radius) + 6px);
-    padding:34px 28px; box-shadow:0 14px 40px rgba(14,42,61,.15); max-width:900px; margin:0 auto;
+    background:var(--navy-deep); border:1.5px solid var(--gold); border-radius:calc(var(--radius) + 6px);
+    padding:34px 28px; box-shadow:0 14px 40px rgba(0,0,0,.25); max-width:900px; margin:0 auto;
   }
   .products-wrap-title{
     display:flex; align-items:center; justify-content:center; gap:12px;
     width:100%; background:none; border:none; cursor:pointer;
-    font-family:'Amiri',serif; color:var(--gold);
+    font-family:'Amiri',serif; color:#fff;
     font-size:26px; padding:6px 0;
   }
   .products-wrap-title .pw-chevron{transition:transform .3s ease; color:var(--gold);}
@@ -278,18 +280,18 @@
     font-family:'Amiri',serif; padding:30px 0;
   }
   .cat-card{
-    background:#fff; border-radius:var(--radius); padding:34px 22px; text-align:center;
-    box-shadow:0 10px 30px rgba(14,42,61,.06); transition:transform .3s ease, box-shadow .3s ease;
-    border:1px solid var(--gold-soft);
+    background:rgba(255,255,255,.05); border-radius:var(--radius); padding:32px 24px; text-align:center;
+    box-shadow:none; transition:transform .3s ease, background .3s ease;
+    border:1px solid rgba(199,154,75,.35);
   }
-  .cat-card:hover{transform:translateY(-8px); box-shadow:0 20px 40px rgba(199,154,75,.18);}
+  .cat-card:hover{transform:translateY(-8px); background:rgba(199,154,75,.1);}
   .cat-icon{
-    width:64px;height:64px;border-radius:50%;margin:0 auto 18px;
-    background:linear-gradient(145deg, #FBF3E0, #fff);
+    width:60px;height:60px;border-radius:50%;margin:0 auto 18px;
+    background:rgba(199,154,75,.16);
     display:flex;align-items:center;justify-content:center;color:var(--gold);
   }
-  .cat-card h3{font-size:18px;color:var(--gold); margin-bottom:8px; font-family:'Tajawal'; font-weight:700;}
-  .cat-card p{font-size:13px;color:var(--text-muted);}
+  .cat-card h3{font-size:17px;color:#fff; margin-bottom:10px; font-family:'Tajawal'; font-weight:700;}
+  .cat-card p{font-size:13.5px;color:rgba(255,255,255,.6); line-height:1.8;}
 
   /* ===== products ===== */
   .filter-tabs{display:flex;justify-content:center;gap:12px;margin-bottom:48px;flex-wrap:wrap;}
@@ -366,7 +368,7 @@
 
   /* ===== CTA ===== */
   .cta{
-    background:linear-gradient(120deg, var(--navy), var(--navy-deep));
+    background:var(--navy-deep); border:1.5px solid var(--gold);
     border-radius:28px; padding:64px 40px; text-align:center; color:#fff;
     margin:0 24px; position:relative; overflow:hidden;
   }
@@ -432,29 +434,36 @@
   }
   .wa-icon{
     position:relative; z-index:2;
-    color:var(--berry);
-    filter:drop-shadow(0 2px 6px rgba(255,255,255,.4));
+    color:var(--gold);
+    background:var(--navy-deep);
+    border-radius:50%;
+    padding:2px;
+    box-sizing:content-box;
+    width:22px; height:22px;
+    box-shadow:0 2px 10px rgba(0,0,0,.35);
   }
 
   /* ===== trust section ===== */
-  .trust-sec{padding:70px 0;}
+  .trust-sec{padding:70px 0; background:transparent;}
+  .trust-sec .sec-head h2{color:#fff;}
   .trust-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; max-width:900px; margin:0 auto;}
   .trust-card{
-    background:#fff; border:1px solid var(--gold-soft); border-radius:var(--radius);
-    padding:32px 24px; text-align:center; box-shadow:0 10px 30px rgba(14,42,61,.06);
+    background:var(--navy-deep); border:1.5px solid var(--gold); border-radius:var(--radius);
+    padding:32px 24px; text-align:center; transition:transform .3s ease;
   }
+  .trust-card:hover{transform:translateY(-6px);}
   .trust-ic{
     width:60px;height:60px;border-radius:50%;margin:0 auto 18px;
-    background:linear-gradient(145deg, #FBF3E0, #fff);
+    background:rgba(199,154,75,.16);
     display:flex;align-items:center;justify-content:center;font-size:26px;
   }
-  .trust-card h3{font-size:17px;color:var(--gold);margin-bottom:10px;font-family:'Tajawal';font-weight:700;}
-  .trust-card p{font-size:13.5px;color:var(--text-muted);line-height:1.8;}
+  .trust-card h3{font-size:17px;color:#fff;margin-bottom:10px;font-family:'Tajawal';font-weight:700;}
+  .trust-card p{font-size:13.5px;color:rgba(255,255,255,.6);line-height:1.8;}
   .pay-trust{
-    text-align:center; margin-top:44px; padding-top:34px; border-top:1px solid var(--gold-soft);
+    text-align:center; margin-top:44px; padding-top:34px; border-top:1px solid rgba(199,154,75,.2);
     max-width:900px; margin-inline:auto;
   }
-  .pay-trust > span{display:block; color:var(--text-muted); font-size:14px; margin-bottom:18px; font-weight:500;}
+  .pay-trust > span{display:block; color:rgba(255,255,255,.7); font-size:14px; margin-bottom:18px; font-weight:500;}
   .pay-logos{display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
   .pay-badge{
     background:var(--navy); color:#fff; padding:10px 22px; border-radius:10px;
@@ -483,7 +492,7 @@
   /* ===== fleet service ===== */
   .fleet-sec{padding:60px 0;}
   .fleet-card{
-    background:linear-gradient(135deg, var(--navy), var(--navy-deep));
+    background:var(--navy-deep); border:1.5px solid var(--gold);
     border-radius:28px; padding:48px 40px; color:#fff;
     position:relative; overflow:hidden; max-width:900px; margin:0 auto;
   }
@@ -519,8 +528,10 @@
   /* ===== suppliers portal ===== */
   .suppliers-sec{background:var(--cream); display:none;}
   .suppliers-sec.show{display:block;}
-  .offers-sec .products-wrap{border-color:rgba(199,154,75,.25);}
-  .offers-sec .products-wrap-title{color:var(--gold);}
+  .offers-sec .products-wrap{
+    border-color:var(--gold); box-shadow:0 14px 40px rgba(199,154,75,.15);
+  }
+  .offers-sec .products-wrap-title{color:#fff;}
   .offers-sec .products-wrap-title .pw-chevron{color:var(--gold);}
   .role-switch{display:flex;justify-content:center;gap:12px;margin-bottom:40px;flex-wrap:wrap;}
   .role-btn{padding:11px 26px;border-radius:100px;font-size:14px;font-weight:700;border:1.5px solid rgba(14,42,61,.15);color:var(--navy);transition:all .25s ease;}
@@ -961,7 +972,7 @@
 </section>
 
 <!-- ================= CTA ================= -->
-<section style="padding-top:0;">
+<section class="cta-sec" style="padding-top:0;">
   <div class="cta reveal">
     <h2>جاهز تطلب لحظتك المثلّجة؟</h2>
     <p>تواصل معنا الآن عبر واتساب واحصل على طلبك خلال ساعات، بارداً كما يجب.</p>
