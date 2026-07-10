@@ -153,8 +153,8 @@
     background:
       linear-gradient(180deg, rgba(8,26,38,.85) 0%, rgba(14,42,61,.6) 25%, rgba(14,42,61,.4) 50%, rgba(8,26,38,.6) 75%, rgba(8,26,38,.9) 92%, var(--navy-deep) 100%),
       url('https://images.unsplash.com/photo-1723401045004-7d489d0be033?auto=format&fit=crop&w=1800&q=70');
-    background-size:cover;
-    background-position:center 20%;
+    background-size:250%;
+    background-position:center 8%;
     display:flex;align-items:stretch;
     padding-top:110px;
     overflow:hidden;
@@ -280,11 +280,11 @@
     font-family:'Amiri',serif; padding:30px 0;
   }
   .cat-card{
-    background:rgba(255,255,255,.05); border-radius:var(--radius); padding:32px 24px; text-align:center;
-    box-shadow:none; transition:transform .3s ease, background .3s ease;
+    background:var(--navy-deep); border-radius:var(--radius); padding:32px 24px; text-align:center;
+    box-shadow:none; transition:transform .3s ease, border-color .3s ease;
     border:1px solid rgba(199,154,75,.35);
   }
-  .cat-card:hover{transform:translateY(-8px); background:rgba(199,154,75,.1);}
+  .cat-card:hover{transform:translateY(-8px); border-color:var(--gold);}
   .cat-icon{
     width:60px;height:60px;border-radius:50%;margin:0 auto 18px;
     background:rgba(199,154,75,.16);
