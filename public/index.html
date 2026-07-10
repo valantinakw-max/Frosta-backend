@@ -166,11 +166,11 @@
   .hero-grid{
     display:flex; flex-direction:column; align-items:center; justify-content:space-between;
     position:relative; z-index:2; width:100%; text-align:center;
-    min-height:calc(100vh - 110px); padding:0 0 60px;
+    min-height:calc(100vh - 110px); padding:0 0 8px;
   }
   .hero-poetry{
     max-width:680px; width:100%;
-    z-index:3;
+    z-index:3; margin-top:auto;
   }
   .verse{
     font-family:'Amiri',serif; color:#fff;
@@ -287,8 +287,9 @@
   .cat-card:hover{transform:translateY(-8px); border-color:var(--gold);}
   .cat-icon{
     width:60px;height:60px;border-radius:50%;margin:0 auto 18px;
-    background:rgba(199,154,75,.16);
+    background:transparent; border:1px solid rgba(199,154,75,.3);
     display:flex;align-items:center;justify-content:center;color:var(--gold);
+    font-size:30px;
   }
   .cat-card h3{font-size:17px;color:#fff; margin-bottom:10px; font-family:'Tajawal'; font-weight:700;}
   .cat-card p{font-size:13.5px;color:rgba(255,255,255,.6); line-height:1.8;}
@@ -454,8 +455,8 @@
   .trust-card:hover{transform:translateY(-6px);}
   .trust-ic{
     width:60px;height:60px;border-radius:50%;margin:0 auto 18px;
-    background:rgba(199,154,75,.16);
-    display:flex;align-items:center;justify-content:center;font-size:26px;
+    background:transparent; border:1px solid rgba(199,154,75,.3);
+    display:flex;align-items:center;justify-content:center;font-size:30px;
   }
   .trust-card h3{font-size:17px;color:#fff;margin-bottom:10px;font-family:'Tajawal';font-weight:700;}
   .trust-card p{font-size:13.5px;color:rgba(255,255,255,.6);line-height:1.8;}
@@ -463,10 +464,10 @@
     text-align:center; margin-top:44px; padding-top:34px; border-top:1px solid rgba(199,154,75,.2);
     max-width:900px; margin-inline:auto;
   }
-  .pay-trust > span{display:block; color:rgba(255,255,255,.7); font-size:14px; margin-bottom:18px; font-weight:500;}
+  .pay-trust > span{display:block; color:var(--gold); font-size:14px; margin-bottom:18px; font-weight:700;}
   .pay-logos{display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
   .pay-badge{
-    background:var(--navy); color:#fff; padding:10px 22px; border-radius:10px;
+    background:transparent; border:1px solid rgba(199,154,75,.3); color:#fff; padding:10px 22px; border-radius:10px;
     font-size:14px; font-weight:700; letter-spacing:.03em;
   }
   @media (max-width:640px){
@@ -736,24 +737,44 @@
       </button>
       <div class="cat-grid" id="catGrid" hidden>
       <div class="cat-card reveal">
-        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3c3 3 5 6 5 9a5 5 0 01-10 0c0-3 2-6 5-9z"/></svg></div>
+        <div class="cat-icon">🍦</div>
         <h3>آيس كريم</h3>
         <p>نكهات كلاسيكية وفاخرة</p>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="8" width="16" height="10" rx="2"/><path d="M4 8l8-5 8 5"/></svg></div>
+        <div class="cat-icon">🍰</div>
         <h3>حلويات مثلجة</h3>
         <p>كنافة، تشيز كيك وسوربيه</p>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M9 4l1.5 2M15 4l-1.5 2"/></svg></div>
+        <div class="cat-icon">🍓</div>
         <h3>فواكه مجمّدة</h3>
         <p>طازجة ومحفوظة بعناية</p>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 3h10l-1 6a6 6 0 01-8 0L7 3z"/><path d="M9 21h6M12 15v6"/></svg></div>
+        <div class="cat-icon">🥤</div>
         <h3>مشروبات مثلجة</h3>
         <p>موهيتو وعصائر منعشة</p>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-icon">🥩</div>
+        <h3>لحوم مثلجة</h3>
+        <p>مجمّدة طازجة بأجود المصادر</p>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-icon">🦐</div>
+        <h3>مأكولات بحرية مثلجة</h3>
+        <p>روبيان وأسماك طازجة مجمّدة</p>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-icon">🥦</div>
+        <h3>خضروات مثلجة</h3>
+        <p>مجمّدة تحفظ قيمتها الغذائية</p>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-icon">🧊</div>
+        <h3>ثلج</h3>
+        <p>مكعبات ثلج نقية للتبريد</p>
       </div>
     </div>
     </div>
