@@ -520,6 +520,49 @@
     transition:transform .25s ease, box-shadow .25s ease;
   }
   .fleet-btn:hover{transform:translateY(-3px); box-shadow:0 14px 30px rgba(199,154,75,.35);}
+  .fleet-btns{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+  .fleet-btns .fleet-btn{flex:0 1 240px; text-align:center; justify-content:center; padding:16px 24px;}
+  .fleet-btn-ghost{
+    display:inline-block; background:transparent; border:1.5px solid var(--gold); color:var(--gold);
+    padding:16px 34px; border-radius:100px; font-weight:700; font-size:15.5px;
+    transition:transform .25s ease, background .25s ease;
+  }
+  .fleet-btn-ghost:hover{transform:translateY(-3px); background:rgba(199,154,75,.1);}
+
+  /* fleet request modal */
+  .fleet-modal-overlay{
+    position:fixed; inset:0; background:rgba(8,26,38,.6); opacity:0; pointer-events:none;
+    transition:opacity .3s ease; z-index:300;
+  }
+  .fleet-modal-overlay.show{opacity:1; pointer-events:auto;}
+  .fleet-modal{
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-46%) scale(.96);
+    width:460px; max-width:92vw; max-height:88vh; background:#fff; border-radius:22px;
+    z-index:301; opacity:0; pointer-events:none; display:flex; flex-direction:column;
+    box-shadow:0 30px 80px rgba(0,0,0,.35); transition:opacity .3s ease, transform .3s ease;
+  }
+  .fleet-modal.show{opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1);}
+  .fleet-modal-head{
+    padding:22px 24px; display:flex; justify-content:space-between; align-items:center;
+    border-bottom:1px solid rgba(14,42,61,.08);
+  }
+  .fleet-modal-head h3{font-family:'Tajawal'; font-weight:700; color:var(--navy); font-size:19px;}
+  .fleet-modal-body{padding:22px 24px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;}
+  .ff-field{display:flex; flex-direction:column; gap:6px;}
+  .ff-field label{font-size:13px; font-weight:700; color:var(--navy);}
+  .ff-field label .req{color:var(--berry);}
+  .ff-field input, .ff-field select, .ff-field textarea{
+    padding:12px 14px; border-radius:10px; border:1.5px solid rgba(14,42,61,.15);
+    font-family:inherit; font-size:14px; color:var(--text-dark); background:#fff; width:100%;
+  }
+  .ff-field input:focus, .ff-field select:focus, .ff-field textarea:focus{outline:none; border-color:var(--gold);}
+  .ff-field textarea{resize:vertical; min-height:64px;}
+  .ff-row{display:flex; gap:12px;}
+  .ff-row .ff-field{flex:1;}
+  .ff-error{color:var(--berry); font-size:13px; font-weight:600; display:none;}
+  .ff-error.show{display:block;}
+  .fleet-modal-foot{padding:20px 24px; border-top:1px solid rgba(14,42,61,.08);}
+  @media(max-width:480px){ .ff-row{flex-direction:column;} }
   @media (max-width:600px){
     .fleet-card{padding:36px 22px;}
     .fleet-features{gap:16px;}
@@ -728,7 +771,7 @@
   <div class="container">
     <div class="sec-head reveal">
       <span class="sec-eyebrow">عالم فروزينا المثلّج</span>
-      <p>ثلج فروزينا يبرّد لك أجواءك — كل شي مثلّج وبارد بمكان واحد، ويوصلك لين عندك.</p>
+      <p>ثلج فروزينا يبرّد لك أجواءك — كل شي مثلّج وبارد بمكان واحد، ويوصلك وين ما كنت.</p>
     </div>
     <div class="products-wrap reveal">
       <button class="products-wrap-title" id="productsToggle" aria-expanded="false">
@@ -744,7 +787,7 @@
       <div class="cat-card reveal">
         <div class="cat-icon">🍰</div>
         <h3>حلويات مثلجة</h3>
-        <p>كنافة، تشيز كيك وسوربيه</p>
+        <p>أشهى الحلويات وأبردها</p>
       </div>
       <div class="cat-card reveal">
         <div class="cat-icon">🍓</div>
@@ -754,7 +797,7 @@
       <div class="cat-card reveal">
         <div class="cat-icon">🥤</div>
         <h3>مشروبات مثلجة</h3>
-        <p>موهيتو وعصائر منعشة</p>
+        <p>رشفات باردة تنعش حواسك بذوقٍ راقٍ</p>
       </div>
       <div class="cat-card reveal">
         <div class="cat-icon">🥩</div>
@@ -764,7 +807,7 @@
       <div class="cat-card reveal">
         <div class="cat-icon">🦐</div>
         <h3>مأكولات بحرية مثلجة</h3>
-        <p>روبيان وأسماك طازجة مجمّدة</p>
+        <p>خيرات البحر طازجة ومجمّدة</p>
       </div>
       <div class="cat-card reveal">
         <div class="cat-icon">🥦</div>
@@ -877,11 +920,66 @@
             <span>تغطية جميع مناطق الكويت</span>
           </div>
         </div>
-        <a href="https://wa.me/96500000000?text=مرحباً، أرغب بالاستفسار عن خدمة أسطول التبريد المتنقّل" target="_blank" class="fleet-btn">اطلب الخدمة عبر واتساب</a>
+        <div class="fleet-btns">
+          <button type="button" class="fleet-btn" id="fleetRequestBtn">اطلب الخدمة عبر الموقع</button>
+          <a href="https://wa.me/96500000000?text=مرحباً، أرغب بالاستفسار عن خدمة أسطول التبريد المتنقّل" target="_blank" class="fleet-btn">تواصل عبر واتساب</a>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- ================= FLEET REQUEST MODAL ================= -->
+<div class="fleet-modal-overlay" id="fleetModalOverlay"></div>
+<div class="fleet-modal" id="fleetModal" role="dialog" aria-modal="true" aria-labelledby="fleetModalTitle">
+  <div class="fleet-modal-head">
+    <h3 id="fleetModalTitle">طلب خدمة أسطول التبريد</h3>
+    <button class="close-x" id="fleetModalClose" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="fleet-modal-body">
+    <div class="ff-field">
+      <label>الاسم <span class="req">*</span></label>
+      <input type="text" id="flName" placeholder="اسمك الكريم">
+    </div>
+    <div class="ff-field">
+      <label>رقم الجوال <span class="req">*</span></label>
+      <input type="tel" id="flPhone" placeholder="مثال: 9XXXXXXX" inputmode="tel">
+    </div>
+    <div class="ff-field">
+      <label>نوع العميل</label>
+      <select id="flType">
+        <option value="فرد">فرد</option>
+        <option value="شركة">شركة</option>
+      </select>
+    </div>
+    <div class="ff-row">
+      <div class="ff-field">
+        <label>منطقة الانطلاق <span class="req">*</span></label>
+        <input type="text" id="flFrom" placeholder="من أين؟">
+      </div>
+      <div class="ff-field">
+        <label>منطقة الوصول <span class="req">*</span></label>
+        <input type="text" id="flTo" placeholder="إلى أين؟">
+      </div>
+    </div>
+    <div class="ff-field">
+      <label>التاريخ المطلوب</label>
+      <input type="date" id="flDate">
+    </div>
+    <div class="ff-field">
+      <label>نوع الشحنة (اختياري)</label>
+      <input type="text" id="flCargo" placeholder="مثال: مواد غذائية مجمّدة">
+    </div>
+    <div class="ff-field">
+      <label>ملاحظات إضافية (اختياري)</label>
+      <textarea id="flNotes" placeholder="أي تفاصيل تحب تضيفها"></textarea>
+    </div>
+    <p class="ff-error" id="flError">يرجى تعبئة الحقول الإلزامية (الاسم، الجوال، الانطلاق، الوصول).</p>
+  </div>
+  <div class="fleet-modal-foot">
+    <button class="fleet-btn" id="flSubmit" style="width:100%;">إرسال الطلب</button>
+  </div>
+</div>
 
 <!-- ================= SUPPLIERS PORTAL ================= -->
 <section id="suppliers" class="suppliers-sec">
@@ -1146,6 +1244,80 @@
     if(closeBtn) closeBtn.addEventListener('click', closeMenu);
     if(overlay) overlay.addEventListener('click', closeMenu);
     drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  })();
+
+  // ---------- fleet service request ----------
+  (function(){
+    const openBtn = document.getElementById('fleetRequestBtn');
+    const overlay = document.getElementById('fleetModalOverlay');
+    const modal = document.getElementById('fleetModal');
+    const closeBtn = document.getElementById('fleetModalClose');
+    const submitBtn = document.getElementById('flSubmit');
+    const errEl = document.getElementById('flError');
+    if(!openBtn) return;
+
+    function openModal(){ overlay.classList.add('show'); modal.classList.add('show'); document.body.style.overflow='hidden'; }
+    function closeModal(){ overlay.classList.remove('show'); modal.classList.remove('show'); document.body.style.overflow=''; }
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', closeModal);
+
+    function val(id){ const el = document.getElementById(id); return el ? (el.value || '').trim() : ''; }
+
+    function buildMessage(d){
+      let m = 'مرحباً، أرغب بطلب خدمة أسطول التبريد المتنقّل:%0A';
+      m += `- الاسم: ${d.name}%0A`;
+      m += `- الجوال: ${d.phone}%0A`;
+      m += `- نوع العميل: ${d.type}%0A`;
+      m += `- من: ${d.from}%0A`;
+      m += `- إلى: ${d.to}%0A`;
+      if(d.date)  m += `- التاريخ المطلوب: ${d.date}%0A`;
+      if(d.cargo) m += `- نوع الشحنة: ${d.cargo}%0A`;
+      if(d.notes) m += `- ملاحظات: ${d.notes}%0A`;
+      return m;
+    }
+
+    function showSuccess(){
+      modal.querySelector('.fleet-modal-body').innerHTML =
+        '<div style="text-align:center;padding:30px 10px;">' +
+        '<div style="font-size:44px;margin-bottom:12px;">✅</div>' +
+        '<h3 style="font-family:\'Tajawal\';color:var(--navy);margin-bottom:10px;">تم استلام طلبك</h3>' +
+        '<p style="color:var(--text-muted);font-size:14px;line-height:1.8;">شكراً لك، فريق فروزينا بيتواصل معك في أقرب وقت لتأكيد التفاصيل.</p>' +
+        '</div>';
+      modal.querySelector('.fleet-modal-foot').innerHTML =
+        '<button class="fleet-btn" style="width:100%;" id="flDone">تم</button>';
+      document.getElementById('flDone').addEventListener('click', closeModal);
+    }
+
+    submitBtn.addEventListener('click', async () => {
+      const d = {
+        name: val('flName'), phone: val('flPhone'), type: val('flType'),
+        from: val('flFrom'), to: val('flTo'), date: val('flDate'),
+        cargo: val('flCargo'), notes: val('flNotes')
+      };
+      if(!d.name || !d.phone || !d.from || !d.to){ errEl.classList.add('show'); return; }
+      errEl.classList.remove('show');
+
+      const original = submitBtn.textContent;
+      submitBtn.textContent = 'جاري إرسال الطلب...';
+      submitBtn.disabled = true;
+
+      try{
+        const res = await fetch(`${API_BASE_URL}/api/fleet-request`, {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(d)
+        });
+        if(!res.ok) throw new Error('failed');
+        submitBtn.textContent = original; submitBtn.disabled = false;
+        showSuccess();
+      }catch(err){
+        // احتياطي: إرسال نفس التفاصيل عبر واتساب حتى لا يضيع الطلب
+        submitBtn.textContent = original; submitBtn.disabled = false;
+        window.open('https://wa.me/96500000000?text=' + buildMessage(d), '_blank');
+        showSuccess();
+      }
+    });
   })();
 
   // ---------- data ----------
