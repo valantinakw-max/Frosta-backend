@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>فروزينا | نكهة الفخامة في كل قطرة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --navy:#0E2A3D;
@@ -24,7 +24,7 @@
   html{scroll-behavior:smooth;}
   body{
     font-family:'Tajawal',sans-serif;
-    background:var(--cream);
+    background:#FFFFFF;
     color:var(--text-dark);
     overflow-x:hidden;
   }
@@ -51,7 +51,7 @@
     100%{transform:translate(0,60vh) translateX(-10px);}
   }
   h1,h2,h3,.display{
-    font-family:'Aref Ruqaa',serif;
+    font-family:'Amiri',serif;
     font-weight:700;
   }
   a{text-decoration:none;color:inherit;}
@@ -82,12 +82,14 @@
   }
   .nav-wrap{display:flex;align-items:center;justify-content:space-between;}
   .logo{
-    font-family:'Aref Ruqaa',serif;
-    font-size:28px;
+    font-family:'Amiri',serif;
+    font-size:24px;
     color:#fff;
     display:flex;align-items:center;gap:8px;
+    line-height:1;
   }
   .logo svg{flex-shrink:0;}
+  .logo-text{display:inline-block; transform:translateY(-3px);}
   nav ul{display:flex;gap:34px;}
   nav a{
     color:#fff; opacity:.85; font-size:15px; font-weight:500;
@@ -111,7 +113,37 @@
     font-size:11px; font-weight:900; width:19px;height:19px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;
   }
-  .menu-toggle{display:none;color:#fff;}
+  nav.top-nav{display:none;}
+  .menu-toggle{display:block;color:#fff;}
+
+  /* ===== slide-out mobile menu ===== */
+  .nav-overlay{
+    position:fixed; inset:0; background:rgba(8,26,38,.6); z-index:200;
+    opacity:0; visibility:hidden; transition:opacity .3s ease;
+  }
+  .nav-overlay.open{opacity:1; visibility:visible;}
+  .nav-drawer{
+    position:fixed; top:0; right:0; bottom:0; width:280px; max-width:82vw;
+    background:var(--navy-deep); z-index:201; padding:80px 0 30px;
+    transform:translateX(100%); transition:transform .32s cubic-bezier(.4,0,.2,1);
+    box-shadow:-10px 0 40px rgba(0,0,0,.3); overflow-y:auto;
+  }
+  .nav-drawer.open{transform:translateX(0);}
+  .nav-drawer-close{
+    position:absolute; top:22px; left:22px; width:40px;height:40px;border-radius:50%;
+    background:rgba(255,255,255,.08); color:#fff; display:flex;align-items:center;justify-content:center;
+  }
+  .nav-drawer-logo{
+    font-family:'Amiri',serif; color:var(--gold); font-size:22px;
+    padding:0 28px 24px; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .nav-drawer a{
+    display:block; color:#fff; font-size:16px; font-weight:500;
+    padding:16px 28px; transition:background .2s ease, color .2s ease; border-right:3px solid transparent;
+  }
+  .nav-drawer a:hover, .nav-drawer a:focus-visible{
+    background:rgba(199,154,75,.12); color:var(--gold); border-right-color:var(--gold);
+  }
 
   /* ===== hero ===== */
   .hero{
@@ -121,8 +153,8 @@
       linear-gradient(180deg, rgba(8,26,38,.94) 0%, rgba(14,42,61,.78) 22%, rgba(14,42,61,.35) 48%, rgba(14,42,61,.12) 68%, rgba(14,42,61,.05) 100%),
       url('https://images.unsplash.com/photo-1723401045004-7d489d0be033?auto=format&fit=crop&w=1800&q=70');
     background-size:cover;
-    background-position:center 65%;
-    display:flex;align-items:center;
+    background-position:center 15%;
+    display:flex;align-items:stretch;
     padding-top:110px;
     overflow:hidden;
   }
@@ -131,12 +163,16 @@
     pointer-events:none;
   }
   .hero-grid{
-    display:flex; flex-direction:column; align-items:center; gap:36px;
+    display:flex; flex-direction:column; align-items:center; justify-content:space-between;
     position:relative; z-index:2; width:100%; text-align:center;
+    min-height:calc(100vh - 110px); padding:0 0 60px;
   }
-  .hero-poetry{max-width:680px; margin:0 auto; width:100%;}
+  .hero-poetry{
+    max-width:680px; width:100%;
+    z-index:3;
+  }
   .verse{
-    font-family:'Aref Ruqaa',serif; color:#fff;
+    font-family:'Amiri',serif; color:#fff;
     font-size:clamp(26px,4.5vw,44px); line-height:1.6; margin-bottom:14px;
   }
   .verse .ajz{color:var(--gold);}
@@ -173,7 +209,7 @@
   .hero-snowflake{
     filter:drop-shadow(0 0 22px rgba(199,154,75,.35)) drop-shadow(0 0 50px rgba(169,223,199,.15));
     animation:flake-spin 34s linear infinite;
-    margin-top:-50px;
+    margin-top:0;
   }
   .hero-snowflake-photo{
     width:150px; height:150px; border-radius:50%; object-fit:cover; display:block;
@@ -191,23 +227,25 @@
 
   /* ===== trust bar ===== */
   .trust{
-    background:var(--navy-deep); padding:0 0 46px;
+    background:var(--cream); padding:0 0 46px;
   }
   .trust-grid{
     display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
   }
   .trust-item{
-    display:flex; align-items:center; gap:14px; color:#fff;
+    display:flex; align-items:center; gap:14px; color:var(--navy);
   }
   .trust-item .ic{
-    width:46px;height:46px;border-radius:12px;background:rgba(169,223,199,.12);
-    display:flex;align-items:center;justify-content:center; color:var(--mint); flex-shrink:0;
+    width:46px;height:46px;border-radius:12px;background:var(--mint-soft);
+    display:flex;align-items:center;justify-content:center; color:var(--navy); flex-shrink:0;
   }
   .trust-item h4{font-size:14.5px; font-weight:700; margin-bottom:3px;}
-  .trust-item p{font-size:12.5px; color:rgba(255,255,255,.55);}
+  .trust-item p{font-size:12.5px; color:var(--text-muted);}
 
   /* ===== section basics ===== */
   section{padding:100px 0;}
+  #bestsellers, #new-arrivals, #offers{padding:22px 0;}
+  #categories + #bestsellers{padding-top:0;}
   .sec-head{text-align:center; max-width:640px; margin:0 auto 60px;}
   .sec-eyebrow{
     color:var(--berry); font-weight:700; font-size:13px; letter-spacing:1px;
@@ -220,20 +258,37 @@
   .reveal.in{opacity:1; transform:translateY(0);}
 
   /* ===== categories ===== */
-  .categories{background:var(--mint-soft);}
+  .categories{background:#FFFFFF;}
   .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .products-wrap{
+    background:linear-gradient(135deg, var(--navy), var(--navy-deep)); border:1px solid rgba(199,154,75,.25); border-radius:calc(var(--radius) + 6px);
+    padding:34px 28px; box-shadow:0 14px 40px rgba(14,42,61,.15); max-width:900px; margin:0 auto;
+  }
+  .products-wrap-title{
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    width:100%; background:none; border:none; cursor:pointer;
+    font-family:'Amiri',serif; color:var(--gold);
+    font-size:26px; padding:6px 0;
+  }
+  .products-wrap-title .pw-chevron{transition:transform .3s ease; color:var(--gold);}
+  .products-wrap-title[aria-expanded="true"] .pw-chevron{transform:rotate(180deg);}
+  #catGrid{margin-top:26px;}
+  .soon-box{
+    margin-top:26px; text-align:center; color:rgba(255,255,255,.7); font-size:18px;
+    font-family:'Amiri',serif; padding:30px 0;
+  }
   .cat-card{
     background:#fff; border-radius:var(--radius); padding:34px 22px; text-align:center;
     box-shadow:0 10px 30px rgba(14,42,61,.06); transition:transform .3s ease, box-shadow .3s ease;
-    border:1px solid rgba(14,42,61,.05);
+    border:1px solid var(--gold-soft);
   }
-  .cat-card:hover{transform:translateY(-8px); box-shadow:0 20px 40px rgba(14,42,61,.12);}
+  .cat-card:hover{transform:translateY(-8px); box-shadow:0 20px 40px rgba(199,154,75,.18);}
   .cat-icon{
     width:64px;height:64px;border-radius:50%;margin:0 auto 18px;
-    background:linear-gradient(145deg, var(--mint-soft), #fff);
-    display:flex;align-items:center;justify-content:center;color:var(--navy);
+    background:linear-gradient(145deg, #FBF3E0, #fff);
+    display:flex;align-items:center;justify-content:center;color:var(--gold);
   }
-  .cat-card h3{font-size:18px;color:var(--navy); margin-bottom:8px; font-family:'Tajawal'; font-weight:700;}
+  .cat-card h3{font-size:18px;color:var(--gold); margin-bottom:8px; font-family:'Tajawal'; font-weight:700;}
   .cat-card p{font-size:13px;color:var(--text-muted);}
 
   /* ===== products ===== */
@@ -242,34 +297,34 @@
     padding:11px 26px;border-radius:100px;font-size:14px;font-weight:700;
     border:1.5px solid rgba(14,42,61,.15); color:var(--navy); transition:all .25s ease;
   }
-  .tab-btn.active, .tab-btn:hover{background:var(--navy); color:#fff; border-color:var(--navy);}
-  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  .tab-btn.active, .tab-btn:hover{background:var(--gold); color:var(--navy-deep); border-color:var(--gold);}
+  .prod-grid{display:flex; flex-direction:column; gap:18px; max-width:720px; margin:0 auto;}
   .prod-card{
     background:#fff;border-radius:var(--radius);overflow:hidden;
     box-shadow:0 10px 30px rgba(14,42,61,.06); transition:transform .3s ease, box-shadow .3s ease;
-    display:flex;flex-direction:column;
+    display:flex;flex-direction:row; align-items:stretch;
   }
-  .prod-card:hover{transform:translateY(-6px); box-shadow:0 22px 40px rgba(14,42,61,.13);}
+  .prod-card:hover{transform:translateY(-4px); box-shadow:0 22px 40px rgba(14,42,61,.13);}
   .prod-thumb{
-    height:190px; position:relative;
+    width:150px; flex-shrink:0; position:relative;
     display:flex;align-items:center;justify-content:center;
   }
   .prod-thumb .seal{
     position:absolute; top:14px; left:14px; background:var(--gold); color:var(--navy-deep);
     font-size:11px; font-weight:900; padding:5px 12px; border-radius:100px;
   }
-  .prod-body{padding:22px; display:flex;flex-direction:column;gap:10px; flex:1;}
+  .prod-body{padding:20px; display:flex;flex-direction:column;gap:8px; flex:1;}
   .prod-cat{color:var(--berry); font-size:11.5px; font-weight:700; letter-spacing:.5px;}
-  .prod-body h3{font-size:18px; color:var(--navy); font-family:'Tajawal'; font-weight:700;}
+  .prod-body h3{font-size:18px; color:var(--gold); font-family:'Tajawal'; font-weight:700;}
   .prod-body p{font-size:13px;color:var(--text-muted); line-height:1.7;}
   .prod-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px;}
-  .price{font-weight:900;color:var(--navy);font-size:18px;}
+  .price{font-weight:900;color:var(--gold);font-size:18px;}
   .price small{font-size:12px;font-weight:500;color:var(--text-muted);}
   .add-btn{
-    width:42px;height:42px;border-radius:50%;background:var(--navy);color:#fff;
+    width:42px;height:42px;border-radius:50%;background:var(--gold);color:var(--navy-deep);
     display:flex;align-items:center;justify-content:center; transition:background .25s ease, transform .2s ease;
   }
-  .add-btn:hover{background:var(--gold); color:var(--navy-deep);}
+  .add-btn:hover{background:var(--navy); color:#fff;}
   .add-btn.added{background:var(--mint); color:var(--navy-deep); transform:scale(1.1);}
 
   /* ===== story ===== */
@@ -284,7 +339,7 @@
     background:radial-gradient(circle at 35% 30%, #123249, var(--navy-deep));
   }
   .story-badge .inner{position:relative;z-index:2;text-align:center;}
-  .story-badge .inner .yr{font-family:'Aref Ruqaa'; font-size:34px; color:var(--gold);}
+  .story-badge .inner .yr{font-family:'Amiri'; font-size:34px; color:var(--gold);}
   .story-badge .inner span{font-size:12px; color:rgba(255,255,255,.6);}
   .story h2{color:#fff; font-size:clamp(28px,3.6vw,40px); margin-bottom:22px;}
   .story p{color:rgba(255,255,255,.7); line-height:2; font-size:15.5px; margin-bottom:18px;}
@@ -301,7 +356,7 @@
   @keyframes fadein{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
   .stars{color:var(--gold); font-size:18px; letter-spacing:4px; margin-bottom:22px;}
   .testi-slide q{
-    font-family:'Aref Ruqaa'; font-size:26px; line-height:1.8; color:var(--navy); display:block; margin-bottom:24px;
+    font-family:'Amiri'; font-size:26px; line-height:1.8; color:var(--navy); display:block; margin-bottom:24px;
   }
   .testi-name{font-weight:700; color:var(--navy);}
   .testi-role{font-size:13px;color:var(--text-muted);}
@@ -311,7 +366,7 @@
 
   /* ===== CTA ===== */
   .cta{
-    background:linear-gradient(120deg, var(--berry), #5c1f29);
+    background:linear-gradient(120deg, var(--navy), var(--navy-deep));
     border-radius:28px; padding:64px 40px; text-align:center; color:#fff;
     margin:0 24px; position:relative; overflow:hidden;
   }
@@ -321,7 +376,7 @@
   /* ===== footer ===== */
   footer{background:var(--navy-deep); color:rgba(255,255,255,.65); padding:70px 0 30px;}
   .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:40px;margin-bottom:50px;}
-  .foot-logo{font-family:'Aref Ruqaa'; font-size:26px; color:#fff; margin-bottom:16px;}
+  .foot-logo{font-family:'Amiri'; font-size:26px; color:#fff; margin-bottom:16px;}
   .foot-grid p{font-size:14px; line-height:1.9;}
   .foot-col h4{color:#fff; font-size:15px; margin-bottom:18px; font-weight:700;}
   .foot-col ul li{margin-bottom:12px; font-size:14px;}
@@ -334,7 +389,7 @@
   .foot-social a:hover{background:var(--gold); color:var(--navy-deep);}
   .foot-bottom{
     border-top:1px solid rgba(255,255,255,.08); padding-top:26px;
-    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:13px;
+    display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:12px;font-size:13px;text-align:center;
   }
 
   /* ===== cart drawer ===== */
@@ -377,11 +432,96 @@
   }
   .wa-icon{
     position:relative; z-index:2;
-    filter:drop-shadow(0 2px 8px rgba(255,255,255,.55));
+    color:var(--berry);
+    filter:drop-shadow(0 2px 6px rgba(255,255,255,.4));
+  }
+
+  /* ===== trust section ===== */
+  .trust-sec{padding:70px 0;}
+  .trust-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; max-width:900px; margin:0 auto;}
+  .trust-card{
+    background:#fff; border:1px solid var(--gold-soft); border-radius:var(--radius);
+    padding:32px 24px; text-align:center; box-shadow:0 10px 30px rgba(14,42,61,.06);
+  }
+  .trust-ic{
+    width:60px;height:60px;border-radius:50%;margin:0 auto 18px;
+    background:linear-gradient(145deg, #FBF3E0, #fff);
+    display:flex;align-items:center;justify-content:center;font-size:26px;
+  }
+  .trust-card h3{font-size:17px;color:var(--gold);margin-bottom:10px;font-family:'Tajawal';font-weight:700;}
+  .trust-card p{font-size:13.5px;color:var(--text-muted);line-height:1.8;}
+  .pay-trust{
+    text-align:center; margin-top:44px; padding-top:34px; border-top:1px solid var(--gold-soft);
+    max-width:900px; margin-inline:auto;
+  }
+  .pay-trust > span{display:block; color:var(--text-muted); font-size:14px; margin-bottom:18px; font-weight:500;}
+  .pay-logos{display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
+  .pay-badge{
+    background:var(--navy); color:#fff; padding:10px 22px; border-radius:10px;
+    font-size:14px; font-weight:700; letter-spacing:.03em;
+  }
+  @media (max-width:640px){
+    .trust-grid{grid-template-columns:1fr;}
+  }
+
+  /* ===== low stock alerts ===== */
+  .stock-alert{
+    background:rgba(124,45,59,.08); border:1px solid rgba(124,45,59,.25); border-radius:14px;
+    padding:16px 18px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  }
+  .stock-alert .sa-info{font-size:13.5px; color:var(--berry); font-weight:500;}
+  .stock-alert .sa-info b{font-weight:800;}
+  .stock-ok-msg{
+    background:rgba(46,125,90,.08); border:1px solid rgba(46,125,90,.25); border-radius:14px;
+    padding:16px 18px; margin-bottom:14px; color:#1f5c40; font-size:13.5px; font-weight:500; text-align:center;
+  }
+  .stock-badge{display:inline-block; padding:4px 12px; border-radius:100px; font-size:12px; font-weight:700;}
+  .stock-low{background:rgba(124,45,59,.15); color:var(--berry);}
+  .stock-good{background:rgba(46,125,90,.15); color:#1f5c40;}
+  .inv-qty-input{width:80px; padding:6px 8px; border-radius:8px; border:1.5px solid rgba(14,42,61,.15); font-family:inherit; font-size:13px; text-align:center;}
+
+  /* ===== fleet service ===== */
+  .fleet-sec{padding:60px 0;}
+  .fleet-card{
+    background:linear-gradient(135deg, var(--navy), var(--navy-deep));
+    border-radius:28px; padding:48px 40px; color:#fff;
+    position:relative; overflow:hidden; max-width:900px; margin:0 auto;
+  }
+  .fleet-content{position:relative; z-index:2; text-align:center;}
+  .fleet-eyebrow{
+    color:var(--gold); font-family:'IBM Plex Sans Arabic','Tajawal',sans-serif;
+    font-size:13px; font-weight:700; letter-spacing:.08em;
+  }
+  .fleet-card h2{color:#fff; font-size:clamp(26px,3.6vw,38px); margin:14px 0 16px;}
+  .fleet-card p{color:rgba(255,255,255,.82); font-size:16px; line-height:1.9; max-width:600px; margin:0 auto 30px;}
+  .fleet-features{
+    display:flex; justify-content:center; gap:28px; flex-wrap:wrap; margin-bottom:34px;
+  }
+  .fleet-feature{
+    display:flex; align-items:center; gap:10px; color:#fff; font-size:14.5px; font-weight:500;
+  }
+  .fleet-feature .ff-ic{
+    font-size:20px; width:42px;height:42px; border-radius:12px; background:rgba(199,154,75,.15);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .fleet-btn{
+    display:inline-block; background:var(--gold); color:var(--navy-deep);
+    padding:16px 40px; border-radius:100px; font-weight:700; font-size:15.5px;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .fleet-btn:hover{transform:translateY(-3px); box-shadow:0 14px 30px rgba(199,154,75,.35);}
+  @media (max-width:600px){
+    .fleet-card{padding:36px 22px;}
+    .fleet-features{gap:16px;}
+    .fleet-feature{width:100%; justify-content:center;}
   }
 
   /* ===== suppliers portal ===== */
-  .suppliers-sec{background:var(--cream);}
+  .suppliers-sec{background:var(--cream); display:none;}
+  .suppliers-sec.show{display:block;}
+  .offers-sec .products-wrap{border-color:rgba(199,154,75,.25);}
+  .offers-sec .products-wrap-title{color:var(--gold);}
+  .offers-sec .products-wrap-title .pw-chevron{color:var(--gold);}
   .role-switch{display:flex;justify-content:center;gap:12px;margin-bottom:40px;flex-wrap:wrap;}
   .role-btn{padding:11px 26px;border-radius:100px;font-size:14px;font-weight:700;border:1.5px solid rgba(14,42,61,.15);color:var(--navy);transition:all .25s ease;}
   .role-btn.active,.role-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
@@ -424,25 +564,28 @@
 
   /* ===== responsive ===== */
   @media (max-width:980px){
-    nav, .header-actions .icon-btn:first-child{display:none;}
-    .menu-toggle{display:block;}
+    .header-actions .icon-btn:first-child{display:none;}
     .hero-grid{grid-template-columns:1fr; text-align:center;}
     .hero p{margin:0 auto 36px;}
     .btn-row{justify-content:center;}
     .hero-visual{order:-1; margin-bottom:20px;}
     .hero-snowflake-photo{width:120px;height:120px;}
     .trust-grid{grid-template-columns:1fr 1fr;}
-    .cat-grid{grid-template-columns:1fr 1fr;}
-    .prod-grid{grid-template-columns:1fr 1fr;}
+    .cat-grid{grid-template-columns:1fr 1fr; gap:12px;}
+    .products-wrap{padding:22px 16px;}
+    .cat-card{padding:18px 10px;}
+    .cat-icon{width:48px;height:48px;margin-bottom:12px;}
+    .cat-card h3{font-size:15px;}
+    .cat-card p{font-size:11.5px;}
     .story-grid{grid-template-columns:1fr;}
     .story-points{grid-template-columns:1fr 1fr;}
     .foot-grid{grid-template-columns:1fr 1fr;}
   }
   @media (max-width:600px){
     .trust-grid{grid-template-columns:1fr;}
-    .cat-grid{grid-template-columns:1fr;}
-    .prod-grid{grid-template-columns:1fr;}
+    .cat-grid{grid-template-columns:1fr 1fr;}
     .foot-grid{grid-template-columns:1fr;}
+    .prod-thumb{width:110px;}
     section{padding:70px 0;}
   }
 
@@ -486,9 +629,9 @@
           <circle cx="12" cy="12" r="1.7" fill="url(#iceGrad)"/>
         </svg>
       </span>
-      فروزينا
+      <span class="logo-text">فروزينا</span>
     </div>
-    <nav>
+    <nav class="top-nav">
       <ul>
         <li><a href="#categories">التصنيفات</a></li>
         <li><a href="#products">المنتجات</a></li>
@@ -513,15 +656,51 @@
   </div>
 </header>
 
+<!-- ================= SLIDE-OUT MENU ================= -->
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="nav-drawer" id="navDrawer" aria-label="القائمة الرئيسية">
+  <button class="nav-drawer-close" id="navDrawerClose" aria-label="إغلاق القائمة">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="nav-drawer-logo">فروزينا</div>
+  <a href="#categories">المنتجات</a>
+  <a href="#bestsellers">الأكثر مبيعاً</a>
+  <a href="#new-arrivals">الجديد</a>
+  <a href="#offers">العروض والخصومات</a>
+  <a href="#fleet">أسطول التبريد المتنقّل</a>
+  <a href="#trust">لماذا تثق بنا</a>
+  <a href="#contact">تواصل معنا</a>
+</nav>
+
 <!-- ================= HERO ================= -->
 <section class="hero">
   <div class="container hero-grid">
     <div class="hero-visual">
       <div class="hero-snowflake">
-        <img
-          src="https://images.unsplash.com/photo-1644886791046-504a85371f85?fm=jpg&q=60&w=500&auto=format&fit=crop"
-          alt="رقاقة ثلج حقيقية"
-          class="hero-snowflake-photo">
+        <svg width="90" height="90" viewBox="0 0 24 24" fill="none">
+          <defs>
+            <linearGradient id="heroFlakeGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#C79A4B"/>
+              <stop offset=".55" stop-color="#E7D2A2"/>
+              <stop offset="1" stop-color="#C79A4B"/>
+            </linearGradient>
+          </defs>
+          <g stroke="url(#heroFlakeGrad)" stroke-width="1" stroke-linecap="round">
+            <g id="heroFlakeBranch">
+              <line x1="12" y1="12" x2="12" y2="2.3"/>
+              <line x1="12" y1="4.6" x2="9.3" y2="2.6"/>
+              <line x1="12" y1="4.6" x2="14.7" y2="2.6"/>
+              <line x1="12" y1="7.6" x2="9.9" y2="6"/>
+              <line x1="12" y1="7.6" x2="14.1" y2="6"/>
+            </g>
+            <use href="#heroFlakeBranch" transform="rotate(60 12 12)"/>
+            <use href="#heroFlakeBranch" transform="rotate(120 12 12)"/>
+            <use href="#heroFlakeBranch" transform="rotate(180 12 12)"/>
+            <use href="#heroFlakeBranch" transform="rotate(240 12 12)"/>
+            <use href="#heroFlakeBranch" transform="rotate(300 12 12)"/>
+          </g>
+          <circle cx="12" cy="12" r="1.4" fill="url(#heroFlakeGrad)"/>
+        </svg>
       </div>
     </div>
     <div class="hero-poetry">
@@ -532,144 +711,141 @@
 
 </section>
 
-<!-- ================= TRUST BAR ================= -->
-<section class="trust" style="padding-top:0;">
-  <div class="container trust-grid">
-    <div class="trust-item reveal">
-      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13h11V6H3v7zM14 9h4l3 4v4h-7V9z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg></div>
-      <div><h4>توصيل مبرّد</h4><p>لكل مناطق الكويت خلال ساعات</p></div>
-    </div>
-    <div class="trust-item reveal">
-      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg></div>
-      <div><h4>تغليف يحفظ البرودة</h4><p>حتى وصولها إلى باب منزلك</p></div>
-    </div>
-    <div class="trust-item reveal">
-      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 11-4-7.2M21 4v5h-5"/></svg></div>
-      <div><h4>طلب سهل وسريع</h4><p>عبر الموقع أو واتساب مباشرة</p></div>
-    </div>
-    <div class="trust-item reveal">
-      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg></div>
-      <div><h4>ضمان الجودة</h4><p>استرجاع سهل عند أي ملاحظة</p></div>
-    </div>
-  </div>
-</section>
-
 <!-- ================= CATEGORIES ================= -->
 <section class="categories" id="categories">
   <div class="container">
     <div class="sec-head reveal">
-      <span class="sec-eyebrow">تصنيفاتنا</span>
-      <h2>اختر عالمك المثلّج</h2>
-      <p>من الآيس كريم الفاخر إلى الحلويات المثلجة والفواكه الطازجة، كل صنف يُحضَّر بمعايير راقية تليق بذوقك.</p>
+      <span class="sec-eyebrow">عالم فروزينا المثلّج</span>
+      <p>ثلج فروزينا يبرّد لك أجواءك — كل شي مثلّج وبارد بمكان واحد، ويوصلك لين عندك.</p>
     </div>
-    <div class="cat-grid">
+    <div class="products-wrap reveal">
+      <button class="products-wrap-title" id="productsToggle" aria-expanded="false">
+        <span>منتجاتنا</span>
+        <svg class="pw-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="cat-grid" id="catGrid" hidden>
       <div class="cat-card reveal">
-        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E2A3D" stroke-width="1.7"><path d="M12 3c3 3 5 6 5 9a5 5 0 01-10 0c0-3 2-6 5-9z"/></svg></div>
+        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3c3 3 5 6 5 9a5 5 0 01-10 0c0-3 2-6 5-9z"/></svg></div>
         <h3>آيس كريم</h3>
         <p>نكهات كلاسيكية وفاخرة</p>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E2A3D" stroke-width="1.7"><rect x="4" y="8" width="16" height="10" rx="2"/><path d="M4 8l8-5 8 5"/></svg></div>
+        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="8" width="16" height="10" rx="2"/><path d="M4 8l8-5 8 5"/></svg></div>
         <h3>حلويات مثلجة</h3>
         <p>كنافة، تشيز كيك وسوربيه</p>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E2A3D" stroke-width="1.7"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M9 4l1.5 2M15 4l-1.5 2"/></svg></div>
+        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M9 4l1.5 2M15 4l-1.5 2"/></svg></div>
         <h3>فواكه مجمّدة</h3>
         <p>طازجة ومحفوظة بعناية</p>
       </div>
       <div class="cat-card reveal">
-        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E2A3D" stroke-width="1.7"><path d="M7 3h10l-1 6a6 6 0 01-8 0L7 3z"/><path d="M9 21h6M12 15v6"/></svg></div>
+        <div class="cat-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 3h10l-1 6a6 6 0 01-8 0L7 3z"/><path d="M9 21h6M12 15v6"/></svg></div>
         <h3>مشروبات مثلجة</h3>
         <p>موهيتو وعصائر منعشة</p>
       </div>
     </div>
+    </div>
   </div>
 </section>
 
-<!-- ================= PRODUCTS ================= -->
-<section id="products">
+<!-- ================= BESTSELLERS ================= -->
+<section id="bestsellers">
+  <div class="container">
+    <div class="products-wrap reveal">
+      <button class="products-wrap-title collapse-btn" aria-expanded="false">
+        <span>الأكثر مبيعاً</span>
+        <svg class="pw-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="collapse-body soon-box" hidden>قريباً...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= NEW ARRIVALS ================= -->
+<section id="new-arrivals">
+  <div class="container">
+    <div class="products-wrap reveal">
+      <button class="products-wrap-title collapse-btn" aria-expanded="false">
+        <span>الجديد</span>
+        <svg class="pw-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="collapse-body soon-box" hidden>قريباً...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OFFERS ================= -->
+<section id="offers" class="offers-sec">
+  <div class="container">
+    <div class="products-wrap reveal">
+      <button class="products-wrap-title collapse-btn" aria-expanded="false">
+        <span>العروض والخصومات</span>
+        <svg class="pw-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="collapse-body soon-box" hidden>قريباً...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TRUST ================= -->
+<section id="trust" class="trust-sec">
   <div class="container">
     <div class="sec-head reveal">
-      <span class="sec-eyebrow">الأكثر طلباً</span>
-      <h2>منتجاتنا المميّزة</h2>
-      <p>تشكيلة مختارة بعناية، تجمع بين جودة المكونات وأناقة التقديم.</p>
+      <span class="sec-eyebrow">ثقتك تهمّنا</span>
+      <h2>لماذا تثق بفروزينا؟</h2>
     </div>
-    <div class="filter-tabs">
-      <button class="tab-btn active" data-filter="all">الكل</button>
-      <button class="tab-btn" data-filter="icecream">آيس كريم</button>
-      <button class="tab-btn" data-filter="dessert">حلويات مثلجة</button>
-      <button class="tab-btn" data-filter="fruit">فواكه مجمدة</button>
-      <button class="tab-btn" data-filter="drink">مشروبات</button>
-    </div>
-    <div class="prod-grid" id="prodGrid"></div>
-  </div>
-</section>
-
-<!-- ================= STORY ================= -->
-<section class="story" id="story">
-  <div class="container story-grid">
-    <div class="reveal">
-      <div class="story-badge">
-        <div class="inner"><div class="yr">١٠٠٪</div><span>مكونات طبيعية</span></div>
+    <div class="trust-grid reveal">
+      <div class="trust-card">
+        <div class="trust-ic">🚚</div>
+        <h3>توصيل مبرّد مضمون</h3>
+        <p>منتجاتك تصلك من المصدر إلى باب بيتك محفوظة بأعلى معايير التبريد.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-ic">🌡️</div>
+        <h3>مراقبة الحرارة طوال الرحلة</h3>
+        <p>نراقب درجة حرارة منتجاتك باستمرار من لحظة التجهيز حتى وصولها إليك.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-ic">🔄</div>
+        <h3>استبدال واسترجاع فوري</h3>
+        <p>لو وصلك أي منتج غير مطابق، نستبدله أو نسترجعه لك فوراً دون تعقيد.</p>
       </div>
     </div>
-    <div class="reveal">
-      <h2>فخامة الطعم، ثقة الجودة</h2>
-      <p>بدأت فروزينا من الكويت بفكرة بسيطة: أن يصل الثلج إلى بيتك بنفس البرودة والفخامة التي يستحقها ذوقك. نختار مكوناتنا بعناية، ونراقب سلسلة التبريد من التحضير حتى باب منزلك.</p>
-      <p>كل منتج يمر بمعايير جودة صارمة، لتشعر بالثقة والراحة مع كل طلب.</p>
-      <div class="story-points">
-        <div class="story-point">
-          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg></div>
-          <div><h4>رقابة جودة يومية</h4><p>فحص دقيق لكل دفعة إنتاج</p></div>
-        </div>
-        <div class="story-point">
-          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13h11V6H3v7zM14 9h4l3 4v4h-7V9z"/></svg></div>
-          <div><h4>سلسلة تبريد كاملة</h4><p>من المصنع حتى بابك مباشرة</p></div>
-        </div>
-        <div class="story-point">
-          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="13" r="7"/><path d="M12 6V3"/></svg></div>
-          <div><h4>مكوّنات طبيعية</h4><p>بلا إضافات صناعية</p></div>
-        </div>
-        <div class="story-point">
-          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg></div>
-          <div><h4>ضمان الرضا</h4><p>استرجاع سهل بلا تعقيد</p></div>
-        </div>
+    <div class="pay-trust reveal">
+      <span>طرق دفع آمنة وموثوقة</span>
+      <div class="pay-logos">
+        <span class="pay-badge">KNET</span>
+        <span class="pay-badge">MyFatoorah</span>
+        <span class="pay-badge">Visa / Mastercard</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================= TESTIMONIALS ================= -->
-<section id="testimonials">
+<!-- ================= FLEET SERVICE ================= -->
+<section id="fleet" class="fleet-sec">
   <div class="container">
-    <div class="sec-head reveal">
-      <span class="sec-eyebrow">ثقة عملائنا</span>
-      <h2>ماذا يقول عملاؤنا</h2>
-    </div>
-    <div class="testi-wrap reveal">
-      <div class="testi-slide active">
-        <div class="stars">★★★★★</div>
-        <q>طعم راقي فعلاً، ويوصل بارد بالضبط زي ما لازم. أول مرة أطلب آيس كريم أونلاين وأحس بجودته زي المحل.</q>
-        <div class="testi-name">أم فهد</div>
-        <div class="testi-role">حولي، الكويت</div>
-      </div>
-      <div class="testi-slide">
-        <div class="stars">★★★★★</div>
-        <q>أسرع توصيل جربته بالكويت للمنتجات المثلجة، والتغليف يخليك تحس بالفخامة من أول لحظة.</q>
-        <div class="testi-name">سلطان العتيبي</div>
-        <div class="testi-role">السالمية، الكويت</div>
-      </div>
-      <div class="testi-slide">
-        <div class="stars">★★★★★</div>
-        <q>ذوق عالي بكل شي، من التغليف للنكهات. صارت فروزينا خياري الأول بكل مناسبة.</q>
-        <div class="testi-name">دانة الرشيدي</div>
-        <div class="testi-role">مدينة الكويت</div>
-      </div>
-      <div class="testi-dots">
-        <span class="dot active" data-i="0"></span>
-        <span class="dot" data-i="1"></span>
-        <span class="dot" data-i="2"></span>
+    <div class="fleet-card reveal">
+      <div class="fleet-content">
+        <span class="fleet-eyebrow">خدمة إضافية</span>
+        <h2>أسطول التبريد المتنقّل</h2>
+        <p>نوفّر لك سيارة تبريد من أسطولنا لتوصيل منتجاتك وأغراضك بأمان تام — للأفراد والشركات، مع الحفاظ على البرودة من نقطة الانطلاق حتى الوصول.</p>
+        <div class="fleet-features">
+          <div class="fleet-feature">
+            <span class="ff-ic">❄</span>
+            <span>تبريد مستمر طوال الرحلة</span>
+          </div>
+          <div class="fleet-feature">
+            <span class="ff-ic">🏢</span>
+            <span>للأفراد والشركات</span>
+          </div>
+          <div class="fleet-feature">
+            <span class="ff-ic">📍</span>
+            <span>تغطية جميع مناطق الكويت</span>
+          </div>
+        </div>
+        <a href="https://wa.me/96500000000?text=مرحباً، أرغب بالاستفسار عن خدمة أسطول التبريد المتنقّل" target="_blank" class="fleet-btn">اطلب الخدمة عبر واتساب</a>
       </div>
     </div>
   </div>
@@ -743,7 +919,15 @@
 
     <!-- Admin panel -->
     <div class="portal-card reveal in" id="adminPanel" hidden>
-      <div class="sup-block-title" style="margin-top:0;">إرسال طلب توريد جديد</div>
+      <div id="lowStockAlerts"></div>
+
+      <div class="sup-block-title" style="margin-top:0;">المخزون الحالي (عدّل الكميات لتحديث التنبيهات)</div>
+      <table class="sup-table">
+        <thead><tr><th>المنتج</th><th>المورّد</th><th>المخزون</th><th>الحد الأدنى</th><th>الحالة</th></tr></thead>
+        <tbody id="adminInventoryBody"></tbody>
+      </table>
+
+      <div class="sup-block-title">إرسال طلب توريد جديد</div>
       <div class="sup-login-row">
         <div class="sup-field">
           <label>المورّد</label>
@@ -791,21 +975,19 @@
     <div class="foot-grid">
       <div>
         <div class="foot-logo">فروزينا</div>
-        <p>نكهة الفخامة في كل قطرة. نوصلك الثلج الفاخر أينما كنت في الكويت.</p>
+        <p>كل ما هو مثلّج وبارد، نوصله إليك أينما كنت في الكويت.</p>
         <div class="foot-social">
           <a href="#" aria-label="انستغرام"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
-          <a href="#" aria-label="تويتر"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 4.01c-1 .49-1.98.69-3 .84 1.06-.63 1.9-1.63 2.28-2.83-1 .59-2.1 1-3.28 1.24C17.06 2.11 15.7 1.5 14.2 1.5c-2.8 0-5.06 2.26-5.06 5.06 0 .4.05.78.14 1.15C5.2 7.5 2.7 6.1.9 3.98c-.44.75-.7 1.63-.7 2.56 0 1.76.9 3.32 2.26 4.23-.83-.02-1.62-.26-2.3-.63v.06c0 2.46 1.75 4.5 4.06 4.97-.42.11-.87.17-1.33.17-.32 0-.64-.03-.94-.09.64 2.01 2.5 3.48 4.7 3.52A10.13 10.13 0 010 19.54 14.28 14.28 0 007.75 22c9.3 0 14.4-7.7 14.4-14.4 0-.22 0-.44-.02-.65C21 6.5 22 5.32 22 4.01z"/></svg></a>
-          <a href="#" aria-label="واتساب"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 11-4-7.2M21 4v5h-5"/></svg></a>
+          <a href="https://wa.me/96500000000" target="_blank" aria-label="واتساب"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.16c-.24.68-1.42 1.31-1.96 1.38-.5.08-1.14.11-1.83-.11-.42-.13-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.15-.2-1.19-1.58-1.19-3.02 0-1.43.75-2.14 1.02-2.43.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.59.83 2.03.9 2.18.07.15.12.32.02.51-.09.2-.14.32-.28.49-.14.17-.29.38-.42.51-.14.14-.28.28-.12.56.16.28.72 1.18 1.54 1.91 1.06.94 1.95 1.24 2.23 1.38.28.14.44.12.6-.07.16-.19.69-.81.88-1.09.19-.28.37-.23.63-.14.26.09 1.66.78 1.94.93.28.14.47.2.54.31.07.12.07.68-.17 1.36z"/></svg></a>
         </div>
       </div>
       <div class="foot-col">
         <h4>روابط سريعة</h4>
         <ul>
-          <li><a href="#categories">التصنيفات</a></li>
-          <li><a href="#products">المنتجات</a></li>
-          <li><a href="#story">قصتنا</a></li>
-          <li><a href="#testimonials">آراء العملاء</a></li>
-          <li><a href="#suppliers">بوابة الموردين</a></li>
+          <li><a href="#categories">المنتجات</a></li>
+          <li><a href="#bestsellers">الأكثر مبيعاً</a></li>
+          <li><a href="#offers">العروض والخصومات</a></li>
+          <li><a href="#suppliers" id="supplierFooterLink">بوابة الموردين</a></li>
         </ul>
       </div>
       <div class="foot-col">
@@ -828,7 +1010,6 @@
     </div>
     <div class="foot-bottom">
       <span>© ٢٠٢٦ فروزينا. جميع الحقوق محفوظة.</span>
-      <span>صُنع بحب في الكويت ❄</span>
     </div>
   </div>
 </footer>
@@ -873,12 +1054,67 @@
       <use href="#waFlakeBranch" transform="rotate(300 12 12)"/>
     </g>
   </svg>
-  <svg class="wa-icon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.3A8.9 8.9 0 0012 3.6a8.94 8.94 0 00-7.7 13.4L3 21l4.1-1.3A8.9 8.9 0 0012 20.9a8.94 8.94 0 006.3-15.2 8.9 8.9 0 00-.7-.4zM12 19.2a7.6 7.6 0 01-3.9-1.1l-.3-.2-2.4.8.8-2.3-.2-.3A7.6 7.6 0 1119.6 12 7.6 7.6 0 0112 19.2zm4.2-5.7c-.2-.1-1.3-.6-1.5-.7s-.4-.1-.5.1-.6.7-.7.9-.3.2-.5.1a6.2 6.2 0 01-3-2.6c-.2-.4.2-.4.5-1.2a.4.4 0 000-.5c-.1-.1-.5-1.2-.7-1.7s-.4-.4-.5-.4h-.5a.9.9 0 00-.6.3 2.7 2.7 0 00-.8 2 4.7 4.7 0 00.9 2.5c.1.2 1.6 2.5 3.9 3.4s2.3.7 2.7.7a2.3 2.3 0 001.5-1 1.9 1.9 0 00.1-1.1c-.1-.1-.2-.2-.4-.3z"/></svg>
+  <svg class="wa-icon" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.9-5.6A8.38 8.38 0 013.5 11 8.5 8.5 0 1112 19.5a8.38 8.38 0 01-4.4-1.2L3 21z"/><path d="M9 9.5c0-.3.3-.5.6-.5h.6c.2 0 .4.1.5.4l.5 1.3c.1.2 0 .4-.1.5l-.5.5c.5 1 1.3 1.8 2.3 2.3l.5-.5c.1-.1.3-.2.5-.1l1.3.5c.3.1.4.3.4.5v.6c0 .3-.2.6-.5.6a6 6 0 01-6-6z"/></svg>
 </a>
 
 <script>
   // ⚠️ عدّل هذا الرابط ليطابق رابط الخادم الخلفي بعد نشره (راجع ملف README في مشروع الخادم)
   const API_BASE_URL = 'https://frozina.com';
+
+  // ---------- suppliers portal reveal ----------
+  (function(){
+    const sec = document.getElementById('suppliers');
+    const link = document.getElementById('supplierFooterLink');
+    function reveal(){
+      if(sec){ sec.classList.add('show'); setTimeout(()=>sec.scrollIntoView({behavior:'smooth'}), 60); }
+    }
+    if(link) link.addEventListener('click', reveal);
+    // فتح مباشر عبر رابط سري frozina.com/#suppliers
+    if(window.location.hash === '#suppliers') reveal();
+  })();
+
+  // ---------- products toggle ----------
+  (function(){
+    const toggle = document.getElementById('productsToggle');
+    const grid = document.getElementById('catGrid');
+    function openGrid(){ if(grid){ grid.removeAttribute('hidden'); if(toggle) toggle.setAttribute('aria-expanded','true'); } }
+    if(toggle && grid){
+      toggle.addEventListener('click', () => {
+        const open = grid.hasAttribute('hidden');
+        if(open){ grid.removeAttribute('hidden'); toggle.setAttribute('aria-expanded','true'); }
+        else { grid.setAttribute('hidden',''); toggle.setAttribute('aria-expanded','false'); }
+      });
+    }
+    // فتح الأصناف تلقائياً عند الضغط على رابط "المنتجات" بالقائمة الجانبية
+    document.querySelectorAll('a[href="#categories"]').forEach(link => {
+      link.addEventListener('click', () => setTimeout(openGrid, 50));
+    });
+
+    // البطاقات القابلة للطي (الأكثر مبيعاً / الجديد / العروض)
+    document.querySelectorAll('.collapse-btn').forEach(btn => {
+      const body = btn.parentElement.querySelector('.collapse-body');
+      if(!body) return;
+      btn.addEventListener('click', () => {
+        const isHidden = body.hasAttribute('hidden');
+        if(isHidden){ body.removeAttribute('hidden'); btn.setAttribute('aria-expanded','true'); }
+        else { body.setAttribute('hidden',''); btn.setAttribute('aria-expanded','false'); }
+      });
+    });
+  })();
+
+  // ---------- slide-out menu ----------
+  (function(){
+    const drawer = document.getElementById('navDrawer');
+    const overlay = document.getElementById('navOverlay');
+    const openBtn = document.querySelector('.menu-toggle');
+    const closeBtn = document.getElementById('navDrawerClose');
+    function openMenu(){ drawer.classList.add('open'); overlay.classList.add('open'); document.body.style.overflow='hidden'; }
+    function closeMenu(){ drawer.classList.remove('open'); overlay.classList.remove('open'); document.body.style.overflow=''; }
+    if(openBtn) openBtn.addEventListener('click', openMenu);
+    if(closeBtn) closeBtn.addEventListener('click', closeMenu);
+    if(overlay) overlay.addEventListener('click', closeMenu);
+    drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  })();
 
   // ---------- data ----------
   const products = [
@@ -896,6 +1132,7 @@
 
   const grid = document.getElementById('prodGrid');
   function renderProducts(filter){
+    if(!grid) return;
     grid.innerHTML = '';
     products.filter(p => filter === 'all' || p.cat === filter).forEach((p, i) => {
       const grad = thumbColors[i % thumbColors.length];
@@ -1039,17 +1276,17 @@
 
     const suppliers = [
       {id:'s1', name:'مزارع الوادي الأخضر', username:'wadi', password:'wadi2026', category:'فواكه وخضروات مجمدة', contact:'ريم القحطاني', products:[
-        {name:'فراولة مجمدة', qty:480, unit:'كجم'},
-        {name:'مانجو مجمد', qty:210, unit:'كجم'},
-        {name:'توت أزرق مجمد', qty:95, unit:'كجم'}
+        {name:'فراولة مجمدة', qty:480, unit:'كجم', min:150, reorder:300},
+        {name:'مانجو مجمد', qty:210, unit:'كجم', min:150, reorder:250},
+        {name:'توت أزرق مجمد', qty:95, unit:'كجم', min:100, reorder:200}
       ]},
       {id:'s2', name:'شركة ألفا للألبان الطازجة', username:'alfa', password:'alfa2026', category:'مكوّنات الآيس كريم', contact:'محمد الحربي', products:[
-        {name:'قشطة طازجة', qty:340, unit:'لتر'},
-        {name:'حليب كامل الدسم', qty:600, unit:'لتر'}
+        {name:'قشطة طازجة', qty:340, unit:'لتر', min:200, reorder:400},
+        {name:'حليب كامل الدسم', qty:600, unit:'لتر', min:300, reorder:600}
       ]},
       {id:'s3', name:'مصنع الجليد الفاخر للتغليف', username:'jaleed', password:'jaleed2026', category:'مواد تغليف وتبريد', contact:'سارة العجمي', products:[
-        {name:'عبوات معزولة حرارياً', qty:1200, unit:'قطعة'},
-        {name:'أكياس تبريد جل', qty:850, unit:'قطعة'}
+        {name:'عبوات معزولة حرارياً', qty:1200, unit:'قطعة', min:500, reorder:1000},
+        {name:'أكياس تبريد جل', qty:850, unit:'قطعة', min:500, reorder:1000}
       ]}
     ];
 
@@ -1161,6 +1398,69 @@
           <td data-label="الحالة"><span class="status-badge ${statusClass[o.status]}">${statusLabels[o.status]}</span></td>
         </tr>`;
       }).join('');
+      renderInventory();
+      renderStockAlerts();
+    }
+
+    // عرض جدول المخزون مع إمكانية تعديل الكميات
+    function renderInventory(){
+      const body = document.getElementById('adminInventoryBody');
+      if(!body) return;
+      let rows = '';
+      suppliers.forEach(sup => {
+        sup.products.forEach((p, idx) => {
+          const low = p.qty <= p.min;
+          rows += `<tr>
+            <td data-label="المنتج">${p.name}</td>
+            <td data-label="المورّد">${sup.name}</td>
+            <td data-label="المخزون"><input type="number" class="inv-qty-input" data-sup="${sup.id}" data-idx="${idx}" value="${p.qty}" min="0"> ${p.unit}</td>
+            <td data-label="الحد الأدنى">${p.min} ${p.unit}</td>
+            <td data-label="الحالة"><span class="stock-badge ${low ? 'stock-low' : 'stock-good'}">${low ? 'منخفض' : 'جيد'}</span></td>
+          </tr>`;
+        });
+      });
+      body.innerHTML = rows;
+      // ربط تعديل الكمية
+      body.querySelectorAll('.inv-qty-input').forEach(inp => {
+        inp.addEventListener('change', () => {
+          const sup = suppliers.find(s => s.id === inp.dataset.sup);
+          const p = sup.products[parseInt(inp.dataset.idx)];
+          p.qty = parseInt(inp.value) || 0;
+          renderInventory();
+          renderStockAlerts();
+        });
+      });
+    }
+
+    // تنبيهات المخزون المنخفض + تجهيز طلب توريد بضغطة
+    function renderStockAlerts(){
+      const box = document.getElementById('lowStockAlerts');
+      if(!box) return;
+      const lowItems = [];
+      suppliers.forEach(sup => {
+        sup.products.forEach(p => { if(p.qty <= p.min) lowItems.push({sup, p}); });
+      });
+      if(lowItems.length === 0){
+        box.innerHTML = `<div class="stock-ok-msg">✅ كل المخزون ضمن الحدود الآمنة، لا توجد تنبيهات.</div>`;
+        return;
+      }
+      box.innerHTML = lowItems.map(({sup, p}) => `
+        <div class="stock-alert">
+          <div class="sa-info">⚠️ <b>${p.name}</b> وصل لـ <b>${p.qty} ${p.unit}</b> (الحد الأدنى ${p.min}) — من <b>${sup.name}</b></div>
+          <button class="mini-btn stock-reorder-btn" data-sup="${sup.id}" data-name="${p.name}" data-qty="${p.reorder}" data-unit="${p.unit}">جهّز طلب توريد (${p.reorder} ${p.unit})</button>
+        </div>
+      `).join('');
+      // زر تجهيز الطلب: يعبّي نموذج الإرسال تلقائياً
+      box.querySelectorAll('.stock-reorder-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          adminSupplierSelect.value = btn.dataset.sup;
+          fillAdminProducts(btn.dataset.sup);
+          adminProductSelect.value = btn.dataset.name;
+          document.getElementById('adminQty').value = btn.dataset.qty;
+          document.getElementById('adminNote').value = 'طلب تلقائي: المخزون وصل للحد الأدنى';
+          document.getElementById('adminSendBtn').scrollIntoView({behavior:'smooth', block:'center'});
+        });
+      });
     }
 
     // ---- supplier login ----
