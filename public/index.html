@@ -137,6 +137,12 @@
   }
   nav.top-nav{display:none;}
   .menu-toggle{display:block;color:#fff;}
+  .lang-btn{
+    color:#fff; border:1.5px solid rgba(199,154,75,.55); background:rgba(199,154,75,.1);
+    border-radius:100px; padding:8px 16px; font-size:13px; font-weight:700;
+    font-family:'Tajawal',sans-serif; transition:background .25s ease;
+  }
+  .lang-btn:hover{background:rgba(199,154,75,.25);}
 
   /* ===== search bar ===== */
   .search-bar{max-height:0; overflow:hidden; transition:max-height .35s ease;}
@@ -736,6 +742,7 @@
       </ul>
     </nav>
     <div class="header-actions">
+      <button class="lang-btn" id="langBtn" aria-label="تبديل اللغة">English</button>
       <button class="icon-btn" id="searchBtn" aria-label="بحث">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4" stroke-linecap="round"/></svg>
       </button>
@@ -1256,6 +1263,132 @@
     });
   }
 
+  // ---------- i18n: عربي / English ----------
+  let currentLang = 'ar';
+  let currentFilter = 'all';
+  function tt(ar, en){ return currentLang === 'en' ? en : ar; }
+
+  const I18N = {
+    // header / nav
+    "التصنيفات":"Categories", "المنتجات":"Products", "قصتنا":"Our Story",
+    "آراء العملاء":"Reviews", "بوابة الموردين":"Suppliers Portal", "تواصل معنا":"Contact Us",
+    "فروزينا":"Frozina",
+    "الأكثر مبيعاً":"Best Sellers", "الجديد":"New Arrivals", "العروض والخصومات":"Offers & Discounts",
+    "أسطول التبريد المتنقّل":"Mobile Cooling Fleet", "لماذا تثق بنا":"Why Trust Us",
+    "ابحث عن منتج...":"Search products...",
+    // hero
+    "الثلج والبراد…":"Everything frozen & cold —", "هذا مكانه":"this is its home",
+    "سحتني وصقوعه…":"chilled to perfection —", "هذا حجينه":"delivered to you",
+    // categories
+    "عالم فروزينا المثلّج":"Frozina's Frozen World",
+    "ثلج فروزينا يبرّد لك أجواءك — كل شي مثلّج وبارد بمكان واحد، ويوصلك وين ما كنت.":"Frozina keeps your vibe cool — everything frozen and cold in one place, delivered wherever you are.",
+    "منتجاتنا":"Our Products",
+    "آيس كريم":"Ice Cream", "نكهات كلاسيكية وفاخرة":"Classic & premium flavors",
+    "حلويات مثلّجة":"Frozen Desserts", "أشهى الحلويات وأبردها":"The tastiest, coldest treats",
+    "فواكه مجمّدة":"Frozen Fruits", "طازجة ومحفوظة بعناية":"Fresh, carefully preserved",
+    "مشروبات مثلّجة":"Iced Drinks", "رشفات باردة تنعش حواسك بذوقٍ راقٍ":"Refreshing cold sips with an elegant taste",
+    "لحوم مجمّدة":"Frozen Meats", "مجمّدة طازجة بأجود المصادر":"Fresh-frozen from the finest sources",
+    "مأكولات بحرية مجمّدة":"Frozen Seafood", "خيرات البحر طازجة ومجمّدة":"The sea's finest, fresh and frozen",
+    "خضروات مجمّدة":"Frozen Vegetables", "مجمّدة تحفظ قيمتها الغذائية":"Frozen to preserve their nutrients",
+    "ثلج":"Ice", "مكعبات ثلج نقية للتبريد":"Pure ice cubes for cooling",
+    "أكل أطفال":"Baby Food", "أصناف آمنة ومغذّية مناسبة للصغار":"Safe, nutritious options for little ones",
+    "أكل عضوي":"Organic Food", "خيارات طبيعية نقية بلا إضافات صناعية":"Pure natural options, no artificial additives",
+    "قريباً...":"Coming soon...",
+    // trust
+    "ثقتك تهمّنا":"Your Trust Matters", "لماذا تثق بفروزينا؟":"Why Trust Frozina?",
+    "توصيل مبرّد مضمون":"Guaranteed Chilled Delivery",
+    "منتجاتك تصلك من المصدر إلى باب بيتك محفوظة بأعلى معايير التبريد.":"Your products arrive from the source to your doorstep, kept at the highest cooling standards.",
+    "مراقبة الحرارة طوال الرحلة":"Temperature Monitored All the Way",
+    "نراقب درجة حرارة منتجاتك باستمرار من لحظة التجهيز حتى وصولها إليك.":"We continuously monitor your products' temperature from preparation until it reaches you.",
+    "استبدال واسترجاع فوري":"Instant Replacement & Refund",
+    "لو وصلك أي منتج غير مطابق، نستبدله أو نسترجعه لك فوراً دون تعقيد.":"If any product doesn't match, we'll replace or refund it instantly, hassle-free.",
+    "طرق دفع آمنة وموثوقة":"Safe & Trusted Payment Methods",
+    // fleet
+    "خدمة إضافية":"Extra Service",
+    "نوفّر لك سيارة تبريد من أسطولنا لتوصيل منتجاتك وأغراضك بأمان تام — للأفراد والشركات، مع الحفاظ على البرودة من نقطة الانطلاق حتى الوصول.":"We provide a refrigerated vehicle from our fleet to deliver your goods safely — for individuals and businesses, keeping everything cold from pickup to drop-off.",
+    "تبريد مستمر طوال الرحلة":"Continuous cooling throughout",
+    "للأفراد والشركات":"For individuals & businesses",
+    "تغطية جميع مناطق الكويت":"Covering all areas of Kuwait",
+    "اطلب الخدمة عبر الموقع":"Request via Website", "تواصل عبر واتساب":"Contact via WhatsApp",
+    // fleet modal
+    "طلب خدمة أسطول التبريد":"Cooling Fleet Request",
+    "الاسم":"Name", "رقم الجوال":"Mobile Number", "نوع العميل":"Customer Type",
+    "فرد":"Individual", "شركة":"Company",
+    "منطقة الانطلاق":"Pickup Area", "منطقة الوصول":"Drop-off Area",
+    "التاريخ المطلوب":"Preferred Date", "نوع الشحنة (اختياري)":"Cargo Type (optional)",
+    "ملاحظات إضافية (اختياري)":"Additional Notes (optional)",
+    "يرجى تعبئة الحقول الإلزامية (الاسم، الجوال، الانطلاق، الوصول).":"Please fill in the required fields (Name, Mobile, Pickup, Drop-off).",
+    "إرسال الطلب":"Submit Request",
+    "اسمك الكريم":"Your name", "من أين؟":"From where?", "إلى أين؟":"To where?",
+    "مثال: مواد غذائية مجمّدة":"e.g. frozen food items", "أي تفاصيل تحب تضيفها":"Any details you'd like to add",
+    // CTA
+    "جاهز تطلب لحظتك المثلّجة؟":"Ready to order your frozen moment?",
+    "تواصل معنا الآن عبر واتساب واحصل على طلبك خلال ساعات، بارداً كما يجب.":"Contact us now on WhatsApp and get your order within hours — cold as it should be.",
+    "اطلب عبر واتساب":"Order via WhatsApp",
+    // footer
+    "كل ما هو مثلّج وبارد، نوصله إليك أينما كنت في الكويت.":"Everything frozen and cold, delivered to you anywhere in Kuwait.",
+    "روابط سريعة":"Quick Links", "خدمة العملاء":"Customer Service",
+    "سياسة التوصيل":"Delivery Policy", "الاسترجاع والاستبدال":"Returns & Exchange",
+    "الأسئلة الشائعة":"FAQ",
+    "📍 الكويت — توصيل لجميع المناطق":"📍 Kuwait — delivery to all areas",
+    "© ٢٠٢٦ فروزينا. جميع الحقوق محفوظة.":"© 2026 Frozina. All rights reserved.",
+    // cart
+    "سلة الطلبات":"Your Cart",
+    "سلتك فارغة حالياً. أضف منتجاً لتبدأ طلبك.":"Your cart is empty. Add a product to start your order.",
+    "الإجمالي":"Total", "إتمام الطلب عبر واتساب":"Checkout via WhatsApp"
+  };
+
+  const _origText = new WeakMap();
+  function _textNodes(){
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode(n){
+        if(!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const p = n.parentElement;
+        if(!p || p.closest('#suppliers, script, style, noscript')) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const out = []; let n; while((n = walker.nextNode())) out.push(n); return out;
+  }
+
+  function applyLang(lang){
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+    // text nodes
+    _textNodes().forEach(n => {
+      if(lang === 'en'){
+        const key = n.nodeValue.trim();
+        if(I18N[key] !== undefined){
+          if(!_origText.has(n)) _origText.set(n, n.nodeValue);
+          n.nodeValue = n.nodeValue.replace(key, I18N[key]);
+        }
+      } else if(_origText.has(n)){
+        n.nodeValue = _origText.get(n);
+      }
+    });
+    // placeholders
+    document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(el => {
+      if(el.closest('#suppliers')) return;
+      if(lang === 'en'){
+        const k = (el.getAttribute('placeholder') || '').trim();
+        if(I18N[k] !== undefined){ if(!el.dataset.phOrig) el.dataset.phOrig = el.getAttribute('placeholder'); el.setAttribute('placeholder', I18N[k]); }
+      } else if(el.dataset.phOrig){
+        el.setAttribute('placeholder', el.dataset.phOrig);
+      }
+    });
+    const lb = document.getElementById('langBtn');
+    if(lb) lb.textContent = (lang === 'ar') ? 'English' : 'عربي';
+    // re-render dynamic (language-aware)
+    if(typeof renderProducts === 'function') renderProducts(currentFilter);
+    if(typeof updateCart === 'function') updateCart();
+  }
+
+  (function(){
+    const lb = document.getElementById('langBtn');
+    if(lb) lb.addEventListener('click', () => applyLang(currentLang === 'ar' ? 'en' : 'ar'));
+  })();
+
   // ---------- suppliers portal reveal ----------
   (function(){
     const sec = document.getElementById('suppliers');
@@ -1345,15 +1478,15 @@
     function val(id){ const el = document.getElementById(id); return el ? (el.value || '').trim() : ''; }
 
     function buildMessage(d){
-      let m = 'مرحباً، أرغب بطلب خدمة أسطول التبريد المتنقّل:%0A';
-      m += `- الاسم: ${d.name}%0A`;
-      m += `- الجوال: ${d.phone}%0A`;
-      m += `- نوع العميل: ${d.type}%0A`;
-      m += `- من: ${d.from}%0A`;
-      m += `- إلى: ${d.to}%0A`;
-      if(d.date)  m += `- التاريخ المطلوب: ${d.date}%0A`;
-      if(d.cargo) m += `- نوع الشحنة: ${d.cargo}%0A`;
-      if(d.notes) m += `- ملاحظات: ${d.notes}%0A`;
+      let m = tt('مرحباً، أرغب بطلب خدمة أسطول التبريد المتنقّل:','Hello, I would like to request the mobile cooling fleet service:') + '%0A';
+      m += `- ${tt('الاسم','Name')}: ${d.name}%0A`;
+      m += `- ${tt('الجوال','Mobile')}: ${d.phone}%0A`;
+      m += `- ${tt('نوع العميل','Customer type')}: ${d.type}%0A`;
+      m += `- ${tt('من','From')}: ${d.from}%0A`;
+      m += `- ${tt('إلى','To')}: ${d.to}%0A`;
+      if(d.date)  m += `- ${tt('التاريخ المطلوب','Preferred date')}: ${d.date}%0A`;
+      if(d.cargo) m += `- ${tt('نوع الشحنة','Cargo type')}: ${d.cargo}%0A`;
+      if(d.notes) m += `- ${tt('ملاحظات','Notes')}: ${d.notes}%0A`;
       return m;
     }
 
@@ -1361,11 +1494,11 @@
       modal.querySelector('.fleet-modal-body').innerHTML =
         '<div style="text-align:center;padding:30px 10px;">' +
         '<div style="font-size:44px;margin-bottom:12px;">✅</div>' +
-        '<h3 style="font-family:\'Tajawal\';color:var(--navy);margin-bottom:10px;">تم استلام طلبك</h3>' +
-        '<p style="color:var(--text-muted);font-size:14px;line-height:1.8;">شكراً لك، فريق فروزينا بيتواصل معك في أقرب وقت لتأكيد التفاصيل.</p>' +
+        '<h3 style="font-family:\'Tajawal\';color:var(--navy);margin-bottom:10px;">' + tt('تم استلام طلبك','Request received') + '</h3>' +
+        '<p style="color:var(--text-muted);font-size:14px;line-height:1.8;">' + tt('شكراً لك، فريق فروزينا بيتواصل معك في أقرب وقت لتأكيد التفاصيل.','Thank you! The Frozina team will contact you shortly to confirm the details.') + '</p>' +
         '</div>';
       modal.querySelector('.fleet-modal-foot').innerHTML =
-        '<button class="fleet-btn" style="width:100%;" id="flDone">تم</button>';
+        '<button class="fleet-btn" style="width:100%;" id="flDone">' + tt('تم','Done') + '</button>';
       document.getElementById('flDone').addEventListener('click', closeModal);
     }
 
@@ -1402,38 +1535,43 @@
 
   // ---------- data ----------
   const products = [
-    {id:1, cat:'icecream', name:'آيس كريم فانيليا مدغشقر', desc:'فانيليا طبيعية فاخرة بقوام حريري', price:2.500, badge:'الأكثر مبيعاً'},
-    {id:2, cat:'dessert', name:'كنافة مثلّجة بالقشطة', desc:'مزيج راقٍ بين الكنافة والقشطة الطازجة', price:3.750, badge:'جديد'},
-    {id:3, cat:'dessert', name:'سوربيه المانجو الطازج', desc:'منعش وخفيف بنكهة المانجو الحقيقية', price:2.250, badge:null},
-    {id:4, cat:'icecream', name:'شوكولاتة بلجيكية مثلّجة', desc:'شوكولاتة داكنة غنية بالطعم', price:2.900, badge:null},
-    {id:5, cat:'fruit', name:'فراولة مجمّدة عضوية 500غ', desc:'مقطوفة ومجمّدة بذروة نضجها', price:1.800, badge:'عضوي'},
-    {id:6, cat:'drink', name:'موهيتو مثلّج بالنعناع', desc:'منعش ومثالي لأيام الصيف الحارة', price:1.500, badge:null},
-    {id:7, cat:'fruit', name:'مزيج فواكه استوائية مجمّدة', desc:'مانجو، أناناس وباشن فروت', price:2.100, badge:null},
-    {id:8, cat:'icecream', name:'آيس كريم فستق حلبي', desc:'فستق حلبي أصلي محمّص طازجاً', price:3.200, badge:'مميز'},
-    {id:9, cat:'drink', name:'عصير مثلّج بالتوت الأزرق', desc:'غني بمضادات الأكسدة ومنعش', price:1.650, badge:null},
+    {id:1, cat:'icecream', name:'آيس كريم فانيليا مدغشقر', name_en:'Madagascar Vanilla Ice Cream', desc:'فانيليا طبيعية فاخرة بقوام حريري', desc_en:'Premium natural vanilla, silky texture', price:2.500, badge:'الأكثر مبيعاً', badge_en:'Best Seller'},
+    {id:2, cat:'dessert', name:'كنافة مثلّجة بالقشطة', name_en:'Frozen Kunafa with Cream', desc:'مزيج راقٍ بين الكنافة والقشطة الطازجة', desc_en:'An elegant blend of kunafa and fresh cream', price:3.750, badge:'جديد', badge_en:'New'},
+    {id:3, cat:'dessert', name:'سوربيه المانجو الطازج', name_en:'Fresh Mango Sorbet', desc:'منعش وخفيف بنكهة المانجو الحقيقية', desc_en:'Light & refreshing with real mango', price:2.250, badge:null, badge_en:null},
+    {id:4, cat:'icecream', name:'شوكولاتة بلجيكية مثلّجة', name_en:'Frozen Belgian Chocolate', desc:'شوكولاتة داكنة غنية بالطعم', desc_en:'Rich, dark chocolate flavor', price:2.900, badge:null, badge_en:null},
+    {id:5, cat:'fruit', name:'فراولة مجمّدة عضوية 500غ', name_en:'Organic Frozen Strawberries 500g', desc:'مقطوفة ومجمّدة بذروة نضجها', desc_en:'Picked & frozen at peak ripeness', price:1.800, badge:'عضوي', badge_en:'Organic'},
+    {id:6, cat:'drink', name:'موهيتو مثلّج بالنعناع', name_en:'Iced Mint Mojito', desc:'منعش ومثالي لأيام الصيف الحارة', desc_en:'Refreshing, perfect for hot summer days', price:1.500, badge:null, badge_en:null},
+    {id:7, cat:'fruit', name:'مزيج فواكه استوائية مجمّدة', name_en:'Frozen Tropical Fruit Mix', desc:'مانجو، أناناس وباشن فروت', desc_en:'Mango, pineapple & passion fruit', price:2.100, badge:null, badge_en:null},
+    {id:8, cat:'icecream', name:'آيس كريم فستق حلبي', name_en:'Pistachio Ice Cream', desc:'فستق حلبي أصلي محمّص طازجاً', desc_en:'Authentic freshly-roasted pistachio', price:3.200, badge:'مميز', badge_en:'Premium'},
+    {id:9, cat:'drink', name:'عصير مثلّج بالتوت الأزرق', name_en:'Iced Blueberry Juice', desc:'غني بمضادات الأكسدة ومنعش', desc_en:'Rich in antioxidants & refreshing', price:1.650, badge:null, badge_en:null},
   ];
   const thumbColors = ['#0E2A3D,#17435f','#7C2D3B,#9c3f4d','#A9DFC7,#7fc4a4','#C79A4B,#e0bd82'];
 
   const grid = document.getElementById('prodGrid');
   function renderProducts(filter){
+    currentFilter = filter;
     if(!grid) return;
     grid.innerHTML = '';
     products.filter(p => filter === 'all' || p.cat === filter).forEach((p, i) => {
       const grad = thumbColors[i % thumbColors.length];
+      const nm = tt(p.name, p.name_en);
+      const ds = tt(p.desc, p.desc_en);
+      const bd = tt(p.badge, p.badge_en);
+      const cur = tt('د.ك', 'KWD');
       const card = document.createElement('div');
       card.className = 'prod-card reveal in';
       card.innerHTML = `
         <div class="prod-thumb" style="background:linear-gradient(140deg, ${grad});">
-          ${p.badge ? `<span class="seal">${p.badge}</span>` : ''}
+          ${bd ? `<span class="seal">${bd}</span>` : ''}
           <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.3" opacity=".85"><path d="M12 3c3 3 5 6 5 9a5 5 0 01-10 0c0-3 2-6 5-9z"/></svg>
         </div>
         <div class="prod-body">
           <span class="prod-cat">${catLabel(p.cat)}</span>
-          <h3>${p.name}</h3>
-          <p>${p.desc}</p>
+          <h3>${nm}</h3>
+          <p>${ds}</p>
           <div class="prod-foot">
-            <div class="price">${p.price.toFixed(3)} <small>د.ك</small></div>
-            <button class="add-btn" data-id="${p.id}" aria-label="إضافة للسلة">
+            <div class="price">${p.price.toFixed(3)} <small>${cur}</small></div>
+            <button class="add-btn" data-id="${p.id}" aria-label="${tt('إضافة للسلة','Add to cart')}">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
             </button>
           </div>
@@ -1443,7 +1581,9 @@
     document.querySelectorAll('.add-btn').forEach(btn => btn.addEventListener('click', onAdd));
   }
   function catLabel(c){
-    return {icecream:'آيس كريم', dessert:'حلويات مثلّجة', fruit:'فواكه مجمّدة', drink:'مشروبات مثلّجة'}[c] || '';
+    const ar = {icecream:'آيس كريم', dessert:'حلويات مثلّجة', fruit:'فواكه مجمّدة', drink:'مشروبات مثلّجة'};
+    const en = {icecream:'Ice Cream', dessert:'Frozen Desserts', fruit:'Frozen Fruits', drink:'Iced Drinks'};
+    return tt(ar[c] || '', en[c] || '');
   }
   renderProducts('all');
 
@@ -1475,9 +1615,10 @@
 
   function updateCart(){
     cartCount.textContent = cart.length;
+    const cur = tt('د.ك', 'KWD');
     if(cart.length === 0){
-      drawerBody.innerHTML = '<div class="drawer-empty">سلتك فارغة حالياً. أضف منتجاً لتبدأ طلبك.</div>';
-      drawerTotal.textContent = '٠.٠٠٠ د.ك';
+      drawerBody.innerHTML = `<div class="drawer-empty">${tt('سلتك فارغة حالياً. أضف منتجاً لتبدأ طلبك.','Your cart is empty. Add a product to start your order.')}</div>`;
+      drawerTotal.textContent = tt('٠.٠٠٠ د.ك', '0.000 KWD');
       return;
     }
     let total = 0;
@@ -1487,13 +1628,13 @@
       return `<div class="cart-item">
         <div class="thumb" style="background:linear-gradient(140deg, ${grad});"></div>
         <div style="flex:1;">
-          <h5>${p.name}</h5>
-          <div class="p">${p.price.toFixed(3)} د.ك</div>
+          <h5>${tt(p.name, p.name_en)}</h5>
+          <div class="p">${p.price.toFixed(3)} ${cur}</div>
         </div>
-        <button class="rm" data-idx="${idx}">إزالة</button>
+        <button class="rm" data-idx="${idx}">${tt('إزالة','Remove')}</button>
       </div>`;
     }).join('');
-    drawerTotal.textContent = total.toFixed(3) + ' د.ك';
+    drawerTotal.textContent = total.toFixed(3) + ' ' + cur;
     document.querySelectorAll('.rm').forEach(btn => {
       btn.addEventListener('click', () => {
         cart.splice(parseInt(btn.dataset.idx), 1);
@@ -1510,22 +1651,23 @@
   function closeDrawer(){ drawer.classList.remove('show'); overlay.classList.remove('show'); }
 
   function buildWhatsappOrder(){
-    if(cart.length === 0) return 'مرحباً، أرغب بالاستفسار عن منتجاتكم المثلّجة.';
-    let msg = 'مرحباً، أرغب بطلب التالي من فروزينا:%0A';
-    cart.forEach(p => msg += `- ${p.name} (${p.price.toFixed(3)} د.ك)%0A`);
+    const cur = tt('د.ك', 'KWD');
+    if(cart.length === 0) return tt('مرحباً، أرغب بالاستفسار عن منتجاتكم المثلّجة.','Hello, I would like to inquire about your frozen products.');
+    let msg = tt('مرحباً، أرغب بطلب التالي من فروزينا:','Hello, I would like to order the following from Frozina:') + '%0A';
+    cart.forEach(p => msg += `- ${tt(p.name, p.name_en)} (${p.price.toFixed(3)} ${cur})%0A`);
     const total = cart.reduce((s,p)=>s+p.price,0);
-    msg += `الإجمالي: ${total.toFixed(3)} د.ك`;
+    msg += `${tt('الإجمالي','Total')}: ${total.toFixed(3)} ${cur}`;
     return msg;
   }
   document.getElementById('checkoutBtn').addEventListener('click', async (e) => {
     e.preventDefault();
     if(cart.length === 0){
-      alert('سلتك فارغة، أضف منتجاً أولاً.');
+      alert(tt('سلتك فارغة، أضف منتجاً أولاً.','Your cart is empty, add a product first.'));
       return;
     }
     const btn = e.currentTarget;
     const originalText = btn.textContent;
-    btn.textContent = 'جاري تجهيز صفحة الدفع...';
+    btn.textContent = tt('جاري تجهيز صفحة الدفع...','Preparing payment page...');
 
     try{
       const res = await fetch(`${API_BASE_URL}/api/checkout`, {
@@ -1544,13 +1686,13 @@
     }catch(err){
       console.error('تعذّر الدفع الإلكتروني:', err);
       btn.textContent = originalText;
-      alert('تعذّر فتح صفحة الدفع الإلكتروني حالياً، سيتم تحويلك لإتمام الطلب عبر واتساب.');
+      alert(tt('تعذّر فتح صفحة الدفع الإلكتروني حالياً، سيتم تحويلك لإتمام الطلب عبر واتساب.','Online payment is currently unavailable, redirecting you to complete via WhatsApp.'));
       window.open('https://wa.me/96500000000?text=' + buildWhatsappOrder(), '_blank');
     }
   });
   document.getElementById('ctaWhatsapp').addEventListener('click', (e) => {
     e.preventDefault();
-    window.open('https://wa.me/96500000000?text=' + encodeURIComponent('مرحباً، أرغب بالاستفسار عن منتجاتكم المثلّجة.'), '_blank');
+    window.open('https://wa.me/96500000000?text=' + encodeURIComponent(tt('مرحباً، أرغب بالاستفسار عن منتجاتكم المثلّجة.','Hello, I would like to inquire about your frozen products.')), '_blank');
   });
 
   // ---------- suppliers portal (persistent + real accounts) ----------
