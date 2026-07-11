@@ -16,6 +16,14 @@
 <meta name="twitter:title" content="فروزينا">
 <meta name="twitter:description" content="كل ما هو مثلّج وبارد يوصلك وين ما كنت في الكويت">
 <meta name="twitter:image" content="https://frozina.com/frozina-logo.png">
+<!-- ===== PWA (تثبيت التطبيق على الجوال) ===== -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#081A26">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="فروزينا">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -129,6 +137,23 @@
   }
   nav.top-nav{display:none;}
   .menu-toggle{display:block;color:#fff;}
+
+  /* ===== search bar ===== */
+  .search-bar{max-height:0; overflow:hidden; transition:max-height .35s ease;}
+  .search-bar.open{max-height:100px;}
+  .search-inner{
+    display:flex; align-items:center; gap:10px; margin-top:14px;
+    background:rgba(255,255,255,.08); border:1.5px solid rgba(199,154,75,.45);
+    border-radius:100px; padding:11px 20px;
+  }
+  .search-inner svg{color:var(--gold); flex-shrink:0;}
+  .search-inner input{
+    flex:1; background:none; border:none; outline:none; color:#fff;
+    font-family:inherit; font-size:15px;
+  }
+  .search-inner input::placeholder{color:rgba(255,255,255,.5);}
+  .search-close{color:#fff; opacity:.7; font-size:15px; flex-shrink:0; padding:0 4px;}
+  .search-close:hover{opacity:1;}
 
   /* ===== slide-out mobile menu ===== */
   .nav-overlay{
@@ -633,7 +658,7 @@
 
   /* ===== responsive ===== */
   @media (max-width:980px){
-    .header-actions .icon-btn:first-child{display:none;}
+    .header-actions .icon-btn:first-child{display:flex;}
     .hero-grid{grid-template-columns:1fr; text-align:center;}
     .hero p{margin:0 auto 36px;}
     .btn-row{justify-content:center;}
@@ -711,7 +736,7 @@
       </ul>
     </nav>
     <div class="header-actions">
-      <button class="icon-btn" aria-label="بحث">
+      <button class="icon-btn" id="searchBtn" aria-label="بحث">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4" stroke-linecap="round"/></svg>
       </button>
       <button class="icon-btn" id="cartBtn" aria-label="سلة الطلبات">
@@ -721,6 +746,15 @@
       <button class="menu-toggle" aria-label="القائمة">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
       </button>
+    </div>
+  </div>
+  <div class="search-bar" id="searchBar">
+    <div class="container">
+      <div class="search-inner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4" stroke-linecap="round"/></svg>
+        <input type="search" id="searchInput" placeholder="ابحث عن منتج...">
+        <button class="search-close" id="searchClose" aria-label="إغلاق البحث">✕</button>
+      </div>
     </div>
   </div>
 </header>
@@ -800,7 +834,7 @@
       </div>
       <div class="cat-card reveal">
         <div class="cat-icon">🍰</div>
-        <h3>حلويات مثلجة</h3>
+        <h3>حلويات مثلّجة</h3>
         <p>أشهى الحلويات وأبردها</p>
       </div>
       <div class="cat-card reveal">
@@ -810,28 +844,38 @@
       </div>
       <div class="cat-card reveal">
         <div class="cat-icon">🥤</div>
-        <h3>مشروبات مثلجة</h3>
+        <h3>مشروبات مثلّجة</h3>
         <p>رشفات باردة تنعش حواسك بذوقٍ راقٍ</p>
       </div>
       <div class="cat-card reveal">
         <div class="cat-icon">🥩</div>
-        <h3>لحوم مثلجة</h3>
+        <h3>لحوم مجمّدة</h3>
         <p>مجمّدة طازجة بأجود المصادر</p>
       </div>
       <div class="cat-card reveal">
         <div class="cat-icon">🦐</div>
-        <h3>مأكولات بحرية مثلجة</h3>
+        <h3>مأكولات بحرية مجمّدة</h3>
         <p>خيرات البحر طازجة ومجمّدة</p>
       </div>
       <div class="cat-card reveal">
         <div class="cat-icon">🥦</div>
-        <h3>خضروات مثلجة</h3>
+        <h3>خضروات مجمّدة</h3>
         <p>مجمّدة تحفظ قيمتها الغذائية</p>
       </div>
       <div class="cat-card reveal">
         <div class="cat-icon">🧊</div>
         <h3>ثلج</h3>
         <p>مكعبات ثلج نقية للتبريد</p>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-icon">🥣</div>
+        <h3>أكل أطفال</h3>
+        <p>أصناف آمنة ومغذّية مناسبة للصغار</p>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-icon">🌿</div>
+        <h3>أكل عضوي</h3>
+        <p>خيارات طبيعية نقية بلا إضافات صناعية</p>
       </div>
     </div>
     </div>
@@ -1205,6 +1249,13 @@
   // ⚠️ عدّل هذا الرابط ليطابق رابط الخادم الخلفي بعد نشره (راجع ملف README في مشروع الخادم)
   const API_BASE_URL = 'https://frozina.com';
 
+  // ---------- PWA: تسجيل الـ Service Worker ----------
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch((err) => console.log('SW registration failed:', err));
+    });
+  }
+
   // ---------- suppliers portal reveal ----------
   (function(){
     const sec = document.getElementById('suppliers');
@@ -1258,6 +1309,21 @@
     if(closeBtn) closeBtn.addEventListener('click', closeMenu);
     if(overlay) overlay.addEventListener('click', closeMenu);
     drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  })();
+
+  // ---------- search bar (UI only — filtering to be enabled later) ----------
+  (function(){
+    const btn = document.getElementById('searchBtn');
+    const bar = document.getElementById('searchBar');
+    const input = document.getElementById('searchInput');
+    const closeBtn = document.getElementById('searchClose');
+    const header = document.getElementById('siteHeader');
+    if(!btn || !bar) return;
+    function openBar(){ bar.classList.add('open'); header.classList.add('scrolled'); setTimeout(()=>input && input.focus(), 120); }
+    function closeBar(){ bar.classList.remove('open'); header.classList.toggle('scrolled', window.scrollY > 40); }
+    btn.addEventListener('click', () => bar.classList.contains('open') ? closeBar() : openBar());
+    if(closeBtn) closeBtn.addEventListener('click', closeBar);
+    if(input) input.addEventListener('keydown', e => { if(e.key === 'Escape') closeBar(); });
   })();
 
   // ---------- fleet service request ----------
@@ -1337,14 +1403,14 @@
   // ---------- data ----------
   const products = [
     {id:1, cat:'icecream', name:'آيس كريم فانيليا مدغشقر', desc:'فانيليا طبيعية فاخرة بقوام حريري', price:2.500, badge:'الأكثر مبيعاً'},
-    {id:2, cat:'dessert', name:'كنافة مثلجة بالقشطة', desc:'مزيج راقٍ بين الكنافة والقشطة الطازجة', price:3.750, badge:'جديد'},
+    {id:2, cat:'dessert', name:'كنافة مثلّجة بالقشطة', desc:'مزيج راقٍ بين الكنافة والقشطة الطازجة', price:3.750, badge:'جديد'},
     {id:3, cat:'dessert', name:'سوربيه المانجو الطازج', desc:'منعش وخفيف بنكهة المانجو الحقيقية', price:2.250, badge:null},
-    {id:4, cat:'icecream', name:'شوكولاتة بلجيكية مثلجة', desc:'شوكولاتة داكنة غنية بالطعم', price:2.900, badge:null},
-    {id:5, cat:'fruit', name:'فراولة مجمدة عضوية 500غ', desc:'مقطوفة ومجمدة بذروة نضجها', price:1.800, badge:'عضوي'},
-    {id:6, cat:'drink', name:'موهيتو مثلج بالنعناع', desc:'منعش ومثالي لأيام الصيف الحارة', price:1.500, badge:null},
-    {id:7, cat:'fruit', name:'مزيج فواكه استوائية مجمدة', desc:'مانجو، أناناس وباشن فروت', price:2.100, badge:null},
+    {id:4, cat:'icecream', name:'شوكولاتة بلجيكية مثلّجة', desc:'شوكولاتة داكنة غنية بالطعم', price:2.900, badge:null},
+    {id:5, cat:'fruit', name:'فراولة مجمّدة عضوية 500غ', desc:'مقطوفة ومجمّدة بذروة نضجها', price:1.800, badge:'عضوي'},
+    {id:6, cat:'drink', name:'موهيتو مثلّج بالنعناع', desc:'منعش ومثالي لأيام الصيف الحارة', price:1.500, badge:null},
+    {id:7, cat:'fruit', name:'مزيج فواكه استوائية مجمّدة', desc:'مانجو، أناناس وباشن فروت', price:2.100, badge:null},
     {id:8, cat:'icecream', name:'آيس كريم فستق حلبي', desc:'فستق حلبي أصلي محمّص طازجاً', price:3.200, badge:'مميز'},
-    {id:9, cat:'drink', name:'عصير مثلج بالتوت الأزرق', desc:'غني بمضادات الأكسدة ومنعش', price:1.650, badge:null},
+    {id:9, cat:'drink', name:'عصير مثلّج بالتوت الأزرق', desc:'غني بمضادات الأكسدة ومنعش', price:1.650, badge:null},
   ];
   const thumbColors = ['#0E2A3D,#17435f','#7C2D3B,#9c3f4d','#A9DFC7,#7fc4a4','#C79A4B,#e0bd82'];
 
@@ -1377,7 +1443,7 @@
     document.querySelectorAll('.add-btn').forEach(btn => btn.addEventListener('click', onAdd));
   }
   function catLabel(c){
-    return {icecream:'آيس كريم', dessert:'حلويات مثلجة', fruit:'فواكه مجمدة', drink:'مشروبات مثلجة'}[c] || '';
+    return {icecream:'آيس كريم', dessert:'حلويات مثلّجة', fruit:'فواكه مجمّدة', drink:'مشروبات مثلّجة'}[c] || '';
   }
   renderProducts('all');
 
@@ -1444,7 +1510,7 @@
   function closeDrawer(){ drawer.classList.remove('show'); overlay.classList.remove('show'); }
 
   function buildWhatsappOrder(){
-    if(cart.length === 0) return 'مرحباً، أرغب بالاستفسار عن منتجاتكم المثلجة.';
+    if(cart.length === 0) return 'مرحباً، أرغب بالاستفسار عن منتجاتكم المثلّجة.';
     let msg = 'مرحباً، أرغب بطلب التالي من فروزينا:%0A';
     cart.forEach(p => msg += `- ${p.name} (${p.price.toFixed(3)} د.ك)%0A`);
     const total = cart.reduce((s,p)=>s+p.price,0);
@@ -1484,7 +1550,7 @@
   });
   document.getElementById('ctaWhatsapp').addEventListener('click', (e) => {
     e.preventDefault();
-    window.open('https://wa.me/96500000000?text=' + encodeURIComponent('مرحباً، أرغب بالاستفسار عن منتجاتكم المثلجة.'), '_blank');
+    window.open('https://wa.me/96500000000?text=' + encodeURIComponent('مرحباً، أرغب بالاستفسار عن منتجاتكم المثلّجة.'), '_blank');
   });
 
   // ---------- suppliers portal (persistent + real accounts) ----------
@@ -1493,10 +1559,10 @@
     const ADMIN_PASSWORD = 'frosta-admin-2026';
 
     const suppliers = [
-      {id:'s1', name:'مزارع الوادي الأخضر', username:'wadi', password:'wadi2026', category:'فواكه وخضروات مجمدة', contact:'ريم القحطاني', products:[
-        {name:'فراولة مجمدة', qty:480, unit:'كجم', min:150, reorder:300},
-        {name:'مانجو مجمد', qty:210, unit:'كجم', min:150, reorder:250},
-        {name:'توت أزرق مجمد', qty:95, unit:'كجم', min:100, reorder:200}
+      {id:'s1', name:'مزارع الوادي الأخضر', username:'wadi', password:'wadi2026', category:'فواكه وخضروات مجمّدة', contact:'ريم القحطاني', products:[
+        {name:'فراولة مجمّدة', qty:480, unit:'كجم', min:150, reorder:300},
+        {name:'مانجو مجمّد', qty:210, unit:'كجم', min:150, reorder:250},
+        {name:'توت أزرق مجمّد', qty:95, unit:'كجم', min:100, reorder:200}
       ]},
       {id:'s2', name:'شركة ألفا للألبان الطازجة', username:'alfa', password:'alfa2026', category:'مكوّنات الآيس كريم', contact:'محمد الحربي', products:[
         {name:'قشطة طازجة', qty:340, unit:'لتر', min:200, reorder:400},
@@ -1511,7 +1577,7 @@
     const seedData = {
       orderSeq: 1042,
       supplierOrders: [
-        {id:'FR-1041', supplierId:'s1', product:'فراولة مجمدة', qty:150, unit:'كجم', date:'2026-07-01', status:'confirmed', note:''},
+        {id:'FR-1041', supplierId:'s1', product:'فراولة مجمّدة', qty:150, unit:'كجم', date:'2026-07-01', status:'confirmed', note:''},
         {id:'FR-1040', supplierId:'s2', product:'قشطة طازجة', qty:80, unit:'لتر', date:'2026-06-28', status:'shipped', note:''}
       ]
     };
