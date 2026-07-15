@@ -346,6 +346,20 @@
   }
   .tab-btn.active, .tab-btn:hover{background:var(--gold); color:var(--navy-deep); border-color:var(--gold);}
   .prod-grid{display:flex; flex-direction:column; gap:18px; max-width:720px; margin:0 auto;}
+  .prod-display{margin-top:34px;}
+  .featured-wrap{margin-top:44px;}
+  .featured-head{text-align:center; margin-bottom:28px;}
+  .featured-title{color:#fff; font-size:clamp(26px,3.5vw,38px); margin-top:6px;}
+  .filter-tabs .tab-btn{
+    border:1.5px solid rgba(199,154,75,.45); color:#fff; background:transparent;
+  }
+  .filter-tabs .tab-btn.active, .filter-tabs .tab-btn:hover{
+    background:var(--gold); color:var(--navy-deep); border-color:var(--gold);
+  }
+  .prod-empty{
+    text-align:center; color:rgba(255,255,255,.6); font-size:15px;
+    font-family:'Amiri',serif; padding:30px 0;
+  }
   .prod-card{
     background:#fff;border-radius:var(--radius);overflow:hidden;
     box-shadow:0 10px 30px rgba(14,42,61,.06); transition:transform .3s ease, box-shadow .3s ease;
@@ -834,57 +848,88 @@
         <svg class="pw-chevron" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
       <div class="cat-grid" id="catGrid" hidden>
-      <div class="cat-card reveal">
+      <div class="cat-card reveal" data-cat="icecream">
         <div class="cat-icon">🍦</div>
         <h3>آيس كريم</h3>
         <p>نكهات كلاسيكية وفاخرة</p>
       </div>
-      <div class="cat-card reveal">
+      <div class="cat-card reveal" data-cat="dessert">
         <div class="cat-icon">🍰</div>
         <h3>حلويات مثلّجة</h3>
         <p>أشهى الحلويات وأبردها</p>
       </div>
-      <div class="cat-card reveal">
+      <div class="cat-card reveal" data-cat="fruit">
         <div class="cat-icon">🍓</div>
         <h3>فواكه مجمّدة</h3>
         <p>طازجة ومحفوظة بعناية</p>
       </div>
-      <div class="cat-card reveal">
+      <div class="cat-card reveal" data-cat="drink">
         <div class="cat-icon">🥤</div>
         <h3>مشروبات مثلّجة</h3>
         <p>رشفات باردة تنعش حواسك بذوقٍ راقٍ</p>
       </div>
-      <div class="cat-card reveal">
+      <div class="cat-card reveal" data-cat="meat">
         <div class="cat-icon">🥩</div>
         <h3>لحوم مجمّدة</h3>
         <p>مجمّدة طازجة بأجود المصادر</p>
       </div>
-      <div class="cat-card reveal">
+      <div class="cat-card reveal" data-cat="seafood">
         <div class="cat-icon">🦐</div>
         <h3>مأكولات بحرية مجمّدة</h3>
         <p>خيرات البحر طازجة ومجمّدة</p>
       </div>
-      <div class="cat-card reveal">
+      <div class="cat-card reveal" data-cat="veg">
         <div class="cat-icon">🥦</div>
         <h3>خضروات مجمّدة</h3>
         <p>مجمّدة تحفظ قيمتها الغذائية</p>
       </div>
-      <div class="cat-card reveal">
+      <div class="cat-card reveal" data-cat="ice">
         <div class="cat-icon">🧊</div>
         <h3>ثلج</h3>
         <p>مكعبات ثلج نقية للتبريد</p>
       </div>
-      <div class="cat-card reveal">
+      <div class="cat-card reveal" data-cat="baby">
         <div class="cat-icon">🥣</div>
         <h3>أكل أطفال</h3>
         <p>أصناف آمنة ومغذّية مناسبة للصغار</p>
       </div>
-      <div class="cat-card reveal">
+      <div class="cat-card reveal" data-cat="organic">
         <div class="cat-icon">🌿</div>
         <h3>أكل عضوي</h3>
         <p>خيارات طبيعية نقية بلا إضافات صناعية</p>
       </div>
     </div>
+    </div>
+
+    <div class="featured-wrap reveal" id="featuredWrap">
+      <div class="featured-head">
+        <span class="sec-eyebrow">⭐ اختيارنا لك</span>
+        <h2 class="featured-title">المميّزة</h2>
+      </div>
+      <div class="prod-grid" id="featuredGrid"></div>
+      <p class="prod-empty" id="featuredEmpty">قريباً... منتجات مختارة لك</p>
+    </div>
+
+    <div class="prod-display reveal" id="allWrap">
+      <div class="featured-head">
+        <span class="sec-eyebrow">تسوّق حسب التصنيف</span>
+        <h2 class="featured-title">كل المنتجات</h2>
+      </div>
+      <div class="filter-tabs" id="filterTabs">
+        <button class="tab-btn active" data-filter="all">الكل</button>
+        <button class="tab-btn" data-filter="icecream">آيس كريم</button>
+        <button class="tab-btn" data-filter="dessert">حلويات مثلّجة</button>
+        <button class="tab-btn" data-filter="fruit">فواكه مجمّدة</button>
+        <button class="tab-btn" data-filter="drink">مشروبات مثلّجة</button>
+        <button class="tab-btn" data-filter="meat">لحوم مجمّدة</button>
+        <button class="tab-btn" data-filter="seafood">مأكولات بحرية مجمّدة</button>
+        <button class="tab-btn" data-filter="veg">خضروات مجمّدة</button>
+        <button class="tab-btn" data-filter="ice">ثلج</button>
+        <button class="tab-btn" data-filter="baby">أكل أطفال</button>
+        <button class="tab-btn" data-filter="organic">أكل عضوي</button>
+      </div>
+      <div class="prod-grid" id="allGrid"></div>
+      <p class="prod-empty" id="allEmpty">قريباً...</p>
     </div>
   </div>
 </section>
@@ -1256,6 +1301,15 @@
   // ⚠️ عدّل هذا الرابط ليطابق رابط الخادم الخلفي بعد نشره (راجع ملف README في مشروع الخادم)
   const API_BASE_URL = 'https://frozina.com';
 
+  // ---------- Supabase (قاعدة بيانات المنتجات) ----------
+  const SUPABASE_URL = 'https://pqkbqkfliyarpvdckgls.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_mbOAoWTolvgpwyD-5My09Q_01GOlbqC';
+
+  // ---------- مفاتيح إظهار/إخفاء أقسام المنتجات ----------
+  // غيّر إلى false لإخفاء القسم من الواجهة (ثم ارفع الملف)
+  const SHOW_FEATURED = true;      // قسم "المميّزة"
+  const SHOW_ALL_LIST = true;      // قسم "كل المنتجات"
+
   // ---------- PWA: تسجيل الـ Service Worker ----------
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -1335,7 +1389,11 @@
     // cart
     "سلة الطلبات":"Your Cart",
     "سلتك فارغة حالياً. أضف منتجاً لتبدأ طلبك.":"Your cart is empty. Add a product to start your order.",
-    "الإجمالي":"Total", "إتمام الطلب عبر واتساب":"Checkout via WhatsApp"
+    "الإجمالي":"Total", "إتمام الطلب عبر واتساب":"Checkout via WhatsApp",
+    "الكل":"All", "لا توجد منتجات في هذا التصنيف بعد.":"No products in this category yet.",
+    "⭐ اختيارنا لك":"⭐ Our Picks for You", "المميّزة":"Featured",
+    "قريباً... منتجات مختارة لك":"Coming soon... curated picks for you",
+    "تسوّق حسب التصنيف":"Shop by Category", "كل المنتجات":"All Products"
   };
 
   const _origText = new WeakMap();
@@ -1547,20 +1605,22 @@
   ];
   const thumbColors = ['#0E2A3D,#17435f','#7C2D3B,#9c3f4d','#A9DFC7,#7fc4a4','#C79A4B,#e0bd82'];
 
-  const grid = document.getElementById('prodGrid');
-  function renderProducts(filter){
-    currentFilter = filter;
-    if(!grid) return;
-    grid.innerHTML = '';
-    products.filter(p => filter === 'all' || p.cat === filter).forEach((p, i) => {
-      const grad = thumbColors[i % thumbColors.length];
-      const nm = tt(p.name, p.name_en);
-      const ds = tt(p.desc, p.desc_en);
-      const bd = tt(p.badge, p.badge_en);
-      const cur = tt('د.ك', 'KWD');
-      const card = document.createElement('div');
-      card.className = 'prod-card reveal in';
-      card.innerHTML = `
+  const featuredGrid = document.getElementById('featuredGrid');
+  const allGrid = document.getElementById('allGrid');
+
+  function catLabel(c){
+    const ar = {icecream:'آيس كريم', dessert:'حلويات مثلّجة', fruit:'فواكه مجمّدة', drink:'مشروبات مثلّجة', meat:'لحوم مجمّدة', seafood:'مأكولات بحرية مجمّدة', veg:'خضروات مجمّدة', ice:'ثلج', baby:'أكل أطفال', organic:'أكل عضوي'};
+    const en = {icecream:'Ice Cream', dessert:'Frozen Desserts', fruit:'Frozen Fruits', drink:'Iced Drinks', meat:'Frozen Meats', seafood:'Frozen Seafood', veg:'Frozen Vegetables', ice:'Ice', baby:'Baby Food', organic:'Organic Food'};
+    return tt(ar[c] || '', en[c] || '');
+  }
+
+  function cardHTML(p, i){
+    const grad = thumbColors[i % thumbColors.length];
+    const nm = tt(p.name, p.name_en);
+    const ds = tt(p.desc, p.desc_en);
+    const bd = tt(p.badge, p.badge_en);
+    const cur = tt('د.ك', 'KWD');
+    return `<div class="prod-card reveal in">
         <div class="prod-thumb" style="background:linear-gradient(140deg, ${grad});">
           ${bd ? `<span class="seal">${bd}</span>` : ''}
           <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.3" opacity=".85"><path d="M12 3c3 3 5 6 5 9a5 5 0 01-10 0c0-3 2-6 5-9z"/></svg>
@@ -1575,25 +1635,84 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
             </button>
           </div>
-        </div>`;
-      grid.appendChild(card);
-    });
-    document.querySelectorAll('.add-btn').forEach(btn => btn.addEventListener('click', onAdd));
+        </div>
+      </div>`;
   }
-  function catLabel(c){
-    const ar = {icecream:'آيس كريم', dessert:'حلويات مثلّجة', fruit:'فواكه مجمّدة', drink:'مشروبات مثلّجة'};
-    const en = {icecream:'Ice Cream', dessert:'Frozen Desserts', fruit:'Frozen Fruits', drink:'Iced Drinks'};
-    return tt(ar[c] || '', en[c] || '');
-  }
-  renderProducts('all');
 
+  function attachAdd(){
+    document.querySelectorAll('.add-btn').forEach(btn => {
+      btn.removeEventListener('click', onAdd);
+      btn.addEventListener('click', onAdd);
+    });
+  }
+
+  function renderFeatured(){
+    if(!featuredGrid) return;
+    const list = products.filter(p => p.is_featured);
+    featuredGrid.innerHTML = list.map((p, i) => cardHTML(p, i)).join('');
+    const e = document.getElementById('featuredEmpty');
+    if(e) e.hidden = list.length !== 0;
+    attachAdd();
+  }
+
+  function renderAll(filter){
+    currentFilter = filter;
+    if(!allGrid) return;
+    const list = products.filter(p => filter === 'all' || p.cat === filter);
+    allGrid.innerHTML = list.map((p, i) => cardHTML(p, i)).join('');
+    const e = document.getElementById('allEmpty');
+    if(e) e.hidden = list.length !== 0;
+    attachAdd();
+  }
+
+  // دالة موحّدة تعيد عرض القسمين (يستخدمها مبدّل اللغة)
+  function renderProducts(filter){ renderAll(filter); renderFeatured(); }
+
+  // أزرار الفلترة (قسم "كل المنتجات")
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      renderProducts(btn.dataset.filter);
+      renderAll(btn.dataset.filter);
     });
   });
+
+  // تطبيق مفاتيح الإظهار/الإخفاء
+  if(!SHOW_FEATURED){ const w = document.getElementById('featuredWrap'); if(w) w.hidden = true; }
+  if(!SHOW_ALL_LIST){ const w = document.getElementById('allWrap'); if(w) w.hidden = true; }
+
+  // ---------- تحميل المنتجات من قاعدة بيانات Supabase ----------
+  // "المميّزة" = المنتجات المُعلَّمة is_featured | "كل المنتجات" = كل المتوفر
+  async function loadProductsFromDB(){
+    try{
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*&in_stock=eq.true&order=sort_order.asc`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+      });
+      if(!res.ok) throw new Error('DB response ' + res.status);
+      const rows = await res.json();
+      const mapped = (Array.isArray(rows) ? rows : []).map(r => ({
+        id: r.id, cat: r.category,
+        name: r.name_ar, name_en: r.name_en || r.name_ar,
+        desc: r.desc_ar, desc_en: r.desc_en || r.desc_ar,
+        price: Number(r.price),
+        badge: r.badge_ar || null, badge_en: r.badge_en || r.badge_ar || null,
+        image_url: r.image_url || null,
+        is_featured: r.is_featured === true
+      }));
+      products.length = 0;
+      products.push(...mapped);
+      renderAll(currentFilter);
+      renderFeatured();
+      updateCart();
+      console.log('✅ منتجات:', mapped.length, '| مميّزة:', mapped.filter(p => p.is_featured).length);
+    }catch(err){
+      products.length = 0;
+      renderAll(currentFilter);
+      renderFeatured();
+      console.log('تعذّر تحميل المنتجات:', err);
+    }
+  }
+  loadProductsFromDB();
 
   // ---------- cart ----------
   let cart = [];
