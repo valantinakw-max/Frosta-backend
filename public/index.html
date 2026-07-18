@@ -102,7 +102,7 @@
     border-bottom:1px solid rgba(199,154,75,.45);
     padding:12px 0;
   }
-  .nav-wrap{display:flex;align-items:center;justify-content:space-between;}
+  .nav-wrap{display:flex;align-items:center;justify-content:space-between;gap:18px;}
   .logo{
     font-family:'Amiri',serif;
     font-size:24px;
@@ -621,6 +621,70 @@
   .ff-error{color:var(--berry); font-size:13px; font-weight:600; display:none;}
   .ff-error.show{display:block;}
   .fleet-modal-foot{padding:20px 24px; border-top:1px solid rgba(14,42,61,.08);}
+  .co-summary{
+    background:var(--mint-soft); border-radius:12px; padding:14px 16px; margin-top:4px;
+    font-size:14px; color:var(--navy);
+  }
+  .co-summary .r{display:flex; justify-content:space-between; margin-bottom:6px;}
+  .co-summary .r.tot{font-weight:800; font-size:16px; margin-top:8px; padding-top:8px; border-top:1px solid rgba(14,42,61,.12);}
+
+  /* ===== receipt 80mm ===== */
+  .receipt-overlay{
+    position:fixed; inset:0; background:rgba(8,26,38,.6); opacity:0; pointer-events:none;
+    transition:opacity .3s ease; z-index:320;
+  }
+  .receipt-overlay.show{opacity:1; pointer-events:auto;}
+  .receipt-wrap{
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(.96);
+    z-index:321; opacity:0; pointer-events:none; transition:opacity .3s ease, transform .3s ease;
+    width:320px; max-width:92vw; max-height:88vh; overflow-y:auto;
+    display:flex; flex-direction:column; gap:14px; align-items:center;
+  }
+  .receipt-wrap.show{opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1);}
+  .receipt{
+    width:80mm; max-width:302px; background:#fff; color:#000; border-radius:8px;
+    padding:16px 14px; font-family:'Courier New', monospace; font-size:12px; line-height:1.5;
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+  }
+  .receipt .r-center{text-align:center;}
+  .receipt .r-brand{font-size:18px; font-weight:700; letter-spacing:2px;}
+  .receipt .r-line{border-top:1px dashed #000; margin:8px 0;}
+  .receipt .r-row{display:flex; justify-content:space-between; gap:8px;}
+  .receipt .r-row.bold{font-weight:700;}
+  .receipt .r-item{margin:3px 0;}
+  .receipt-actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center;}
+  .receipt-actions .fleet-btn, .receipt-actions .fleet-btn-ghost{padding:12px 22px; font-size:14px;}
+  /* account UI */
+  .auth-tabs{display:flex; gap:8px; margin-bottom:16px;}
+  .auth-tab{flex:1; padding:11px; border-radius:100px; font-size:14px; font-weight:700; border:1.5px solid rgba(14,42,61,.15); color:var(--navy); background:transparent;}
+  .auth-tab.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .auth-msg{color:#1f5c40; font-size:13px; font-weight:600; display:none;}
+  .auth-msg.show{display:block;}
+  .acct-email{font-size:14px; color:var(--text-muted); margin-bottom:6px;}
+  .acct-sec-title{font-size:15px; font-weight:800; color:var(--navy); margin:22px 0 12px; font-family:'Tajawal';}
+  .addr-list{display:flex; flex-direction:column; gap:10px;}
+  .addr-card{border:1.5px solid rgba(14,42,61,.12); border-radius:12px; padding:12px 14px; font-size:13.5px; color:var(--text-dark);}
+  .addr-card b{color:var(--navy);}
+  .addr-card .addr-actions{display:flex; gap:12px; margin-top:8px;}
+  .addr-card .addr-actions button{font-size:12px; font-weight:700; color:var(--berry); background:none;}
+  .addr-card .addr-actions button.def{color:#1f5c40;}
+  .addr-form{margin-top:12px; padding-top:12px; border-top:1px dashed rgba(14,42,61,.15); display:flex; flex-direction:column; gap:12px;}
+  .orders-list{display:flex; flex-direction:column; gap:10px;}
+  .order-card{border:1.5px solid rgba(14,42,61,.12); border-radius:12px; padding:12px 14px; font-size:13px;}
+  .order-card .o-top{display:flex; justify-content:space-between; font-weight:700; color:var(--navy);}
+  .order-badge{display:inline-block; padding:3px 10px; border-radius:100px; font-size:11px; font-weight:700; background:rgba(199,154,75,.15); color:#8a6a2f; margin-top:6px;}
+
+  @media print{
+    body * { visibility:hidden !important; }
+    #receiptWrap, #receiptWrap * { visibility:visible !important; }
+    #receiptWrap{
+      position:absolute; inset:auto; top:0; left:0; transform:none; box-shadow:none;
+      width:80mm; max-width:80mm;
+    }
+    .receipt{box-shadow:none; width:80mm;}
+    .receipt-actions{display:none !important;}
+    .receipt-overlay{display:none !important;}
+  }
   @media(max-width:480px){ .ff-row{flex-direction:column;} }
   @media (max-width:600px){
     .fleet-card{padding:36px 22px;}
@@ -755,6 +819,9 @@
       <button class="lang-btn" id="langBtn" aria-label="تبديل اللغة">English</button>
       <button class="icon-btn" id="searchBtn" aria-label="بحث">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" id="accountBtn" aria-label="حسابي">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6" stroke-linecap="round"/></svg>
       </button>
       <button class="icon-btn" id="cartBtn" aria-label="سلة الطلبات">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l2.4 12.4a2 2 0 002 1.6h8.2a2 2 0 002-1.6L21 8H6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>
@@ -1153,7 +1220,111 @@
   </div>
   <div class="drawer-foot">
     <div class="row"><span>الإجمالي</span><span id="drawerTotal">٠.٠٠٠ د.ك</span></div>
-    <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;" id="checkoutBtn">إتمام الطلب عبر واتساب</a>
+    <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;" id="checkoutBtn">إتمام الطلب</a>
+  </div>
+</div>
+
+<!-- ================= CHECKOUT MODAL ================= -->
+<div class="fleet-modal-overlay" id="checkoutOverlay"></div>
+<div class="fleet-modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+  <div class="fleet-modal-head">
+    <h3 id="checkoutTitle">إتمام الطلب</h3>
+    <button class="close-x" id="checkoutClose" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="fleet-modal-body" id="checkoutBody">
+    <div class="ff-field">
+      <label>الاسم <span class="req">*</span></label>
+      <input type="text" id="coName" placeholder="اسمك الكريم">
+    </div>
+    <div class="ff-field">
+      <label>رقم الجوال <span class="req">*</span></label>
+      <input type="tel" id="coPhone" placeholder="مثال: 9XXXXXXX" inputmode="tel">
+    </div>
+    <div class="ff-field">
+      <label>المنطقة <span class="req">*</span></label>
+      <select id="coArea"></select>
+    </div>
+    <div class="ff-field">
+      <label>العنوان التفصيلي <span class="req">*</span></label>
+      <textarea id="coAddress" placeholder="قطعة / شارع / منزل / تفاصيل"></textarea>
+    </div>
+    <div class="ff-field">
+      <label>ملاحظات (اختياري)</label>
+      <textarea id="coNotes" placeholder="أي تفاصيل تحب تضيفها"></textarea>
+    </div>
+    <div class="co-summary" id="coSummary"></div>
+    <p class="ff-error" id="coError">يرجى تعبئة الحقول الإلزامية.</p>
+  </div>
+  <div class="fleet-modal-foot">
+    <button class="fleet-btn" id="coSubmit" style="width:100%;">تأكيد الطلب</button>
+  </div>
+</div>
+
+<!-- ================= RECEIPT (80mm) ================= -->
+<div class="receipt-overlay" id="receiptOverlay"></div>
+<div class="receipt-wrap" id="receiptWrap">
+  <div class="receipt" id="receipt"></div>
+  <div class="receipt-actions">
+    <button class="fleet-btn" id="receiptPrint">🖨️ Print Receipt</button>
+    <button class="fleet-btn-ghost" id="receiptClose">Close</button>
+  </div>
+</div>
+
+<!-- ================= AUTH MODAL ================= -->
+<div class="fleet-modal-overlay" id="authOverlay"></div>
+<div class="fleet-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <div class="fleet-modal-head">
+    <h3 id="authTitle">حسابي</h3>
+    <button class="close-x" id="authClose" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="fleet-modal-body">
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-mode="login">تسجيل الدخول</button>
+      <button class="auth-tab" data-mode="signup">حساب جديد</button>
+    </div>
+    <div class="ff-field">
+      <label>البريد الإلكتروني <span class="req">*</span></label>
+      <input type="email" id="authEmail" placeholder="you@email.com" inputmode="email" autocomplete="email">
+    </div>
+    <div class="ff-field">
+      <label>كلمة المرور <span class="req">*</span></label>
+      <input type="password" id="authPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <p class="ff-error" id="authError"></p>
+    <p class="auth-msg" id="authMsg"></p>
+  </div>
+  <div class="fleet-modal-foot">
+    <button class="fleet-btn" id="authSubmit" style="width:100%;">تسجيل الدخول</button>
+  </div>
+</div>
+
+<!-- ================= ACCOUNT PANEL ================= -->
+<div class="fleet-modal-overlay" id="acctOverlay"></div>
+<div class="fleet-modal" id="acctModal" role="dialog" aria-modal="true" aria-labelledby="acctTitle">
+  <div class="fleet-modal-head">
+    <h3 id="acctTitle">حسابي</h3>
+    <button class="close-x" id="acctClose" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="fleet-modal-body">
+    <p class="acct-email" id="acctEmail"></p>
+
+    <div class="acct-sec-title">عناويني</div>
+    <div id="addrList" class="addr-list"></div>
+    <button class="fleet-btn-ghost" id="addAddrBtn" style="width:100%;margin-top:6px;">+ إضافة عنوان</button>
+
+    <div id="addrForm" class="addr-form" hidden>
+      <div class="ff-field"><label>اسم العنوان</label><input type="text" id="addrLabel" placeholder="البيت / الدوام"></div>
+      <div class="ff-field"><label>المنطقة</label><select id="addrArea"></select></div>
+      <div class="ff-field"><label>العنوان التفصيلي</label><textarea id="addrDetail" placeholder="قطعة / شارع / منزل"></textarea></div>
+      <div class="ff-field"><label>رقم الجوال</label><input type="tel" id="addrPhone" placeholder="9XXXXXXX" inputmode="tel"></div>
+      <button class="fleet-btn" id="saveAddrBtn" style="width:100%;">حفظ العنوان</button>
+    </div>
+
+    <div class="acct-sec-title">طلباتي</div>
+    <div id="ordersList" class="orders-list"><p style="color:var(--text-muted);padding:14px 0;text-align:center;">جاري التحميل...</p></div>
+  </div>
+  <div class="fleet-modal-foot">
+    <button class="fleet-btn-ghost" id="signOutBtn" style="width:100%;">تسجيل الخروج</button>
   </div>
 </div>
 
@@ -1277,6 +1448,16 @@
     "سلة الطلبات":"Your Cart",
     "سلتك فارغة حالياً. أضف منتجاً لتبدأ طلبك.":"Your cart is empty. Add a product to start your order.",
     "الإجمالي":"Total", "إتمام الطلب عبر واتساب":"Checkout via WhatsApp",
+    "إتمام الطلب":"Checkout", "المنطقة":"Area", "العنوان التفصيلي":"Delivery Address",
+    "قطعة / شارع / منزل / تفاصيل":"Block / Street / House / details",
+    "ملاحظات (اختياري)":"Notes (optional)", "تأكيد الطلب":"Confirm Order",
+    "يرجى تعبئة الحقول الإلزامية.":"Please fill in the required fields.",
+    "حسابي":"My Account", "تسجيل الدخول":"Sign In", "حساب جديد":"New Account",
+    "البريد الإلكتروني":"Email", "كلمة المرور":"Password",
+    "عناويني":"My Addresses", "+ إضافة عنوان":"+ Add Address",
+    "اسم العنوان":"Address Label", "البيت / الدوام":"Home / Work",
+    "قطعة / شارع / منزل":"Block / Street / House", "حفظ العنوان":"Save Address",
+    "طلباتي":"My Orders", "جاري التحميل...":"Loading...", "تسجيل الخروج":"Sign Out",
     "الكل":"All", "لا توجد منتجات في هذا التصنيف بعد.":"No products in this category yet.",
     "⭐ اختيارنا لك":"⭐ Our Picks for You", "المميّزة":"Featured",
     "قريباً... منتجات مختارة لك":"Coming soon... curated picks for you",
@@ -1652,37 +1833,280 @@
     msg += `${tt('الإجمالي','Total')}: ${total.toFixed(3)} ${cur}`;
     return msg;
   }
-  document.getElementById('checkoutBtn').addEventListener('click', async (e) => {
+  // ---------- checkout: order form + save + receipt ----------
+  const AREAS = [
+    {code:'capital',   ar:'العاصمة',        en:'Capital',            fee:1.5},
+    {code:'hawalli',   ar:'حولي',           en:'Hawalli',            fee:1.5},
+    {code:'farwaniya', ar:'الفروانية',      en:'Farwaniya',          fee:1.5},
+    {code:'mubarak',   ar:'مبارك الكبير',   en:'Mubarak Al-Kabeer',  fee:1.5},
+    {code:'ahmadi',    ar:'الأحمدي',        en:'Ahmadi',             fee:1.5},
+    {code:'jahra',     ar:'الجهراء',        en:'Jahra',              fee:1.5},
+    {code:'mutlaa',    ar:'المطلاع',        en:'Al-Mutlaa',          fee:3},
+    {code:'khiran',    ar:'الخيران',        en:'Al-Khiran',          fee:3},
+  ];
+  const coOverlay  = document.getElementById('checkoutOverlay');
+  const coModal    = document.getElementById('checkoutModal');
+  const coAreaSel  = document.getElementById('coArea');
+  const coSummary  = document.getElementById('coSummary');
+  const coError    = document.getElementById('coError');
+
+  function fillAreas(){
+    coAreaSel.innerHTML = AREAS.map(a => `<option value="${a.code}">${tt(a.ar, a.en)} — ${a.fee.toFixed(3)} ${tt('د.ك','KWD')}</option>`).join('');
+  }
+  function cartSubtotal(){ return cart.reduce((s,p) => s + p.price, 0); }
+  function areaFee(){ const a = AREAS.find(x => x.code === coAreaSel.value); return a ? a.fee : 1.5; }
+  function updateCoSummary(){
+    const cur = tt('د.ك','KWD');
+    const sub = cartSubtotal(), fee = areaFee(), tot = sub + fee;
+    coSummary.innerHTML =
+      `<div class="r"><span>${tt('المجموع','Subtotal')}</span><span>${sub.toFixed(3)} ${cur}</span></div>` +
+      `<div class="r"><span>${tt('التوصيل','Delivery')}</span><span>${fee.toFixed(3)} ${cur}</span></div>` +
+      `<div class="r tot"><span>${tt('الإجمالي','Total')}</span><span>${tot.toFixed(3)} ${cur}</span></div>`;
+  }
+  coAreaSel.addEventListener('change', updateCoSummary);
+
+  function openCheckout(){ fillAreas(); updateCoSummary(); coOverlay.classList.add('show'); coModal.classList.add('show'); document.body.style.overflow='hidden'; if(typeof prefillCheckoutFromDefault==='function') prefillCheckoutFromDefault(); }
+  function closeCheckout(){ coOverlay.classList.remove('show'); coModal.classList.remove('show'); document.body.style.overflow=''; }
+  document.getElementById('checkoutClose').addEventListener('click', closeCheckout);
+  coOverlay.addEventListener('click', closeCheckout);
+
+  document.getElementById('checkoutBtn').addEventListener('click', (e) => {
     e.preventDefault();
-    if(cart.length === 0){
-      alert(tt('سلتك فارغة، أضف منتجاً أولاً.','Your cart is empty, add a product first.'));
-      return;
-    }
-    const btn = e.currentTarget;
-    const originalText = btn.textContent;
-    btn.textContent = tt('جاري تجهيز صفحة الدفع...','Preparing payment page...');
+    if(cart.length === 0){ alert(tt('سلتك فارغة، أضف منتجاً أولاً.','Your cart is empty, add a product first.')); return; }
+    closeDrawer();
+    openCheckout();
+  });
+
+  function val(id){ const el = document.getElementById(id); return el ? (el.value||'').trim() : ''; }
+
+  document.getElementById('coSubmit').addEventListener('click', async () => {
+    const name = val('coName'), phone = val('coPhone'), address = val('coAddress');
+    const areaObj = AREAS.find(a => a.code === coAreaSel.value);
+    if(!name || !phone || !address || !areaObj){ coError.classList.add('show'); return; }
+    coError.classList.remove('show');
+
+    const btn = document.getElementById('coSubmit');
+    const orig = btn.textContent;
+    btn.textContent = tt('جاري حفظ الطلب...','Saving order...'); btn.disabled = true;
+
+    const sub = cartSubtotal(), fee = areaObj.fee, tot = sub + fee;
+    const items = cart.map(p => ({ name: p.name, name_en: p.name_en, price: p.price, qty: 1 }));
+    const payload = {
+      customer_name: name, customer_phone: phone,
+      area: areaObj.en, address: address,
+      items: items, subtotal: sub, delivery_fee: fee, total: tot,
+      notes: val('coNotes')
+    };
+    if(typeof isLoggedIn==='function' && isLoggedIn()) payload.user_id = session.user.id;
 
     try{
-      const res = await fetch(`${API_BASE_URL}/api/checkout`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          items: cart.map(p => ({name: p.name, price: p.price}))
-        })
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+        method:'POST',
+        headers:{ apikey:SUPABASE_KEY, Authorization:`Bearer ${SUPABASE_KEY}`, 'Content-Type':'application/json', Prefer:'return=representation' },
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
-      if(!res.ok || !data.paymentUrl) throw new Error(data.error || 'فشل إنشاء الفاتورة');
-
-      // تحويل العميل فعلياً لصفحة الدفع الحقيقية في مايفاتورة (KNET / بطاقات)
-      window.location.href = data.paymentUrl;
-
+      if(!res.ok) throw new Error(JSON.stringify(data));
+      const order = Array.isArray(data) ? data[0] : data;
+      btn.textContent = orig; btn.disabled = false;
+      closeCheckout();
+      showReceipt(order, payload);
+      cart.length = 0; updateCart();
     }catch(err){
-      console.error('تعذّر الدفع الإلكتروني:', err);
-      btn.textContent = originalText;
-      alert(tt('تعذّر فتح صفحة الدفع الإلكتروني حالياً، سيتم تحويلك لإتمام الطلب عبر واتساب.','Online payment is currently unavailable, redirecting you to complete via WhatsApp.'));
-      window.open('https://wa.me/96500000000?text=' + buildWhatsappOrder(), '_blank');
+      console.error('تعذّر حفظ الطلب:', err);
+      btn.textContent = orig; btn.disabled = false;
+      alert(tt('تعذّر حفظ الطلب حالياً، حاول مرة أخرى.','Could not save the order, please try again.'));
     }
   });
+
+  // ---------- receipt (80mm, English) ----------
+  const receiptOverlay = document.getElementById('receiptOverlay');
+  const receiptWrap = document.getElementById('receiptWrap');
+  function showReceipt(order, payload){
+    const inv = order.invoice_no || 'INV-----';
+    const d = new Date(order.created_at || Date.now());
+    const dt = d.toLocaleString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    const itemsHTML = payload.items.map(it =>
+      `<div class="r-item"><div class="r-row"><span>${it.name_en || it.name}</span><span>${(it.price*it.qty).toFixed(3)}</span></div><div style="font-size:11px;color:#444;">x${it.qty} @ ${it.price.toFixed(3)} KWD</div></div>`
+    ).join('');
+    document.getElementById('receipt').innerHTML =
+      `<div class="r-center r-brand">FROZINA</div>` +
+      `<div class="r-center" style="font-size:11px;">Frozen &amp; Chilled Delivery</div>` +
+      `<div class="r-line"></div>` +
+      `<div class="r-row"><span>Invoice</span><span>${inv}</span></div>` +
+      `<div class="r-row"><span>Date</span><span>${dt}</span></div>` +
+      `<div class="r-line"></div>` +
+      `<div class="r-row"><span>Name</span><span>${payload.customer_name}</span></div>` +
+      `<div class="r-row"><span>Phone</span><span>${payload.customer_phone}</span></div>` +
+      `<div class="r-row"><span>Area</span><span>${payload.area}</span></div>` +
+      `<div style="margin-top:4px;">Address: ${payload.address}</div>` +
+      `<div class="r-line"></div>` +
+      itemsHTML +
+      `<div class="r-line"></div>` +
+      `<div class="r-row"><span>Subtotal</span><span>${payload.subtotal.toFixed(3)} KWD</span></div>` +
+      `<div class="r-row"><span>Delivery</span><span>${payload.delivery_fee.toFixed(3)} KWD</span></div>` +
+      `<div class="r-row bold" style="font-size:14px;margin-top:4px;"><span>TOTAL</span><span>${payload.total.toFixed(3)} KWD</span></div>` +
+      `<div class="r-line"></div>` +
+      `<div class="r-row"><span>Payment</span><span>${(order.payment_status||'UNPAID').toUpperCase()}</span></div>` +
+      `<div class="r-row"><span>Status</span><span>${(order.status||'PENDING').toUpperCase()}</span></div>` +
+      `<div class="r-line"></div>` +
+      `<div class="r-center" style="margin-top:6px;">Thank you for your order!</div>` +
+      `<div class="r-center" style="font-size:11px;">frozina.com</div>`;
+    receiptOverlay.classList.add('show'); receiptWrap.classList.add('show');
+  }
+  document.getElementById('receiptPrint').addEventListener('click', () => window.print());
+  document.getElementById('receiptClose').addEventListener('click', () => {
+    receiptOverlay.classList.remove('show'); receiptWrap.classList.remove('show');
+  });
+  receiptOverlay.addEventListener('click', () => {
+    receiptOverlay.classList.remove('show'); receiptWrap.classList.remove('show');
+  });
+
+  // ---------- customer accounts (Supabase Auth) ----------
+  let session = null;
+  function loadSession(){ try{ const s = localStorage.getItem('frozina_session'); if(s) session = JSON.parse(s); }catch(e){} }
+  function saveSession(s){ session = s; try{ localStorage.setItem('frozina_session', JSON.stringify(s)); }catch(e){} }
+  function clearSession(){ session = null; try{ localStorage.removeItem('frozina_session'); }catch(e){} }
+  function isLoggedIn(){ return !!(session && session.access_token && session.user); }
+  function authHeaders(){ return { apikey: SUPABASE_KEY, 'Content-Type':'application/json', Authorization: 'Bearer ' + ((session && session.access_token) || SUPABASE_KEY) }; }
+
+  const authOverlay=document.getElementById('authOverlay'), authModal=document.getElementById('authModal');
+  const acctOverlay=document.getElementById('acctOverlay'), acctModal=document.getElementById('acctModal');
+  let authMode='login';
+  function openAuth(){ authOverlay.classList.add('show'); authModal.classList.add('show'); document.body.style.overflow='hidden'; }
+  function closeAuth(){ authOverlay.classList.remove('show'); authModal.classList.remove('show'); document.body.style.overflow=''; }
+  function openAcct(){ acctOverlay.classList.add('show'); acctModal.classList.add('show'); document.body.style.overflow='hidden'; renderAccount(); }
+  function closeAcct(){ acctOverlay.classList.remove('show'); acctModal.classList.remove('show'); document.body.style.overflow=''; }
+
+  document.getElementById('accountBtn').addEventListener('click', ()=>{ isLoggedIn() ? openAcct() : openAuth(); });
+  document.getElementById('authClose').addEventListener('click', closeAuth);
+  authOverlay.addEventListener('click', closeAuth);
+  document.getElementById('acctClose').addEventListener('click', closeAcct);
+  acctOverlay.addEventListener('click', closeAcct);
+
+  document.querySelectorAll('.auth-tab').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active'); authMode=t.dataset.mode;
+      document.getElementById('authSubmit').textContent = tt(authMode==='login'?'تسجيل الدخول':'إنشاء حساب', authMode==='login'?'Sign In':'Create Account');
+      document.getElementById('authError').classList.remove('show');
+      document.getElementById('authMsg').classList.remove('show');
+    });
+  });
+
+  document.getElementById('authSubmit').addEventListener('click', async ()=>{
+    const email=(document.getElementById('authEmail').value||'').trim();
+    const pass=document.getElementById('authPass').value||'';
+    const errEl=document.getElementById('authError'), msgEl=document.getElementById('authMsg');
+    errEl.classList.remove('show'); msgEl.classList.remove('show');
+    if(!email || !pass){ errEl.textContent=tt('أدخل البريد وكلمة المرور.','Enter email and password.'); errEl.classList.add('show'); return; }
+    const btn=document.getElementById('authSubmit'); const orig=btn.textContent; btn.disabled=true; btn.textContent=tt('جاري...','Please wait...');
+    try{
+      if(authMode==='signup'){
+        const res=await fetch(`${SUPABASE_URL}/auth/v1/signup`, {method:'POST', headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'}, body:JSON.stringify({email,password:pass})});
+        const data=await res.json();
+        if(!res.ok) throw new Error(data.msg||data.error_description||data.error||'signup failed');
+        if(data.access_token){ saveSession({access_token:data.access_token, refresh_token:data.refresh_token, user:data.user}); closeAuth(); openAcct(); }
+        else { msgEl.textContent=tt('تم إنشاء الحساب! تحقق من بريدك لتأكيد الحساب ثم سجّل الدخول.','Account created! Check your email to confirm, then sign in.'); msgEl.classList.add('show'); }
+      } else {
+        const res=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {method:'POST', headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'}, body:JSON.stringify({email,password:pass})});
+        const data=await res.json();
+        if(!res.ok || !data.access_token) throw new Error(data.error_description||data.msg||'login failed');
+        saveSession({access_token:data.access_token, refresh_token:data.refresh_token, user:data.user});
+        closeAuth(); openAcct();
+      }
+    }catch(err){ errEl.textContent=tt('تعذّر: ','Error: ')+(err.message||''); errEl.classList.add('show'); }
+    finally{ btn.disabled=false; btn.textContent=orig; }
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', ()=>{ clearSession(); closeAcct(); });
+
+  async function renderAccount(){
+    if(!isLoggedIn()){ closeAcct(); openAuth(); return; }
+    document.getElementById('acctEmail').textContent = (session.user && session.user.email) || '';
+    const sel=document.getElementById('addrArea'); sel.innerHTML = AREAS.map(a=>`<option value="${a.code}">${tt(a.ar,a.en)}</option>`).join('');
+    await loadAddresses(); await loadMyOrders();
+  }
+
+  async function loadAddresses(){
+    const list=document.getElementById('addrList');
+    try{
+      const res=await fetch(`${SUPABASE_URL}/rest/v1/addresses?select=*&order=is_default.desc`, {headers:authHeaders()});
+      const rows=await res.json();
+      if(!Array.isArray(rows) || rows.length===0){ list.innerHTML=`<p style="color:var(--text-muted);font-size:13px;">${tt('لا توجد عناوين محفوظة.','No saved addresses.')}</p>`; return; }
+      list.innerHTML = rows.map(a=>`<div class="addr-card">
+          <b>${a.label||tt('عنوان','Address')}</b>${a.is_default?` · <span style="color:#1f5c40;">${tt('افتراضي','Default')}</span>`:''}<br>
+          ${a.area||''} — ${a.address||''}<br>${a.phone||''}
+          <div class="addr-actions">
+            ${a.is_default?'':`<button class="def" data-def="${a.id}">${tt('اجعله افتراضي','Set default')}</button>`}
+            <button data-del="${a.id}">${tt('حذف','Delete')}</button>
+          </div></div>`).join('');
+      list.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', ()=>deleteAddress(b.dataset.del)));
+      list.querySelectorAll('[data-def]').forEach(b=>b.addEventListener('click', ()=>setDefaultAddress(b.dataset.def)));
+    }catch(e){ list.innerHTML=`<p style="color:var(--berry);font-size:13px;">${tt('تعذّر تحميل العناوين.','Could not load addresses.')}</p>`; }
+  }
+
+  document.getElementById('addAddrBtn').addEventListener('click', ()=>{ const f=document.getElementById('addrForm'); f.hidden=!f.hidden; });
+  document.getElementById('saveAddrBtn').addEventListener('click', async ()=>{
+    const label=(document.getElementById('addrLabel').value||'').trim();
+    const areaObj=AREAS.find(a=>a.code===document.getElementById('addrArea').value);
+    const detail=(document.getElementById('addrDetail').value||'').trim();
+    const phone=(document.getElementById('addrPhone').value||'').trim();
+    if(!areaObj || !detail){ alert(tt('أدخل المنطقة والعنوان.','Enter area and address.')); return; }
+    try{
+      const res=await fetch(`${SUPABASE_URL}/rest/v1/addresses`, {method:'POST', headers:authHeaders(), body:JSON.stringify({user_id:session.user.id, label, area:areaObj.en, address:detail, phone})});
+      if(!res.ok){ const d=await res.json(); throw new Error(JSON.stringify(d)); }
+      document.getElementById('addrLabel').value=''; document.getElementById('addrDetail').value=''; document.getElementById('addrPhone').value='';
+      document.getElementById('addrForm').hidden=true; await loadAddresses();
+    }catch(e){ alert(tt('تعذّر حفظ العنوان.','Could not save address.')); }
+  });
+  async function deleteAddress(id){
+    if(!confirm(tt('حذف هذا العنوان؟','Delete this address?'))) return;
+    try{ await fetch(`${SUPABASE_URL}/rest/v1/addresses?id=eq.${id}`, {method:'DELETE', headers:authHeaders()}); await loadAddresses(); }catch(e){}
+  }
+  async function setDefaultAddress(id){
+    try{
+      await fetch(`${SUPABASE_URL}/rest/v1/addresses?user_id=eq.${session.user.id}`, {method:'PATCH', headers:authHeaders(), body:JSON.stringify({is_default:false})});
+      await fetch(`${SUPABASE_URL}/rest/v1/addresses?id=eq.${id}`, {method:'PATCH', headers:authHeaders(), body:JSON.stringify({is_default:true})});
+      await loadAddresses();
+    }catch(e){}
+  }
+
+  async function loadMyOrders(){
+    const list=document.getElementById('ordersList');
+    try{
+      const res=await fetch(`${SUPABASE_URL}/rest/v1/orders?select=invoice_no,total,status,created_at&order=created_at.desc`, {headers:authHeaders()});
+      const rows=await res.json();
+      if(!Array.isArray(rows) || rows.length===0){ list.innerHTML=`<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:10px 0;">${tt('لا توجد طلبات بعد.','No orders yet.')}</p>`; return; }
+      const stLabel={pending:tt('بانتظار','Pending'), confirmed:tt('مؤكد','Confirmed'), preparing:tt('قيد التجهيز','Preparing'), out_for_delivery:tt('خرج للتوصيل','Out for delivery'), delivered:tt('تم التسليم','Delivered'), cancelled:tt('ملغي','Cancelled')};
+      list.innerHTML = rows.map(o=>{
+        const d=new Date(o.created_at).toLocaleDateString('en-GB');
+        return `<div class="order-card"><div class="o-top"><span>${o.invoice_no||''}</span><span>${Number(o.total).toFixed(3)} ${tt('د.ك','KWD')}</span></div><div style="color:var(--text-muted);">${d}</div><span class="order-badge">${stLabel[o.status]||o.status}</span></div>`;
+      }).join('');
+    }catch(e){ list.innerHTML=`<p style="color:var(--berry);font-size:13px;">${tt('تعذّر تحميل الطلبات.','Could not load orders.')}</p>`; }
+  }
+
+  // ملء بيانات الطلب تلقائياً من العنوان الافتراضي عند تسجيل الدخول
+  async function prefillCheckoutFromDefault(){
+    if(!isLoggedIn()) return;
+    try{
+      const res=await fetch(`${SUPABASE_URL}/rest/v1/addresses?select=*&is_default=eq.true&limit=1`, {headers:authHeaders()});
+      const rows=await res.json();
+      const a = Array.isArray(rows) && rows[0];
+      if(a){
+        document.getElementById('coPhone').value = a.phone || '';
+        document.getElementById('coAddress').value = a.address || '';
+        const areaObj = AREAS.find(x=>x.en===a.area || x.ar===a.area);
+        if(areaObj){ coAreaSel.value = areaObj.code; updateCoSummary(); }
+      }
+      if(session.user && session.user.email && !document.getElementById('coName').value){
+        // اسم مبدئي من الإيميل (يعدّله العميل)
+      }
+    }catch(e){}
+  }
+
+  loadSession();
+
   document.getElementById('ctaWhatsapp').addEventListener('click', (e) => {
     e.preventDefault();
     window.open('https://wa.me/96500000000?text=' + encodeURIComponent(tt('مرحباً، أرغب بالاستفسار عن منتجاتكم المثلّجة.','Hello, I would like to inquire about your frozen products.')), '_blank');
