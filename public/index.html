@@ -628,9 +628,6 @@
     .fleet-feature{width:100%; justify-content:center;}
   }
 
-  /* ===== suppliers portal ===== */
-  .suppliers-sec{background:var(--cream); display:none;}
-  .suppliers-sec.show{display:block;}
   .offers-sec .products-wrap{
     border-color:var(--gold); box-shadow:0 14px 40px rgba(199,154,75,.15);
   }
@@ -751,7 +748,6 @@
         <li><a href="#products">المنتجات</a></li>
         <li><a href="#story">قصتنا</a></li>
         <li><a href="#testimonials">آراء العملاء</a></li>
-        <li><a href="#suppliers">بوابة الموردين</a></li>
         <li><a href="#contact">تواصل معنا</a></li>
       </ul>
     </nav>
@@ -1091,114 +1087,6 @@
   </div>
 </div>
 
-<!-- ================= SUPPLIERS PORTAL ================= -->
-<section id="suppliers" class="suppliers-sec">
-  <div class="container">
-    <div class="sec-head reveal">
-      <span class="sec-eyebrow">شراكة الإمداد</span>
-      <h2>بوابة الموردين</h2>
-      <p>مساحة خاصة تربط فروزينا بشركائها من الموردين؛ متابعة الكميات المتوفرة، وتبادل طلبات التوريد بشفافية ودون تعقيد.</p>
-    </div>
-
-    <div class="role-switch reveal in">
-      <button class="role-btn active" data-role="supplier">دخول كمورّد</button>
-      <button class="role-btn" data-role="admin">لوحة تحكم فروزينا</button>
-    </div>
-
-    <p id="supLoadStatus" style="text-align:center;color:var(--text-muted);font-size:13.5px;margin-bottom:24px;">جاري تحميل بيانات الطلبات المحفوظة...</p>
-
-    <!-- Supplier login -->
-    <div class="portal-card reveal in" id="supplierLogin">
-      <div class="sup-login-row">
-        <div class="sup-field">
-          <label>اسم المستخدم</label>
-          <input type="text" id="supplierUsername" placeholder="مثال: wadi">
-        </div>
-        <div class="sup-field" style="min-width:160px;">
-          <label>كلمة المرور</label>
-          <input type="password" id="supplierPassword" placeholder="••••••••">
-        </div>
-        <button class="btn btn-primary" id="supplierEnterBtn" style="height:46px;">دخول لوحة المورد</button>
-      </div>
-      <p id="supplierLoginError" style="color:var(--berry);font-size:13px;margin-top:14px;display:none;">اسم المستخدم أو كلمة المرور غير صحيحة.</p>
-    </div>
-
-    <!-- Supplier dashboard -->
-    <div class="portal-card reveal in" id="supplierDashboard" hidden>
-      <div class="sup-dash-head">
-        <div>
-          <h3 id="supDashName"></h3>
-          <span id="supDashMeta"></span>
-        </div>
-        <button class="sup-logout" id="supplierLogout">تسجيل الخروج ←</button>
-      </div>
-      <div class="sup-stats" id="supStats"></div>
-      <div class="sup-block-title" style="margin-top:0;">الكميات المتوفرة لديكم حالياً</div>
-      <table class="sup-table">
-        <thead><tr><th>المنتج</th><th>الكمية المتوفرة</th><th>الوحدة</th></tr></thead>
-        <tbody id="supProductsBody"></tbody>
-      </table>
-      <div class="sup-block-title">طلبات التوريد المرسلة من فروزينا</div>
-      <table class="sup-table">
-        <thead><tr><th>الطلب</th><th>المنتج</th><th>الكمية</th><th>التاريخ</th><th>الحالة</th><th></th></tr></thead>
-        <tbody id="supOrdersBody"></tbody>
-      </table>
-    </div>
-
-    <!-- Admin login gate -->
-    <div class="portal-card reveal in" id="adminLoginGate" hidden>
-      <div class="sup-login-row">
-        <div class="sup-field" style="min-width:220px;">
-          <label>كلمة مرور لوحة تحكم فروزينا</label>
-          <input type="password" id="adminPassword" placeholder="••••••••">
-        </div>
-        <button class="btn btn-primary" id="adminEnterBtn" style="height:46px;">دخول اللوحة</button>
-      </div>
-      <p id="adminLoginError" style="color:var(--berry);font-size:13px;margin-top:14px;display:none;">كلمة المرور غير صحيحة.</p>
-    </div>
-
-    <!-- Admin panel -->
-    <div class="portal-card reveal in" id="adminPanel" hidden>
-      <div id="lowStockAlerts"></div>
-
-      <div class="sup-block-title" style="margin-top:0;">المخزون الحالي (عدّل الكميات لتحديث التنبيهات)</div>
-      <table class="sup-table">
-        <thead><tr><th>المنتج</th><th>المورّد</th><th>المخزون</th><th>الحد الأدنى</th><th>الحالة</th></tr></thead>
-        <tbody id="adminInventoryBody"></tbody>
-      </table>
-
-      <div class="sup-block-title">إرسال طلب توريد جديد</div>
-      <div class="sup-login-row">
-        <div class="sup-field">
-          <label>المورّد</label>
-          <select id="adminSupplierSelect"></select>
-        </div>
-        <div class="sup-field">
-          <label>المنتج</label>
-          <select id="adminProductSelect"></select>
-        </div>
-        <div class="sup-field" style="min-width:110px;">
-          <label>الكمية</label>
-          <input type="number" id="adminQty" min="1" value="50">
-        </div>
-      </div>
-      <div class="sup-field" style="margin-top:14px;">
-        <label>ملاحظات (اختياري)</label>
-        <textarea id="adminNote" placeholder="مثال: نحتاجها قبل نهاية الأسبوع"></textarea>
-      </div>
-      <button class="btn btn-primary" id="adminSendBtn" style="margin-top:16px;">إرسال الطلب للمورّد</button>
-
-      <div class="sup-block-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>جميع طلبات التوريد</span>
-        <button class="mini-btn" id="resetDataBtn" style="font-weight:500;">إعادة تعيين البيانات التجريبية</button>
-      </div>
-      <table class="sup-table">
-        <thead><tr><th>الطلب</th><th>المورّد</th><th>المنتج</th><th>الكمية</th><th>التاريخ</th><th>الحالة</th></tr></thead>
-        <tbody id="adminOrdersBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
 
 <!-- ================= CTA ================= -->
 <section class="cta-sec" style="padding-top:0;">
@@ -1227,7 +1115,6 @@
           <li><a href="#categories">المنتجات</a></li>
           <li><a href="#bestsellers">الأكثر مبيعاً</a></li>
           <li><a href="#offers">العروض والخصومات</a></li>
-          <li><a href="#suppliers" id="supplierFooterLink">بوابة الموردين</a></li>
         </ul>
       </div>
       <div class="foot-col">
@@ -1325,7 +1212,7 @@
   const I18N = {
     // header / nav
     "التصنيفات":"Categories", "المنتجات":"Products", "قصتنا":"Our Story",
-    "آراء العملاء":"Reviews", "بوابة الموردين":"Suppliers Portal", "تواصل معنا":"Contact Us",
+    "آراء العملاء":"Reviews", "تواصل معنا":"Contact Us",
     "فروزينا":"Frozina",
     "الأكثر مبيعاً":"Best Sellers", "الجديد":"New Arrivals", "العروض والخصومات":"Offers & Discounts",
     "أسطول التبريد المتنقّل":"Mobile Cooling Fleet", "لماذا تثق بنا":"Why Trust Us",
@@ -1402,7 +1289,7 @@
       acceptNode(n){
         if(!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
         const p = n.parentElement;
-        if(!p || p.closest('#suppliers, script, style, noscript')) return NodeFilter.FILTER_REJECT;
+        if(!p || p.closest('script, style, noscript')) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
@@ -1427,7 +1314,6 @@
     });
     // placeholders
     document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(el => {
-      if(el.closest('#suppliers')) return;
       if(lang === 'en'){
         const k = (el.getAttribute('placeholder') || '').trim();
         if(I18N[k] !== undefined){ if(!el.dataset.phOrig) el.dataset.phOrig = el.getAttribute('placeholder'); el.setAttribute('placeholder', I18N[k]); }
@@ -1445,18 +1331,6 @@
   (function(){
     const lb = document.getElementById('langBtn');
     if(lb) lb.addEventListener('click', () => applyLang(currentLang === 'ar' ? 'en' : 'ar'));
-  })();
-
-  // ---------- suppliers portal reveal ----------
-  (function(){
-    const sec = document.getElementById('suppliers');
-    const link = document.getElementById('supplierFooterLink');
-    function reveal(){
-      if(sec){ sec.classList.add('show'); setTimeout(()=>sec.scrollIntoView({behavior:'smooth'}), 60); }
-    }
-    if(link) link.addEventListener('click', reveal);
-    // فتح مباشر عبر رابط سري frozina.com/#suppliers
-    if(window.location.hash === '#suppliers') reveal();
   })();
 
   // ---------- products toggle ----------
@@ -1814,287 +1688,6 @@
     window.open('https://wa.me/96500000000?text=' + encodeURIComponent(tt('مرحباً، أرغب بالاستفسار عن منتجاتكم المثلّجة.','Hello, I would like to inquire about your frozen products.')), '_blank');
   });
 
-  // ---------- suppliers portal (persistent + real accounts) ----------
-  (async function(){
-    const STORAGE_KEY = 'frosta-supplier-orders';
-    const ADMIN_PASSWORD = 'frosta-admin-2026';
-
-    const suppliers = [
-      {id:'s1', name:'مزارع الوادي الأخضر', username:'wadi', password:'wadi2026', category:'فواكه وخضروات مجمّدة', contact:'ريم القحطاني', products:[
-        {name:'فراولة مجمّدة', qty:480, unit:'كجم', min:150, reorder:300},
-        {name:'مانجو مجمّد', qty:210, unit:'كجم', min:150, reorder:250},
-        {name:'توت أزرق مجمّد', qty:95, unit:'كجم', min:100, reorder:200}
-      ]},
-      {id:'s2', name:'شركة ألفا للألبان الطازجة', username:'alfa', password:'alfa2026', category:'مكوّنات الآيس كريم', contact:'محمد الحربي', products:[
-        {name:'قشطة طازجة', qty:340, unit:'لتر', min:200, reorder:400},
-        {name:'حليب كامل الدسم', qty:600, unit:'لتر', min:300, reorder:600}
-      ]},
-      {id:'s3', name:'مصنع الجليد الفاخر للتغليف', username:'jaleed', password:'jaleed2026', category:'مواد تغليف وتبريد', contact:'سارة العجمي', products:[
-        {name:'عبوات معزولة حرارياً', qty:1200, unit:'قطعة', min:500, reorder:1000},
-        {name:'أكياس تبريد جل', qty:850, unit:'قطعة', min:500, reorder:1000}
-      ]}
-    ];
-
-    const seedData = {
-      orderSeq: 1042,
-      supplierOrders: [
-        {id:'FR-1041', supplierId:'s1', product:'فراولة مجمّدة', qty:150, unit:'كجم', date:'2026-07-01', status:'confirmed', note:''},
-        {id:'FR-1040', supplierId:'s2', product:'قشطة طازجة', qty:80, unit:'لتر', date:'2026-06-28', status:'shipped', note:''}
-      ]
-    };
-
-    let orderSeq = seedData.orderSeq;
-    let supplierOrders = seedData.supplierOrders;
-    let currentSupplierId = null;
-    let adminAuthenticated = false;
-
-    // ---- persistence helpers (shared: true = نفس البيانات لأي شخص يفتح هذه الصفحة، مورّداً كان أو إدارة) ----
-    async function saveData(){
-      try{
-        await window.storage.set(STORAGE_KEY, JSON.stringify({orderSeq, supplierOrders}), true);
-      }catch(err){
-        console.error('تعذّر حفظ البيانات:', err);
-      }
-    }
-    async function loadData(){
-      const statusEl = document.getElementById('supLoadStatus');
-      try{
-        const result = await window.storage.get(STORAGE_KEY, true);
-        if(result && result.value){
-          const parsed = JSON.parse(result.value);
-          orderSeq = parsed.orderSeq ?? seedData.orderSeq;
-          supplierOrders = Array.isArray(parsed.supplierOrders) ? parsed.supplierOrders : seedData.supplierOrders;
-        }else{
-          await saveData();
-        }
-      }catch(err){
-        await saveData();
-      }
-      if(statusEl) statusEl.remove();
-    }
-
-    const statusLabels = {pending:'قيد المراجعة', confirmed:'تم التأكيد', prep:'قيد التجهيز', shipped:'تم الشحن'};
-    const statusClass  = {pending:'status-pending', confirmed:'status-confirmed', prep:'status-prep', shipped:'status-shipped'};
-    const nextStatus   = {pending:'confirmed', confirmed:'prep', prep:'shipped', shipped:'shipped'};
-    const nextLabel    = {pending:'تأكيد الطلب', confirmed:'بدء التجهيز', prep:'تسجيل الشحن', shipped:'تم الشحن'};
-
-    const adminSupplierSelect = document.getElementById('adminSupplierSelect');
-    const adminProductSelect = document.getElementById('adminProductSelect');
-
-    function fillSelects(){
-      const opts = suppliers.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-      adminSupplierSelect.innerHTML = opts;
-      fillAdminProducts(adminSupplierSelect.value);
-    }
-    function fillAdminProducts(supplierId){
-      const supplier = suppliers.find(s => s.id === supplierId);
-      adminProductSelect.innerHTML = supplier.products.map(p => `<option value="${p.name}" data-unit="${p.unit}">${p.name}</option>`).join('');
-    }
-    adminSupplierSelect.addEventListener('change', e => fillAdminProducts(e.target.value));
-
-    function renderSupplierDashboard(){
-      const supplier = suppliers.find(s => s.id === currentSupplierId);
-      document.getElementById('supDashName').textContent = supplier.name;
-      document.getElementById('supDashMeta').textContent = `${supplier.category} · مسؤول الحساب: ${supplier.contact}`;
-
-      const myOrders = supplierOrders.filter(o => o.supplierId === currentSupplierId);
-      const pendingCount = myOrders.filter(o => o.status !== 'shipped').length;
-      const totalQty = supplier.products.reduce((s,p) => s + p.qty, 0);
-
-      document.getElementById('supStats').innerHTML = `
-        <div class="sup-stat"><b>${totalQty}</b><span>إجمالي الوحدات المتوفرة</span></div>
-        <div class="sup-stat"><b>${pendingCount}</b><span>طلبات قيد المتابعة</span></div>
-        <div class="sup-stat"><b>${myOrders.length}</b><span>إجمالي الطلبات المستلمة</span></div>`;
-
-      document.getElementById('supProductsBody').innerHTML = supplier.products.map(p => `
-        <tr><td data-label="المنتج">${p.name}</td><td data-label="الكمية المتوفرة">${p.qty}</td><td data-label="الوحدة">${p.unit}</td></tr>`
-      ).join('');
-
-      document.getElementById('supOrdersBody').innerHTML = myOrders.length ? myOrders.map(o => `
-        <tr>
-          <td data-label="الطلب">${o.id}</td>
-          <td data-label="المنتج">${o.product}</td>
-          <td data-label="الكمية">${o.qty} ${o.unit}</td>
-          <td data-label="التاريخ">${o.date}</td>
-          <td data-label="الحالة"><span class="status-badge ${statusClass[o.status]}">${statusLabels[o.status]}</span></td>
-          <td>${o.status !== 'shipped' ? `<button class="mini-btn" data-order="${o.id}">${nextLabel[o.status]}</button>` : ''}</td>
-        </tr>`).join('') : `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);">لا توجد طلبات حالياً</td></tr>`;
-
-      document.querySelectorAll('#supOrdersBody .mini-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const order = supplierOrders.find(o => o.id === btn.dataset.order);
-          order.status = nextStatus[order.status];
-          await saveData();
-          renderSupplierDashboard();
-          renderAdminOrders();
-        });
-      });
-    }
-
-    function renderAdminOrders(){
-      document.getElementById('adminOrdersBody').innerHTML = supplierOrders.map(o => {
-        const supplier = suppliers.find(s => s.id === o.supplierId);
-        return `<tr>
-          <td data-label="الطلب">${o.id}</td>
-          <td data-label="المورّد">${supplier.name}</td>
-          <td data-label="المنتج">${o.product}</td>
-          <td data-label="الكمية">${o.qty} ${o.unit}</td>
-          <td data-label="التاريخ">${o.date}</td>
-          <td data-label="الحالة"><span class="status-badge ${statusClass[o.status]}">${statusLabels[o.status]}</span></td>
-        </tr>`;
-      }).join('');
-      renderInventory();
-      renderStockAlerts();
-    }
-
-    // عرض جدول المخزون مع إمكانية تعديل الكميات
-    function renderInventory(){
-      const body = document.getElementById('adminInventoryBody');
-      if(!body) return;
-      let rows = '';
-      suppliers.forEach(sup => {
-        sup.products.forEach((p, idx) => {
-          const low = p.qty <= p.min;
-          rows += `<tr>
-            <td data-label="المنتج">${p.name}</td>
-            <td data-label="المورّد">${sup.name}</td>
-            <td data-label="المخزون"><input type="number" class="inv-qty-input" data-sup="${sup.id}" data-idx="${idx}" value="${p.qty}" min="0"> ${p.unit}</td>
-            <td data-label="الحد الأدنى">${p.min} ${p.unit}</td>
-            <td data-label="الحالة"><span class="stock-badge ${low ? 'stock-low' : 'stock-good'}">${low ? 'منخفض' : 'جيد'}</span></td>
-          </tr>`;
-        });
-      });
-      body.innerHTML = rows;
-      // ربط تعديل الكمية
-      body.querySelectorAll('.inv-qty-input').forEach(inp => {
-        inp.addEventListener('change', () => {
-          const sup = suppliers.find(s => s.id === inp.dataset.sup);
-          const p = sup.products[parseInt(inp.dataset.idx)];
-          p.qty = parseInt(inp.value) || 0;
-          renderInventory();
-          renderStockAlerts();
-        });
-      });
-    }
-
-    // تنبيهات المخزون المنخفض + تجهيز طلب توريد بضغطة
-    function renderStockAlerts(){
-      const box = document.getElementById('lowStockAlerts');
-      if(!box) return;
-      const lowItems = [];
-      suppliers.forEach(sup => {
-        sup.products.forEach(p => { if(p.qty <= p.min) lowItems.push({sup, p}); });
-      });
-      if(lowItems.length === 0){
-        box.innerHTML = `<div class="stock-ok-msg">✅ كل المخزون ضمن الحدود الآمنة، لا توجد تنبيهات.</div>`;
-        return;
-      }
-      box.innerHTML = lowItems.map(({sup, p}) => `
-        <div class="stock-alert">
-          <div class="sa-info">⚠️ <b>${p.name}</b> وصل لـ <b>${p.qty} ${p.unit}</b> (الحد الأدنى ${p.min}) — من <b>${sup.name}</b></div>
-          <button class="mini-btn stock-reorder-btn" data-sup="${sup.id}" data-name="${p.name}" data-qty="${p.reorder}" data-unit="${p.unit}">جهّز طلب توريد (${p.reorder} ${p.unit})</button>
-        </div>
-      `).join('');
-      // زر تجهيز الطلب: يعبّي نموذج الإرسال تلقائياً
-      box.querySelectorAll('.stock-reorder-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          adminSupplierSelect.value = btn.dataset.sup;
-          fillAdminProducts(btn.dataset.sup);
-          adminProductSelect.value = btn.dataset.name;
-          document.getElementById('adminQty').value = btn.dataset.qty;
-          document.getElementById('adminNote').value = 'طلب تلقائي: المخزون وصل للحد الأدنى';
-          document.getElementById('adminSendBtn').scrollIntoView({behavior:'smooth', block:'center'});
-        });
-      });
-    }
-
-    // ---- supplier login ----
-    document.getElementById('supplierEnterBtn').addEventListener('click', () => {
-      const username = document.getElementById('supplierUsername').value.trim();
-      const password = document.getElementById('supplierPassword').value;
-      const match = suppliers.find(s => s.username === username && s.password === password);
-      const errEl = document.getElementById('supplierLoginError');
-      if(!match){
-        errEl.style.display = 'block';
-        return;
-      }
-      errEl.style.display = 'none';
-      currentSupplierId = match.id;
-      document.getElementById('supplierLogin').hidden = true;
-      document.getElementById('supplierDashboard').hidden = false;
-      renderSupplierDashboard();
-    });
-    document.getElementById('supplierLogout').addEventListener('click', () => {
-      currentSupplierId = null;
-      document.getElementById('supplierPassword').value = '';
-      document.getElementById('supplierDashboard').hidden = true;
-      document.getElementById('supplierLogin').hidden = false;
-    });
-
-    // ---- admin login ----
-    document.getElementById('adminEnterBtn').addEventListener('click', () => {
-      const pass = document.getElementById('adminPassword').value;
-      const errEl = document.getElementById('adminLoginError');
-      if(pass !== ADMIN_PASSWORD){
-        errEl.style.display = 'block';
-        return;
-      }
-      errEl.style.display = 'none';
-      adminAuthenticated = true;
-      document.getElementById('adminLoginGate').hidden = true;
-      document.getElementById('adminPanel').hidden = false;
-    });
-
-    document.getElementById('adminSendBtn').addEventListener('click', async () => {
-      const supplierId = adminSupplierSelect.value;
-      const product = adminProductSelect.value;
-      const unit = adminProductSelect.selectedOptions[0].dataset.unit;
-      const qty = parseInt(document.getElementById('adminQty').value) || 1;
-      orderSeq++;
-      supplierOrders.unshift({
-        id: 'FR-' + orderSeq, supplierId, product, qty, unit,
-        date: new Date().toISOString().slice(0,10), status: 'pending',
-        note: document.getElementById('adminNote').value
-      });
-      document.getElementById('adminNote').value = '';
-      await saveData();
-      renderAdminOrders();
-      if(currentSupplierId === supplierId) renderSupplierDashboard();
-    });
-
-    document.getElementById('resetDataBtn').addEventListener('click', async () => {
-      if(!confirm('سيتم حذف كل الطلبات المحفوظة والرجوع للبيانات الافتراضية. متابعة؟')) return;
-      orderSeq = seedData.orderSeq;
-      supplierOrders = JSON.parse(JSON.stringify(seedData.supplierOrders));
-      await saveData();
-      renderAdminOrders();
-      if(currentSupplierId) renderSupplierDashboard();
-    });
-
-    document.querySelectorAll('.role-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const role = btn.dataset.role;
-
-        if(role === 'admin'){
-          document.getElementById('supplierLogin').hidden = true;
-          document.getElementById('supplierDashboard').hidden = true;
-          document.getElementById('adminLoginGate').hidden = adminAuthenticated;
-          document.getElementById('adminPanel').hidden = !adminAuthenticated;
-        }else{
-          document.getElementById('adminLoginGate').hidden = true;
-          document.getElementById('adminPanel').hidden = true;
-          document.getElementById('supplierLogin').hidden = !!currentSupplierId;
-          document.getElementById('supplierDashboard').hidden = !currentSupplierId;
-        }
-      });
-    });
-
-    await loadData();
-    fillSelects();
-    renderAdminOrders();
-  })();
 
   // ---------- ambient snow particles ----------
   (function(){
