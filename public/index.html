@@ -360,6 +360,7 @@
     text-align:center; color:rgba(255,255,255,.6); font-size:15px;
     font-family:'Amiri',serif; padding:30px 0;
   }
+  .prod-weight{font-size:.75em; color:var(--text-muted); font-weight:500;}
   .prod-card{
     background:#fff;border-radius:var(--radius);overflow:hidden;
     box-shadow:0 10px 30px rgba(14,42,61,.06); transition:transform .3s ease, box-shadow .3s ease;
@@ -1790,7 +1791,7 @@
         </div>
         <div class="prod-body">
           <span class="prod-cat">${catLabel(p.cat)}</span>
-          <h3>${nm}</h3>
+          <h3>${nm}${p.weight ? ` <span class="prod-weight">— ${p.weight}</span>` : ''}</h3>
           <p>${ds}</p>
           <div class="prod-foot">
             <div class="price">${p.price.toFixed(3)} <small>${cur}</small></div>
@@ -1856,6 +1857,7 @@
       const mapped = (Array.isArray(rows) ? rows : []).map(r => ({
         id: r.id, cat: r.category,
         name: r.name_ar, name_en: r.name_en || r.name_ar,
+        weight: r.weight || null,
         desc: r.desc_ar, desc_en: r.desc_en || r.desc_ar,
         price: Number(r.price),
         badge: r.badge_ar || null, badge_en: r.badge_en || r.badge_ar || null,
