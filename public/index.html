@@ -625,6 +625,24 @@
     background:var(--mint-soft); border-radius:12px; padding:14px 16px; margin-top:4px;
     font-size:14px; color:var(--navy);
   }
+  /* area smart search */
+  .area-search-wrap{position:relative;}
+  .area-results{
+    position:absolute; top:calc(100% + 4px); right:0; left:0; z-index:50;
+    background:#fff; border:1.5px solid rgba(14,42,61,.15); border-radius:12px;
+    max-height:220px; overflow-y:auto; box-shadow:0 12px 30px rgba(0,0,0,.12);
+  }
+  .area-item{
+    padding:11px 14px; font-size:14px; color:var(--text-dark); cursor:pointer;
+    display:flex; justify-content:space-between; gap:10px; align-items:center;
+    border-bottom:1px solid rgba(14,42,61,.06);
+  }
+  .area-item:last-child{border-bottom:none;}
+  .area-item:hover, .area-item.hl{background:rgba(199,154,75,.1);}
+  .area-item .gov{font-size:11.5px; color:var(--text-muted);}
+  .area-item .fee{font-size:12px; font-weight:700; color:#8a6a2f; white-space:nowrap;}
+  .area-empty{padding:12px 14px; font-size:13px; color:var(--text-muted); text-align:center;}
+  #coAreaSearch.ok{border-color:#1f8a5b; background:rgba(31,138,91,.05);}
   .co-summary .r{display:flex; justify-content:space-between; margin-bottom:6px;}
   .co-summary .r.tot{font-weight:800; font-size:16px; margin-top:8px; padding-top:8px; border-top:1px solid rgba(14,42,61,.12);}
 
@@ -1242,7 +1260,10 @@
     </div>
     <div class="ff-field">
       <label>المنطقة <span class="req">*</span></label>
-      <select id="coArea"></select>
+      <div class="area-search-wrap">
+        <input type="text" id="coAreaSearch" placeholder="اكتب اسم منطقتك للبحث..." autocomplete="off">
+        <div class="area-results" id="coAreaResults" hidden></div>
+      </div>
     </div>
     <div class="ff-field">
       <label>العنوان التفصيلي <span class="req">*</span></label>
@@ -1458,6 +1479,7 @@
     "اسم العنوان":"Address Label", "البيت / الدوام":"Home / Work",
     "قطعة / شارع / منزل":"Block / Street / House", "حفظ العنوان":"Save Address",
     "طلباتي":"My Orders", "جاري التحميل...":"Loading...", "تسجيل الخروج":"Sign Out",
+    "اكتب اسم منطقتك للبحث...":"Type your area name to search...",
     "الكل":"All", "لا توجد منتجات في هذا التصنيف بعد.":"No products in this category yet.",
     "⭐ اختيارنا لك":"⭐ Our Picks for You", "المميّزة":"Featured",
     "قريباً... منتجات مختارة لك":"Coming soon... curated picks for you",
@@ -1834,6 +1856,124 @@
     return msg;
   }
   // ---------- checkout: order form + save + receipt ----------
+  // مناطق الكويت كاملة — كل منطقة بمحافظتها ورسوم توصيلها
+  const KW_AREAS = [
+    {ar:'دسمان', en:'Dasman', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الشرق', en:'Sharq', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الصوابر', en:'Sawaber', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'المرقاب', en:'Mirqab', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'القبلة', en:'Qibla', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الصالحية', en:'Salhiya', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'بنيد القار', en:'Bneid Al-Gar', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الدسمة', en:'Dasma', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الدعية', en:'Daiya', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'المنصورية', en:'Mansouriya', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'عبدالله السالم', en:'Abdullah Al-Salem', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'النزهة', en:'Nuzha', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الفيحاء', en:'Faiha', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الشامية', en:'Shamiya', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الروضة', en:'Rawda', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'العديلية', en:'Adailiya', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الخالدية', en:'Khaldiya', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'القادسية', en:'Qadsiya', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'قرطبة', en:'Qurtuba', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'السرة', en:'Surra', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'اليرموك', en:'Yarmouk', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الشويخ', en:'Shuwaikh', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الشويخ الصناعية', en:'Shuwaikh Industrial', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الري', en:'Rai', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'غرناطة', en:'Granada', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الصليبيخات', en:'Sulaibikhat', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'الدوحة', en:'Doha', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'جابر الأحمد', en:'Jaber Al-Ahmad', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'شمال غرب الصليبيخات', en:'NW Sulaibikhat', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'القيروان', en:'Qairawan', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'جزيرة فيلكا', en:'Failaka Island', gov:'capital', gov_ar:'العاصمة', gov_en:'Capital', fee:1.5},
+    {ar:'حولي', en:'Hawalli', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'السالمية', en:'Salmiya', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'الرميثية', en:'Rumaithiya', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'الجابرية', en:'Jabriya', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'مشرف', en:'Mishref', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'بيان', en:'Bayan', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'سلوى', en:'Salwa', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'الشعب', en:'Shaab', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'الصديق', en:'Siddiq', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'حطين', en:'Hittin', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'الزهراء', en:'Zahra', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'السلام', en:'Salam', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'الشهداء', en:'Shuhada', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'مبارك العبدالله', en:'Mubarak Al-Abdullah', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'البدع', en:'Bidaa', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'أنجفة', en:'Anjafa', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'ميدان حولي', en:'Maidan Hawalli', gov:'hawalli', gov_ar:'حولي', gov_en:'Hawalli', fee:1.5},
+    {ar:'الفروانية', en:'Farwaniya', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'خيطان', en:'Khaitan', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'العارضية', en:'Ardiya', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'العارضية الصناعية', en:'Ardiya Industrial', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'العمرية', en:'Omariya', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'الرابية', en:'Rabiya', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'الرقعي', en:'Riqai', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'الأندلس', en:'Andalous', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'جليب الشيوخ', en:'Jleeb Al-Shuyoukh', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'الضجيج', en:'Dajeej', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'الفردوس', en:'Firdous', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'صباح الناصر', en:'Sabah Al-Nasser', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'إشبيلية', en:'Ishbiliya', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'الرحاب', en:'Rehab', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'عبدالله المبارك', en:'Abdullah Al-Mubarak', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'غرب عبدالله المبارك', en:'West Abdullah Al-Mubarak', gov:'farwaniya', gov_ar:'الفروانية', gov_en:'Farwaniya', fee:1.5},
+    {ar:'مبارك الكبير', en:'Mubarak Al-Kabeer', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'القرين', en:'Qurain', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'العدان', en:'Adan', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'القصور', en:'Qusour', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'صباح السالم', en:'Sabah Al-Salem', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'المسيلة', en:'Messila', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'أبو فطيرة', en:'Abu Fatira', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'أبو الحصانية', en:'Abu Al-Hasaniya', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'الفنيطيس', en:'Funaitees', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'غرب أبو فطيرة', en:'West Abu Fatira', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'صبحان الصناعية', en:'Subhan Industrial', gov:'mubarak', gov_ar:'مبارك الكبير', gov_en:'Mubarak Al-Kabeer', fee:1.5},
+    {ar:'الأحمدي', en:'Ahmadi', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'الفحيحيل', en:'Fahaheel', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'المنقف', en:'Mangaf', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'أبو حليفة', en:'Abu Halifa', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'الصباحية', en:'Sabahiya', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'الرقة', en:'Riqqa', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'هدية', en:'Hadiya', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'جابر العلي', en:'Jaber Al-Ali', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'الفنطاس', en:'Fintas', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'العقيلة', en:'Egaila', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'المهبولة', en:'Mahboula', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'الوفرة', en:'Wafra', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'الزور', en:'Zour', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'علي صباح السالم', en:'Ali Sabah Al-Salem', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'فهد الأحمد', en:'Fahad Al-Ahmad', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'ميناء عبدالله', en:'Mina Abdullah', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'الشعيبة', en:'Shuaiba', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'بنيدر', en:'Bnaider', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'الجليعة', en:'Julaia', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'النويصيب', en:'Nuwaiseeb', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'صباح الأحمد', en:'Sabah Al-Ahmad', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'صباح الأحمد البحرية', en:'Sabah Al-Ahmad Sea City', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:1.5},
+    {ar:'الجهراء', en:'Jahra', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'القصر', en:'Qasr', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'النعيم', en:'Naeem', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'النسيم', en:'Naseem', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'العيون', en:'Oyoun', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'تيماء', en:'Taima', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'الواحة', en:'Waha', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'سعد العبدالله', en:'Saad Al-Abdullah', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'أمغرة', en:'Amghara', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'الصليبية', en:'Sulaibiya', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'الصليبية الصناعية', en:'Sulaibiya Industrial', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'كبد', en:'Kabd', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'العبدلي', en:'Abdali', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'السالمي', en:'Salmi', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:1.5},
+    {ar:'المطلاع', en:'Al-Mutlaa', gov:'jahra', gov_ar:'الجهراء', gov_en:'Jahra', fee:3},
+    {ar:'الخيران', en:'Al-Khiran', gov:'ahmadi', gov_ar:'الأحمدي', gov_en:'Ahmadi', fee:3},
+  ];
+
+  // توافُق خلفي: المحافظات كقائمة (للعناوين المحفوظة وصفحة الحساب)
   const AREAS = [
     {code:'capital',   ar:'العاصمة',        en:'Capital',            fee:1.5},
     {code:'hawalli',   ar:'حولي',           en:'Hawalli',            fee:1.5},
@@ -1844,28 +1984,76 @@
     {code:'mutlaa',    ar:'المطلاع',        en:'Al-Mutlaa',          fee:3},
     {code:'khiran',    ar:'الخيران',        en:'Al-Khiran',          fee:3},
   ];
+  let selectedArea = null;   // المنطقة المختارة من البحث
   const coOverlay  = document.getElementById('checkoutOverlay');
   const coModal    = document.getElementById('checkoutModal');
-  const coAreaSel  = document.getElementById('coArea');
+  const coAreaInput = document.getElementById('coAreaSearch');
+  const coAreaResults = document.getElementById('coAreaResults');
   const coSummary  = document.getElementById('coSummary');
   const coError    = document.getElementById('coError');
 
-  function fillAreas(){
-    coAreaSel.innerHTML = AREAS.map(a => `<option value="${a.code}">${tt(a.ar, a.en)} — ${a.fee.toFixed(3)} ${tt('د.ك','KWD')}</option>`).join('');
+  // بحث ذكي في مناطق الكويت (يدعم عربي/إنجليزي، ويتجاهل ال التعريف والهمزات)
+  function normAr(s){
+    return (s||'').trim().toLowerCase()
+      .replace(/^ال/,'').replace(/\s+ال/g,' ')
+      .replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه');
   }
+  function searchAreas(q){
+    const n = normAr(q);
+    if(!n) return [];
+    return KW_AREAS.filter(a =>
+      normAr(a.ar).includes(n) || a.en.toLowerCase().includes(n) ||
+      normAr(a.gov_ar).includes(n) || a.gov_en.toLowerCase().includes(n)
+    ).slice(0, 12);
+  }
+  function renderAreaResults(list){
+    if(!list.length){
+      coAreaResults.innerHTML = `<div class="area-empty">${tt('لا توجد منطقة مطابقة','No matching area')}</div>`;
+    } else {
+      coAreaResults.innerHTML = list.map((a,i) =>
+        `<div class="area-item" data-i="${i}">
+           <span>${tt(a.ar, a.en)} <span class="gov">— ${tt(a.gov_ar, a.gov_en)}</span></span>
+           <span class="fee">${a.fee.toFixed(3)} ${tt('د.ك','KWD')}</span>
+         </div>`).join('');
+      coAreaResults.querySelectorAll('.area-item').forEach(el => {
+        el.addEventListener('click', () => chooseArea(list[parseInt(el.dataset.i)]));
+      });
+    }
+    coAreaResults.hidden = false;
+  }
+  function chooseArea(a){
+    selectedArea = a;
+    coAreaInput.value = tt(a.ar, a.en) + ' — ' + tt(a.gov_ar, a.gov_en);
+    coAreaInput.classList.add('ok');
+    coAreaResults.hidden = true;
+    updateCoSummary();
+  }
+  coAreaInput.addEventListener('input', () => {
+    selectedArea = null; coAreaInput.classList.remove('ok');
+    const q = coAreaInput.value;
+    if(q.trim().length < 1){ coAreaResults.hidden = true; updateCoSummary(); return; }
+    renderAreaResults(searchAreas(q));
+    updateCoSummary();
+  });
+  coAreaInput.addEventListener('focus', () => {
+    if(coAreaInput.value.trim() && !selectedArea) renderAreaResults(searchAreas(coAreaInput.value));
+  });
+  document.addEventListener('click', (e) => {
+    if(!e.target.closest('.area-search-wrap')) coAreaResults.hidden = true;
+  });
+
   function cartSubtotal(){ return cart.reduce((s,p) => s + p.price, 0); }
-  function areaFee(){ const a = AREAS.find(x => x.code === coAreaSel.value); return a ? a.fee : 1.5; }
+  function areaFee(){ return selectedArea ? selectedArea.fee : 1.5; }
   function updateCoSummary(){
     const cur = tt('د.ك','KWD');
     const sub = cartSubtotal(), fee = areaFee(), tot = sub + fee;
     coSummary.innerHTML =
       `<div class="r"><span>${tt('المجموع','Subtotal')}</span><span>${sub.toFixed(3)} ${cur}</span></div>` +
-      `<div class="r"><span>${tt('التوصيل','Delivery')}</span><span>${fee.toFixed(3)} ${cur}</span></div>` +
+      `<div class="r"><span>${tt('التوصيل','Delivery')}${selectedArea ? '' : ' <small>('+tt('حدد المنطقة','select area')+')</small>'}</span><span>${fee.toFixed(3)} ${cur}</span></div>` +
       `<div class="r tot"><span>${tt('الإجمالي','Total')}</span><span>${tot.toFixed(3)} ${cur}</span></div>`;
   }
-  coAreaSel.addEventListener('change', updateCoSummary);
 
-  function openCheckout(){ fillAreas(); updateCoSummary(); coOverlay.classList.add('show'); coModal.classList.add('show'); document.body.style.overflow='hidden'; if(typeof prefillCheckoutFromDefault==='function') prefillCheckoutFromDefault(); }
+  function openCheckout(){ updateCoSummary(); coOverlay.classList.add('show'); coModal.classList.add('show'); document.body.style.overflow='hidden'; if(typeof prefillCheckoutFromDefault==='function') prefillCheckoutFromDefault(); }
   function closeCheckout(){ coOverlay.classList.remove('show'); coModal.classList.remove('show'); document.body.style.overflow=''; }
   document.getElementById('checkoutClose').addEventListener('click', closeCheckout);
   coOverlay.addEventListener('click', closeCheckout);
@@ -1881,7 +2069,7 @@
 
   document.getElementById('coSubmit').addEventListener('click', async () => {
     const name = val('coName'), phone = val('coPhone'), address = val('coAddress');
-    const areaObj = AREAS.find(a => a.code === coAreaSel.value);
+    const areaObj = selectedArea;
     if(!name || !phone || !address || !areaObj){ coError.classList.add('show'); return; }
     coError.classList.remove('show');
 
@@ -1893,7 +2081,7 @@
     const items = cart.map(p => ({ name: p.name, name_en: p.name_en, price: p.price, qty: 1 }));
     const payload = {
       customer_name: name, customer_phone: phone,
-      area: areaObj.en, address: address,
+      area: areaObj.en + ' (' + areaObj.gov_en + ')', address: address,
       items: items, subtotal: sub, delivery_fee: fee, total: tot,
       notes: val('coNotes')
     };
@@ -2024,7 +2212,14 @@
   async function renderAccount(){
     if(!isLoggedIn()){ closeAcct(); openAuth(); return; }
     document.getElementById('acctEmail').textContent = (session.user && session.user.email) || '';
-    const sel=document.getElementById('addrArea'); sel.innerHTML = AREAS.map(a=>`<option value="${a.code}">${tt(a.ar,a.en)}</option>`).join('');
+    const sel=document.getElementById('addrArea');
+    // كل مناطق الكويت مجمّعة بالمحافظات
+    const govs=[...new Set(KW_AREAS.map(a=>a.gov))];
+    sel.innerHTML = govs.map(g=>{
+      const items=KW_AREAS.filter(a=>a.gov===g);
+      return `<optgroup label="${tt(items[0].gov_ar, items[0].gov_en)}">` +
+        items.map(a=>`<option value="${a.en}">${tt(a.ar,a.en)}</option>`).join('') + `</optgroup>`;
+    }).join('');
     await loadAddresses(); await loadMyOrders();
   }
 
@@ -2049,7 +2244,8 @@
   document.getElementById('addAddrBtn').addEventListener('click', ()=>{ const f=document.getElementById('addrForm'); f.hidden=!f.hidden; });
   document.getElementById('saveAddrBtn').addEventListener('click', async ()=>{
     const label=(document.getElementById('addrLabel').value||'').trim();
-    const areaObj=AREAS.find(a=>a.code===document.getElementById('addrArea').value);
+    const areaVal=document.getElementById('addrArea').value;
+    const areaObj=KW_AREAS.find(a=>a.en===areaVal);
     const detail=(document.getElementById('addrDetail').value||'').trim();
     const phone=(document.getElementById('addrPhone').value||'').trim();
     if(!areaObj || !detail){ alert(tt('أدخل المنطقة والعنوان.','Enter area and address.')); return; }
@@ -2096,8 +2292,14 @@
       if(a){
         document.getElementById('coPhone').value = a.phone || '';
         document.getElementById('coAddress').value = a.address || '';
-        const areaObj = AREAS.find(x=>x.en===a.area || x.ar===a.area);
-        if(areaObj){ coAreaSel.value = areaObj.code; updateCoSummary(); }
+        // مطابقة المنطقة المحفوظة (سواء منطقة دقيقة أو محافظة قديمة)
+        const savedName = (a.area || '').split(' (')[0];
+        let areaObj = KW_AREAS.find(x => x.en === savedName || x.ar === savedName);
+        if(!areaObj){
+          const gov = AREAS.find(x => x.en === savedName || x.ar === savedName);
+          if(gov) areaObj = KW_AREAS.find(x => x.gov === gov.code);
+        }
+        if(areaObj) chooseArea(areaObj);
       }
       if(session.user && session.user.email && !document.getElementById('coName').value){
         // اسم مبدئي من الإيميل (يعدّله العميل)
