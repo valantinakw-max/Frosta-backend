@@ -643,6 +643,21 @@
   .area-item .fee{font-size:12px; font-weight:700; color:#8a6a2f; white-space:nowrap;}
   .area-empty{padding:12px 14px; font-size:13px; color:var(--text-muted); text-align:center;}
   #coAreaSearch.ok{border-color:#1f8a5b; background:rgba(31,138,91,.05);}
+  /* location picker map */
+  .co-map{
+    width:100%; height:200px; border-radius:12px; border:1.5px solid rgba(14,42,61,.15);
+    background:#e8ecef; overflow:hidden;
+  }
+  .co-map:empty::before{
+    content:'جاري تحميل الخريطة...'; display:flex; align-items:center; justify-content:center;
+    height:100%; color:var(--text-muted); font-size:13px;
+  }
+  .co-map-actions{display:flex; align-items:center; gap:10px; margin-top:8px;}
+  .map-locate-btn{
+    background:var(--navy); color:#fff; border-radius:100px; padding:9px 16px;
+    font-size:13px; font-weight:700; font-family:inherit;
+  }
+  .map-status{font-size:12px; color:#1f8a5b; font-weight:600;}
   .co-summary .r{display:flex; justify-content:space-between; margin-bottom:6px;}
   .co-summary .r.tot{font-weight:800; font-size:16px; margin-top:8px; padding-top:8px; border-top:1px solid rgba(14,42,61,.12);}
 
@@ -1270,6 +1285,14 @@
       <textarea id="coAddress" placeholder="قطعة / شارع / منزل / تفاصيل"></textarea>
     </div>
     <div class="ff-field">
+      <label>📍 حدد موقعك على الخريطة (اختياري — يساعد السائق يوصلك أسرع)</label>
+      <div id="coMap" class="co-map"></div>
+      <div class="co-map-actions">
+        <button type="button" class="map-locate-btn" id="coLocateBtn">📡 موقعي الحالي</button>
+        <span class="map-status" id="coMapStatus"></span>
+      </div>
+    </div>
+    <div class="ff-field">
       <label>ملاحظات (اختياري)</label>
       <textarea id="coNotes" placeholder="أي تفاصيل تحب تضيفها"></textarea>
     </div>
@@ -1383,6 +1406,69 @@
   // ---------- Supabase (قاعدة بيانات المنتجات) ----------
   const SUPABASE_URL = 'https://pqkbqkfliyarpvdckgls.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_mbOAoWTolvgpwyD-5My09Q_01GOlbqC';
+
+  // ---------- Google Maps (تحديد موقع العميل) ----------
+  const GMAPS_KEY = 'AIzaSyCqCVAlQwiOFROcizQjCLXi2U-JnZADxkc';
+  let gmapsLoaded = false, coMapObj = null, coMarker = null;
+  let customerLoc = null;   // {lat, lng} موقع العميل المختار
+
+  function loadGoogleMaps(){
+    if(gmapsLoaded || document.getElementById('gmapsScript')) return;
+    gmapsLoaded = true;
+    const s = document.createElement('script');
+    s.id = 'gmapsScript';
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${GMAPS_KEY}&callback=initCoMap&language=${currentLang}`;
+    s.async = true; s.defer = true;
+    document.head.appendChild(s);
+  }
+
+  window.initCoMap = function(){
+    const el = document.getElementById('coMap');
+    if(!el || !window.google) return;
+    const kuwaitCenter = {lat: 29.3759, lng: 47.9774};  // الكويت
+    coMapObj = new google.maps.Map(el, {
+      center: kuwaitCenter, zoom: 10,
+      disableDefaultUI: true, zoomControl: true, gestureHandling: 'greedy'
+    });
+    // ضغطة على الخريطة = تحديد الموقع
+    coMapObj.addListener('click', (e) => setCustomerLoc(e.latLng.lat(), e.latLng.lng()));
+  };
+
+  function setCustomerLoc(lat, lng){
+    customerLoc = {lat, lng};
+    if(!coMarker){
+      coMarker = new google.maps.Marker({ map: coMapObj, draggable: true });
+      coMarker.addListener('dragend', () => {
+        const p = coMarker.getPosition();
+        customerLoc = {lat: p.lat(), lng: p.lng()};
+      });
+    }
+    coMarker.setPosition({lat, lng});
+    coMapObj.panTo({lat, lng});
+    if(coMapObj.getZoom() < 15) coMapObj.setZoom(15);
+    const st = document.getElementById('coMapStatus');
+    if(st) st.textContent = tt('✓ تم تحديد الموقع','✓ Location set');
+  }
+
+  // زر "موقعي الحالي" — GPS الجوال
+  document.addEventListener('DOMContentLoaded', () => {
+    const lb = document.getElementById('coLocateBtn');
+    if(lb) lb.addEventListener('click', () => {
+      if(!navigator.geolocation){ alert(tt('المتصفح لا يدعم تحديد الموقع','Geolocation not supported')); return; }
+      lb.textContent = tt('⏳ جاري التحديد...','⏳ Locating...');
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          lb.textContent = tt('📡 موقعي الحالي','📡 My location');
+          if(coMapObj) setCustomerLoc(pos.coords.latitude, pos.coords.longitude);
+        },
+        () => {
+          lb.textContent = tt('📡 موقعي الحالي','📡 My location');
+          alert(tt('تعذّر تحديد موقعك — اسمح بالوصول للموقع من إعدادات المتصفح، أو حدد موقعك بالضغط على الخريطة.','Could not get your location — allow location access, or tap the map to set it.'));
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    });
+  });
 
   // ---------- مفاتيح إظهار/إخفاء أقسام المنتجات ----------
   // غيّر إلى false لإخفاء القسم من الواجهة (ثم ارفع الملف)
@@ -2053,7 +2139,7 @@
       `<div class="r tot"><span>${tt('الإجمالي','Total')}</span><span>${tot.toFixed(3)} ${cur}</span></div>`;
   }
 
-  function openCheckout(){ updateCoSummary(); coOverlay.classList.add('show'); coModal.classList.add('show'); document.body.style.overflow='hidden'; if(typeof prefillCheckoutFromDefault==='function') prefillCheckoutFromDefault(); }
+  function openCheckout(){ updateCoSummary(); coOverlay.classList.add('show'); coModal.classList.add('show'); document.body.style.overflow='hidden'; loadGoogleMaps(); if(typeof prefillCheckoutFromDefault==='function') prefillCheckoutFromDefault(); }
   function closeCheckout(){ coOverlay.classList.remove('show'); coModal.classList.remove('show'); document.body.style.overflow=''; }
   document.getElementById('checkoutClose').addEventListener('click', closeCheckout);
   coOverlay.addEventListener('click', closeCheckout);
@@ -2085,6 +2171,7 @@
       items: items, subtotal: sub, delivery_fee: fee, total: tot,
       notes: val('coNotes')
     };
+    if(customerLoc) payload.location = customerLoc;   // إحداثيات العميل (اختياري)
     if(typeof isLoggedIn==='function' && isLoggedIn()) payload.user_id = session.user.id;
 
     try{
