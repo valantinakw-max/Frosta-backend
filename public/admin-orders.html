@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>فروزينا — لوحة الطلبات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0E2A3D; --navy-deep:#081A26; --gold:#C79A4B; --gold-soft:#E7D2A2;
+    --berry:#7C2D3B; --mint:#A9DFC7; --ok:#1f8a5b;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif;}
+  body{background:#f4f6f8; color:#1c2b36; min-height:100vh;}
+  header{
+    background:var(--navy-deep); color:#fff; padding:14px 18px;
+    display:flex; justify-content:space-between; align-items:center;
+    position:sticky; top:0; z-index:50;
+  }
+  header h1{font-size:17px; font-weight:900;}
+  header h1 span{color:var(--gold);}
+  .hdr-actions{display:flex; gap:8px; align-items:center;}
+  .btn{
+    border:none; cursor:pointer; border-radius:100px; font-weight:700;
+    font-size:13px; padding:9px 16px; font-family:inherit; transition:opacity .2s;
+  }
+  .btn:active{opacity:.7;}
+  .btn-gold{background:var(--gold); color:var(--navy-deep);}
+  .btn-ghost{background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.35);}
+  .btn-navy{background:var(--navy); color:#fff;}
+  .btn-ok{background:var(--ok); color:#fff;}
+  .btn-sm{padding:7px 12px; font-size:12px;}
+
+  /* login */
+  .login-wrap{max-width:380px; margin:60px auto; padding:0 18px;}
+  .card{background:#fff; border-radius:16px; padding:22px; box-shadow:0 4px 20px rgba(0,0,0,.06);}
+  .card h2{font-size:18px; margin-bottom:14px; color:var(--navy);}
+  .field{margin-bottom:12px;}
+  .field label{display:block; font-size:13px; font-weight:700; margin-bottom:5px; color:var(--navy);}
+  .field input, .field select{
+    width:100%; padding:11px 13px; border-radius:10px; border:1.5px solid #d7dde3;
+    font-family:inherit; font-size:14px;
+  }
+  .err{color:var(--berry); font-size:13px; font-weight:600; margin-top:8px; display:none;}
+  .err.show{display:block;}
+
+  /* board */
+  main{max-width:860px; margin:0 auto; padding:16px;}
+  .toolbar{display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap;}
+  .toolbar .count{font-size:13px; font-weight:700; color:#5a6a75;}
+  .suggest{
+    background:#fff8ea; border:1.5px solid var(--gold); border-radius:14px;
+    padding:14px; margin-bottom:14px;
+  }
+  .suggest h3{font-size:14px; color:#8a6a2f; margin-bottom:8px;}
+  .suggest .s-orders{font-size:13px; color:#333; margin-bottom:10px; line-height:1.8;}
+  .order-card{
+    background:#fff; border-radius:14px; padding:14px; margin-bottom:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05); border-right:4px solid var(--gold);
+  }
+  .order-card.assigned{border-right-color:var(--ok);}
+  .oc-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+  .oc-top .inv{font-weight:900; color:var(--navy); font-size:15px;}
+  .oc-top .tot{font-weight:900; color:#8a6a2f;}
+  .oc-meta{font-size:13px; color:#5a6a75; line-height:1.8;}
+  .oc-meta b{color:#1c2b36;}
+  .badge{
+    display:inline-block; padding:3px 10px; border-radius:100px; font-size:11px; font-weight:700;
+  }
+  .b-pending{background:#fff3cd; color:#856404;}
+  .b-confirmed{background:#d1ecf1; color:#0c5460;}
+  .b-preparing{background:#e2d9f3; color:#4a3a7a;}
+  .b-out{background:#cfe2ff; color:#084298;}
+  .b-delivered{background:#d4edda; color:#155724;}
+  .oc-actions{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center;}
+  .oc-actions select{
+    padding:8px 10px; border-radius:10px; border:1.5px solid #d7dde3; font-family:inherit; font-size:13px;
+  }
+  .checkbox-row{display:flex; align-items:center; gap:8px; margin-top:8px;}
+  .empty{text-align:center; color:#8a97a1; padding:40px 0; font-size:14px;}
+  .map-link{color:#0a58ca; font-size:12.5px; font-weight:700; text-decoration:none;}
+  .hidden{display:none !important;}
+  .refresh-note{font-size:11.5px; color:#8a97a1;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>فروزينا <span>| لوحة الطلبات</span></h1>
+  <div class="hdr-actions">
+    <button class="btn btn-ghost btn-sm" id="refreshBtn">↻ تحديث</button>
+    <button class="btn btn-ghost btn-sm hidden" id="logoutBtn">خروج</button>
+  </div>
+</header>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginView">
+  <div class="card">
+    <h2>تسجيل دخول الإدارة</h2>
+    <div class="field">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="lgEmail" placeholder="admin@frozina.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label>كلمة المرور</label>
+      <input type="password" id="lgPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn btn-gold" id="lgBtn" style="width:100%;padding:12px;">دخول</button>
+    <p class="err" id="lgErr"></p>
+  </div>
+</div>
+
+<!-- BOARD -->
+<main id="boardView" class="hidden">
+  <div class="toolbar">
+    <span class="count" id="countLbl">—</span>
+    <span class="refresh-note">يتحدّث تلقائياً كل ٣٠ ثانية</span>
+  </div>
+  <div id="suggestBox"></div>
+  <div id="ordersList"><p class="empty">جاري التحميل...</p></div>
+</main>
+
+<script>
+  const SUPABASE_URL = 'https://pqkbqkfliyarpvdckgls.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_mbOAoWTolvgpwyD-5My09Q_01GOlbqC';
+  const GMAPS_KEY = 'AIzaSyCqCVAlQwiOFROcizQjCLXi2U-JnZADxkc';
+
+  let session = null;
+  let drivers = [];
+  let orders = [];
+
+  // ---------- session ----------
+  function saveSession(s){ session = s; try{ localStorage.setItem('frozina_admin', JSON.stringify(s)); }catch(e){} }
+  function loadSession(){ try{ const s = localStorage.getItem('frozina_admin'); if(s) session = JSON.parse(s); }catch(e){} }
+  function clearSession(){ session = null; try{ localStorage.removeItem('frozina_admin'); }catch(e){} }
+  function hdrs(){ return { apikey: SUPABASE_KEY, 'Content-Type':'application/json', Authorization: 'Bearer ' + ((session && session.access_token) || SUPABASE_KEY) }; }
+
+  // ---------- login ----------
+  document.getElementById('lgBtn').addEventListener('click', async () => {
+    const email = document.getElementById('lgEmail').value.trim();
+    const pass = document.getElementById('lgPass').value;
+    const err = document.getElementById('lgErr');
+    err.classList.remove('show');
+    if(!email || !pass){ err.textContent = 'أدخل البريد وكلمة المرور'; err.classList.add('show'); return; }
+    try{
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+        method:'POST', headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
+        body: JSON.stringify({email, password: pass})
+      });
+      const data = await res.json();
+      if(!res.ok || !data.access_token) throw new Error(data.error_description || 'فشل الدخول');
+      saveSession({access_token: data.access_token, user: data.user});
+      showBoard();
+    }catch(e){ err.textContent = 'تعذّر الدخول — تحقق من البيانات'; err.classList.add('show'); }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => { clearSession(); location.reload(); });
+  document.getElementById('refreshBtn').addEventListener('click', () => loadAll());
+
+  function showBoard(){
+    document.getElementById('loginView').classList.add('hidden');
+    document.getElementById('boardView').classList.remove('hidden');
+    document.getElementById('logoutBtn').classList.remove('hidden');
+    loadAll();
+    setInterval(loadAll, 30000);
+  }
+
+  // ---------- data ----------
+  async function loadAll(){
+    try{
+      const [dRes, oRes] = await Promise.all([
+        fetch(`${SUPABASE_URL}/rest/v1/drivers?select=*&is_active=eq.true&order=id`, {headers: hdrs()}),
+        fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&status=in.(pending,confirmed,preparing,out_for_delivery)&order=created_at.desc`, {headers: hdrs()})
+      ]);
+      drivers = await dRes.json();
+      orders = await oRes.json();
+      if(!Array.isArray(drivers)) drivers = [];
+      if(!Array.isArray(orders)) orders = [];
+      render();
+    }catch(e){
+      document.getElementById('ordersList').innerHTML = '<p class="empty">تعذّر التحميل — تحقق من الاتصال</p>';
+    }
+  }
+
+  // ---------- smart batching (by distance) ----------
+  function dist(a, b){
+    // Haversine بالكيلومترات
+    const R = 6371, toR = x => x * Math.PI / 180;
+    const dLat = toR(b.lat - a.lat), dLng = toR(b.lng - a.lng);
+    const h = Math.sin(dLat/2)**2 + Math.cos(toR(a.lat))*Math.cos(toR(b.lat))*Math.sin(dLng/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+  function suggestBatches(){
+    // الطلبات غير المسندة الجاهزة
+    const ready = orders.filter(o => !o.driver_id && ['pending','confirmed','preparing'].includes(o.status));
+    const withLoc = ready.filter(o => o.location && o.location.lat);
+    const noLoc = ready.filter(o => !o.location || !o.location.lat);
+    const groups = [];
+    const used = new Set();
+    // تجميع بالمسافة (≤ ٤ كم) للطلبات ذات الإحداثيات
+    for(const o of withLoc){
+      if(used.has(o.id)) continue;
+      const grp = [o]; used.add(o.id);
+      for(const p of withLoc){
+        if(used.has(p.id)) continue;
+        if(dist(o.location, p.location) <= 4){ grp.push(p); used.add(p.id); }
+      }
+      if(grp.length >= 2) groups.push({type:'قريبة من بعض (≤٤كم)', items: grp});
+    }
+    // تجميع بالمنطقة للبقية
+    const byArea = {};
+    for(const o of [...withLoc.filter(o=>!groups.some(g=>g.items.includes(o))), ...noLoc]){
+      const area = (o.area||'').split(' (')[0];
+      (byArea[area] = byArea[area] || []).push(o);
+    }
+    for(const [area, items] of Object.entries(byArea)){
+      if(items.length >= 2) groups.push({type:`نفس المنطقة (${area})`, items});
+    }
+    return groups;
+  }
+
+  // ---------- render ----------
+  const stBadge = {pending:'b-pending', confirmed:'b-confirmed', preparing:'b-preparing', out_for_delivery:'b-out', delivered:'b-delivered'};
+  const stLabel = {pending:'بانتظار', confirmed:'مؤكد', preparing:'قيد التجهيز', out_for_delivery:'خرج للتوصيل', delivered:'تم التسليم'};
+
+  function driverName(id){ const d = drivers.find(x => x.id === id); return d ? d.name : '—'; }
+
+  function render(){
+    document.getElementById('countLbl').textContent = `الطلبات النشطة: ${orders.length}`;
+    // اقتراحات الدفعات
+    const sb = document.getElementById('suggestBox');
+    const batches = suggestBatches();
+    sb.innerHTML = batches.map((b, i) => `
+      <div class="suggest">
+        <h3>💡 دفعة مقترحة — ${b.type} (${b.items.length} طلبات)</h3>
+        <div class="s-orders">${b.items.map(o => `${o.invoice_no} · ${o.area||''}`).join('<br>')}</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <select id="batchDrv${i}">
+            <option value="">اختر السائق...</option>
+            ${drivers.map(d => `<option value="${d.id}">${d.name}</option>`).join('')}
+          </select>
+          <button class="btn btn-gold btn-sm" onclick="assignBatch(${i})">إسناد الدفعة</button>
+        </div>
+      </div>`).join('');
+    window._batches = batches;
+
+    // قائمة الطلبات
+    const list = document.getElementById('ordersList');
+    if(!orders.length){ list.innerHTML = '<p class="empty">لا توجد طلبات نشطة حالياً 🎉</p>'; return; }
+    list.innerHTML = orders.map(o => {
+      const loc = o.location && o.location.lat ? `<a class="map-link" target="_blank" href="https://maps.google.com/?q=${o.location.lat},${o.location.lng}">📍 الموقع على الخريطة</a>` : '';
+      return `
+      <div class="order-card ${o.driver_id ? 'assigned' : ''}">
+        <div class="oc-top">
+          <span class="inv">${o.invoice_no||''}</span>
+          <span class="tot">${Number(o.total).toFixed(3)} د.ك</span>
+        </div>
+        <div class="oc-meta">
+          <b>${o.customer_name||''}</b> · <a href="tel:${o.customer_phone}">${o.customer_phone||''}</a><br>
+          ${o.area||''} — ${o.address||''} ${loc}<br>
+          <span class="badge ${stBadge[o.status]||''}">${stLabel[o.status]||o.status}</span>
+          ${o.driver_id ? `<span class="badge b-delivered">🚗 ${driverName(o.driver_id)}</span>` : ''}
+        </div>
+        <div class="oc-actions">
+          <select onchange="assignDriver(${o.id}, this.value)">
+            <option value="">إسناد لسائق...</option>
+            ${drivers.map(d => `<option value="${d.id}" ${o.driver_id===d.id?'selected':''}>${d.name}</option>`).join('')}
+          </select>
+          <select onchange="setStatus(${o.id}, this.value)">
+            <option value="">تغيير الحالة...</option>
+            ${Object.entries(stLabel).map(([k,v]) => `<option value="${k}" ${o.status===k?'selected':''}>${v}</option>`).join('')}
+          </select>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ---------- actions ----------
+  window.assignDriver = async function(orderId, driverId){
+    if(!driverId) return;
+    await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
+      method:'PATCH', headers: hdrs(), body: JSON.stringify({driver_id: parseInt(driverId)})
+    });
+    loadAll();
+  };
+  window.setStatus = async function(orderId, status){
+    if(!status) return;
+    await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
+      method:'PATCH', headers: hdrs(), body: JSON.stringify({status})
+    });
+    loadAll();
+  };
+  window.assignBatch = async function(i){
+    const b = window._batches[i];
+    const drvId = document.getElementById('batchDrv'+i).value;
+    if(!b || !drvId){ alert('اختر السائق أولاً'); return; }
+    const batchId = 'B' + Date.now();
+    for(const o of b.items){
+      await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${o.id}`, {
+        method:'PATCH', headers: hdrs(),
+        body: JSON.stringify({driver_id: parseInt(drvId), batch_id: batchId})
+      });
+    }
+    loadAll();
+  };
+
+  // ---------- init ----------
+  loadSession();
+  if(session && session.access_token) showBoard();
+</script>
+</body>
+</html>
