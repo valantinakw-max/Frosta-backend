@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>فروزينا — السائق</title>
+<title>Frozina — Driver</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -69,30 +69,30 @@
 <body>
 
 <header>
-  <h1>فروزينا <span>| السائق</span></h1>
-  <button class="btn btn-ghost btn-sm hidden" id="logoutBtn">خروج</button>
+  <h1>FROZINA <span>| Driver</span></h1>
+  <button class="btn btn-ghost btn-sm hidden" id="logoutBtn">Logout</button>
 </header>
 
 <div class="login-wrap" id="loginView">
   <div class="card">
-    <h2>🚗 دخول السائق</h2>
+    <h2>🚗 Driver Login</h2>
     <div class="field">
-      <label>البريد الإلكتروني</label>
+      <label>Email</label>
       <input type="email" id="lgEmail" placeholder="driver1@frozina.com" autocomplete="email" inputmode="email">
     </div>
     <div class="field">
-      <label>كلمة المرور</label>
+      <label>Password</label>
       <input type="password" id="lgPass" placeholder="••••••••" autocomplete="current-password">
     </div>
-    <button class="btn btn-gold btn-lg" id="lgBtn">دخول</button>
+    <button class="btn btn-gold btn-lg" id="lgBtn">Sign In</button>
     <p class="err" id="lgErr"></p>
   </div>
 </div>
 
 <main id="boardView" class="hidden">
   <p class="hello" id="helloLbl"></p>
-  <h2 class="my-orders-title">📦 طلباتي</h2>
-  <div id="ordersList"><p class="empty">جاري التحميل...</p></div>
+  <h2 class="my-orders-title">📦 My Orders</h2>
+  <div id="ordersList"><p class="empty">Loading...</p></div>
 </main>
 
 <script>
@@ -111,7 +111,7 @@
     const pass = document.getElementById('lgPass').value;
     const err = document.getElementById('lgErr');
     err.classList.remove('show');
-    if(!email || !pass){ err.textContent = 'أدخل البريد وكلمة المرور'; err.classList.add('show'); return; }
+    if(!email || !pass){ err.textContent = 'Enter email and password'; err.classList.add('show'); return; }
     try{
       const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
         method:'POST', headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
@@ -121,7 +121,7 @@
       if(!res.ok || !data.access_token) throw new Error('login failed');
       saveSession({access_token: data.access_token, user: data.user});
       showBoard();
-    }catch(e){ err.textContent = 'تعذّر الدخول — تحقق من البيانات'; err.classList.add('show'); }
+    }catch(e){ err.textContent = 'Login failed — check your credentials'; err.classList.add('show'); }
   });
   document.getElementById('logoutBtn').addEventListener('click', () => { clearSession(); location.reload(); });
 
@@ -134,22 +134,22 @@
     setInterval(loadOrders, 30000);
   }
 
-  // إيجاد سجل السائق المرتبط بحسابي (بالإيميل → user_id أو مطابقة يدوية)
+  // Find driver record linked to this account
   async function findMyDriver(){
     try{
-      // أول: بحث بربط user_id
+      // First: search by user_id link
       let res = await fetch(`${SUPABASE_URL}/rest/v1/drivers?select=*&user_id=eq.${session.user.id}`, {headers: hdrs()});
       let rows = await res.json();
       if(Array.isArray(rows) && rows.length){ myDriver = rows[0]; }
       else{
-        // ربط تلقائي: driver1@ → أول سائق نشط بدون user_id (حسب الترتيب)
+        // Auto-link: driver1@ maps to first active driver (by order)
         const m = (session.user.email||'').match(/driver(\d+)@/);
         res = await fetch(`${SUPABASE_URL}/rest/v1/drivers?select=*&is_active=eq.true&order=id`, {headers: hdrs()});
         rows = await res.json();
         if(Array.isArray(rows) && rows.length){
           const idx = m ? (parseInt(m[1]) - 1) : 0;
           myDriver = rows[idx] || rows[0];
-          // اربط الحساب بالسجل لمرات جاية
+          // Link account for future visits
           if(myDriver && !myDriver.user_id){
             await fetch(`${SUPABASE_URL}/rest/v1/drivers?id=eq.${myDriver.id}`, {
               method:'PATCH', headers: hdrs(), body: JSON.stringify({user_id: session.user.id})
@@ -157,36 +157,36 @@
           }
         }
       }
-      document.getElementById('helloLbl').textContent = myDriver ? `أهلاً ${myDriver.name} 👋` : '';
+      document.getElementById('helloLbl').textContent = myDriver ? `Hello ${myDriver.name} 👋` : '';
     }catch(e){}
   }
 
   async function loadOrders(){
-    if(!myDriver){ document.getElementById('ordersList').innerHTML = '<p class="empty">حسابك غير مربوط بسائق — راجع الإدارة</p>'; return; }
+    if(!myDriver){ document.getElementById('ordersList').innerHTML = '<p class="empty">Your account is not linked to a driver — contact admin</p>'; return; }
     try{
       const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&driver_id=eq.${myDriver.id}&status=in.(confirmed,preparing,out_for_delivery)&order=batch_id,created_at`, {headers: hdrs()});
       orders = await res.json();
       if(!Array.isArray(orders)) orders = [];
       render();
     }catch(e){
-      document.getElementById('ordersList').innerHTML = '<p class="empty">تعذّر التحميل</p>';
+      document.getElementById('ordersList').innerHTML = '<p class="empty">Could not load — check connection</p>';
     }
   }
 
   function render(){
     const list = document.getElementById('ordersList');
-    if(!orders.length){ list.innerHTML = '<p class="empty">لا توجد طلبات مسندة لك حالياً ✅</p>'; return; }
+    if(!orders.length){ list.innerHTML = '<p class="empty">No orders assigned to you right now ✅</p>'; return; }
     list.innerHTML = orders.map(o => {
       const mapBtn = o.location && o.location.lat
-        ? `<a class="btn btn-navy" target="_blank" href="https://maps.google.com/?q=${o.location.lat},${o.location.lng}">🗺️ الخريطة</a>`
-        : `<a class="btn btn-navy" target="_blank" href="https://maps.google.com/?q=${encodeURIComponent((o.area||'')+' '+(o.address||'')+' Kuwait')}">🗺️ الخريطة</a>`;
+        ? `<a class="btn btn-navy" target="_blank" href="https://maps.google.com/?q=${o.location.lat},${o.location.lng}">🗺️ Map</a>`
+        : `<a class="btn btn-navy" target="_blank" href="https://maps.google.com/?q=${encodeURIComponent((o.area||'')+' '+(o.address||'')+' Kuwait')}">🗺️ Map</a>`;
       const isOut = o.status === 'out_for_delivery';
       return `
       <div class="order-card">
-        <span class="badge ${isOut?'b-out':'b-ready'}">${isOut?'🚗 بالطريق':'📦 جاهز للاستلام'}</span>
+        <span class="badge ${isOut?'b-out':'b-ready'}">${isOut?'🚗 On the way':'📦 Ready for pickup'}</span>
         <div class="oc-top">
           <span class="inv">${o.invoice_no||''}</span>
-          <span class="tot">${Number(o.total).toFixed(3)} د.ك</span>
+          <span class="tot">${Number(o.total).toFixed(3)} KWD</span>
         </div>
         <div class="oc-meta">
           <b>${o.customer_name||''}</b><br>
@@ -194,11 +194,11 @@
           ${o.notes ? '📝 ' + o.notes + '<br>' : ''}
         </div>
         <div class="row-btns">
-          <a class="btn btn-gold" href="tel:${o.customer_phone}">📞 اتصال</a>
+          <a class="btn btn-gold" href="tel:${o.customer_phone}">📞 Call</a>
           ${mapBtn}
           ${!isOut
-            ? `<button class="btn btn-ok" onclick="setStatus(${o.id}, 'out_for_delivery')">🚗 استلمت — بالطريق</button>`
-            : `<button class="btn btn-ok" onclick="setStatus(${o.id}, 'delivered')">✅ تم التسليم</button>`}
+            ? `<button class="btn btn-ok" onclick="setStatus(${o.id}, 'out_for_delivery')">🚗 Picked up — On the way</button>`
+            : `<button class="btn btn-ok" onclick="setStatus(${o.id}, 'delivered')">✅ Delivered</button>`}
         </div>
       </div>`;
     }).join('');
