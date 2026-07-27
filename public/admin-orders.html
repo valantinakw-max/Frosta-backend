@@ -129,6 +129,7 @@
 
   let session = null;
   let drivers = [];
+  let vehicles = [];
   let orders = [];
 
   // ---------- session ----------
@@ -170,14 +171,17 @@
   // ---------- data ----------
   async function loadAll(){
     try{
-      const [dRes, oRes] = await Promise.all([
+      const [dRes, oRes, vRes] = await Promise.all([
         fetch(`${SUPABASE_URL}/rest/v1/drivers?select=*&is_active=eq.true&order=id`, {headers: hdrs()}),
-        fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&status=in.(pending,confirmed,preparing,out_for_delivery)&order=created_at.desc`, {headers: hdrs()})
+        fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&status=in.(pending,confirmed,preparing,out_for_delivery,arrived)&order=created_at.desc`, {headers: hdrs()}),
+        fetch(`${SUPABASE_URL}/rest/v1/vehicles?select=*&is_active=eq.true&order=id`, {headers: hdrs()})
       ]);
       drivers = await dRes.json();
       orders = await oRes.json();
+      vehicles = await vRes.json();
       if(!Array.isArray(drivers)) drivers = [];
       if(!Array.isArray(orders)) orders = [];
+      if(!Array.isArray(vehicles)) vehicles = [];
       render();
     }catch(e){
       document.getElementById('ordersList').innerHTML = '<p class="empty">تعذّر التحميل — تحقق من الاتصال</p>';
@@ -222,8 +226,8 @@
   }
 
   // ---------- render ----------
-  const stBadge = {pending:'b-pending', confirmed:'b-confirmed', preparing:'b-preparing', out_for_delivery:'b-out', delivered:'b-delivered'};
-  const stLabel = {pending:'بانتظار', confirmed:'مؤكد', preparing:'قيد التجهيز', out_for_delivery:'خرج للتوصيل', delivered:'تم التسليم'};
+  const stBadge = {pending:'b-pending', confirmed:'b-confirmed', preparing:'b-preparing', out_for_delivery:'b-out', arrived:'b-out', delivered:'b-delivered'};
+  const stLabel = {pending:'بانتظار', confirmed:'مؤكد', preparing:'قيد التجهيز', out_for_delivery:'خرج للتوصيل', arrived:'وصل للعميل', delivered:'تم التسليم'};
 
   function driverName(id){ const d = drivers.find(x => x.id === id); return d ? d.name : '—'; }
 
@@ -240,6 +244,10 @@
           <select id="batchDrv${i}">
             <option value="">اختر السائق...</option>
             ${drivers.map(d => `<option value="${d.id}">${d.name}</option>`).join('')}
+          </select>
+          <select id="batchVeh${i}">
+            <option value="">اختر السيارة...</option>
+            ${vehicles.map(v => `<option value="${v.name}">${v.name}</option>`).join('')}
           </select>
           <button class="btn btn-gold btn-sm" onclick="assignBatch(${i})">إسناد الدفعة</button>
         </div>
@@ -262,6 +270,10 @@
           ${o.area||''} — ${o.address||''} ${loc}<br>
           <span class="badge ${stBadge[o.status]||''}">${stLabel[o.status]||o.status}</span>
           ${o.driver_id ? `<span class="badge b-delivered">🚗 ${driverName(o.driver_id)}</span>` : ''}
+          ${o.slot ? `<span class="badge b-out">📥 ${o.slot}${o.delivery_seq ? ' · توصيل #' + o.delivery_seq : ''}</span>` : ''}
+          ${o.vehicle ? `<span class="badge b-confirmed">🚙 ${o.vehicle}</span>` : ''}
+          ${o.is_company ? `<span class="badge b-pending">🏢 شركة</span>` : ''}
+          ${o.pieces_count > 1 ? `<span class="badge b-preparing">🏷️ ${o.pieces_count} قطع</span>` : ''}
         </div>
         <div class="oc-actions">
           <select onchange="assignDriver(${o.id}, this.value)">
@@ -272,6 +284,10 @@
             <option value="">تغيير الحالة...</option>
             ${Object.entries(stLabel).map(([k,v]) => `<option value="${k}" ${o.status===k?'selected':''}>${v}</option>`).join('')}
           </select>
+          <button class="btn btn-sm ${o.is_company?'btn-ok':'btn-navy'}" onclick="toggleCompany(${o.id}, ${!o.is_company})">${o.is_company?'✓ شركة':'🏢 شركة'}</button>
+          <span style="font-size:12.5px;color:#5a6a75;">القطع:</span>
+          <input type="number" min="1" value="${o.pieces_count||1}" style="width:56px;padding:7px;border-radius:8px;border:1.5px solid #d7dde3;font-family:inherit;" onchange="setPieces(${o.id}, this.value)">
+          <button class="btn btn-sm btn-gold" onclick="printLabels(${o.id})">🏷️ ملصقات</button>
         </div>
       </div>`;
     }).join('');
@@ -285,6 +301,87 @@
     });
     loadAll();
   };
+  window.toggleCompany = async function(orderId, val){
+    await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
+      method:'PATCH', headers: hdrs(), body: JSON.stringify({is_company: val})
+    });
+    loadAll();
+  };
+  window.setPieces = async function(orderId, val){
+    const n = Math.max(1, parseInt(val) || 1);
+    await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
+      method:'PATCH', headers: hdrs(), body: JSON.stringify({pieces_count: n})
+    });
+    loadAll();
+  };
+
+  // ===== طباعة الملصقات 100×100mm =====
+  function labelHTML(o){
+    const n = o.pieces_count || 1;
+    let out = '';
+    for(let i = 1; i <= n; i++){
+      const qr = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(o.invoice_no || String(o.id));
+      out += `
+      <div class="label">
+        <div class="l-top">
+          <span class="l-brand">FROZINA</span>
+          <span class="l-slot">${o.slot || '—'}</span>
+        </div>
+        <div class="l-inv">${o.invoice_no || ''}</div>
+        <div class="l-piece">قطعة ${i} من ${n}</div>
+        <div class="l-row">
+          <img class="l-qr" src="${qr}" alt="">
+          <div class="l-info">
+            <div>${o.customer_name || ''}</div>
+            <div>${o.area || ''}</div>
+            <div>${o.customer_phone || ''}</div>
+            ${o.delivery_seq ? `<div><b>توصيل #${o.delivery_seq}</b></div>` : ''}
+            ${o.vehicle ? `<div>${o.vehicle}</div>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }
+    return out;
+  }
+  function openLabelWindow(list){
+    const w = window.open('', '_blank');
+    if(!w){ alert('اسمح بالنوافذ المنبثقة للطباعة'); return; }
+    w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+    <title>ملصقات فروزينا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+      *{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif;}
+      body{background:#eee;padding:8px;}
+      .label{
+        width:100mm; height:100mm; background:#fff; padding:6mm;
+        display:flex; flex-direction:column; page-break-after:always;
+        border:1px dashed #bbb; margin:0 auto 8px;
+      }
+      .l-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #000;padding-bottom:3mm;}
+      .l-brand{font-weight:900;font-size:20pt;letter-spacing:1px;}
+      .l-slot{font-weight:900;font-size:30pt;line-height:1;}
+      .l-inv{font-size:22pt;font-weight:900;margin-top:4mm;}
+      .l-piece{font-size:16pt;font-weight:700;margin-top:1mm;}
+      .l-row{display:flex;gap:4mm;align-items:center;margin-top:auto;}
+      .l-qr{width:26mm;height:26mm;}
+      .l-info{font-size:11pt;line-height:1.5;}
+      @media print{ body{background:#fff;padding:0;} .label{border:none;margin:0;} }
+      @page{ size:100mm 100mm; margin:0; }
+    </style></head><body>${list}</body></html>`);
+    w.document.close();
+    setTimeout(() => w.print(), 700);
+  }
+  window.printLabels = function(orderId){
+    const o = orders.find(x => x.id === orderId);
+    if(!o) return;
+    openLabelWindow(labelHTML(o));
+  };
+  window.printBatchLabels = function(batchId){
+    const list = orders.filter(o => o.batch_id === batchId)
+      .sort((a,b)=>(a.delivery_seq||99)-(b.delivery_seq||99))
+      .map(o => labelHTML(o)).join('');
+    if(list) openLabelWindow(list);
+  };
   window.setStatus = async function(orderId, status){
     if(!status) return;
     await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${orderId}`, {
@@ -292,18 +389,71 @@
     });
     loadAll();
   };
+  // ===== التوزيع التلقائي حسب دليل السائق وخريطة الصندوق =====
+  // R1..R4 ثم F1..F4 = أكياس (R1 أقرب للباب الجانبي = أول توصيل)
+  // G1..G3 = كراتين الأفراد (سمك/لحوم) — الأرضية
+  // COMPANY = مساحة الشركات الحرة (الباب الخلفي)
+  function isCarton(o){
+    if(o.is_heavy) return true;
+    const items = Array.isArray(o.items) ? o.items : [];
+    return items.some(it => {
+      const n = ((it.name||'') + ' ' + (it.name_en||'')).toLowerCase();
+      return /سمك|أسماك|بحري|روبيان|لحم|لحوم|seafood|fish|shrimp|meat/.test(n);
+    });
+  }
+  function allocateSlots(items){
+    const withLoc = items.filter(o => o.location && o.location.lat);
+    const noLoc = items.filter(o => !o.location || !o.location.lat);
+    let route = [];
+    if(withLoc.length){
+      const remaining = [...withLoc];
+      route.push(remaining.shift());
+      while(remaining.length){
+        const last = route[route.length-1];
+        let bi = 0, bd = Infinity;
+        remaining.forEach((o, idx) => {
+          const d = dist(last.location, o.location);
+          if(d < bd){ bd = d; bi = idx; }
+        });
+        route.push(remaining.splice(bi,1)[0]);
+      }
+    }
+    route = [...route, ...noLoc];
+
+    const bagSlots = ['R1','R2','R3','R4','F1','F2','F3','F4'];
+    const gSlots   = ['G1','G2','G3'];
+    let bi = 0, gi = 0;
+    const assigned = [];
+    route.forEach((o, i) => {
+      const seq = i + 1;
+      if(o.is_company){
+        assigned.push({o, slot:'COMPANY', slot_extra:null, seq});
+      } else if(isCarton(o)){
+        const g = gSlots[gi++] || 'COMPANY';
+        assigned.push({o, slot:g, slot_extra:null, seq});
+      } else {
+        const b = bagSlots[bi++] || 'COMPANY';
+        assigned.push({o, slot:b, slot_extra:null, seq});
+      }
+    });
+    return assigned;
+  }
+
   window.assignBatch = async function(i){
     const b = window._batches[i];
     const drvId = document.getElementById('batchDrv'+i).value;
+    const veh = document.getElementById('batchVeh'+i).value;
     if(!b || !drvId){ alert('اختر السائق أولاً'); return; }
     const batchId = 'B' + Date.now();
-    for(const o of b.items){
+    const allocation = allocateSlots(b.items);
+    for(const {o, slot, seq} of allocation){
       await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${o.id}`, {
         method:'PATCH', headers: hdrs(),
-        body: JSON.stringify({driver_id: parseInt(drvId), batch_id: batchId})
+        body: JSON.stringify({driver_id: parseInt(drvId), batch_id: batchId, slot, delivery_seq: seq, vehicle: veh || null})
       });
     }
     loadAll();
+    if(confirm('تم إسناد الدفعة ✅\nتبي تطبع ملصقات هذه الدفعة الآن؟')) printBatchLabels(batchId);
   };
 
   // ---------- init ----------

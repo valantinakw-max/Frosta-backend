@@ -48,9 +48,8 @@
   .my-orders-title{font-size:15px; font-weight:900; color:var(--navy); margin:6px 0 12px;}
   .order-card{
     background:#fff; border-radius:16px; padding:16px; margin-bottom:14px;
-    box-shadow:0 2px 10px rgba(0,0,0,.06); border-right:5px solid var(--gold);
+    box-shadow:0 2px 10px rgba(0,0,0,.06); border-left:5px solid var(--gold);
   }
-  .order-card.done{border-right-color:var(--ok); opacity:.75;}
   .oc-top{display:flex; justify-content:space-between; margin-bottom:8px;}
   .oc-top .inv{font-weight:900; color:var(--navy); font-size:16px;}
   .oc-top .tot{font-weight:900; color:#8a6a2f; font-size:16px;}
@@ -64,18 +63,32 @@
   .b-ready{background:#fff3cd; color:#856404;}
   .hidden{display:none !important;}
   .hello{font-size:13px; color:#5a6a75; margin-bottom:10px;}
+  .slot-box{
+    display:flex; align-items:center; gap:10px; background:var(--navy-deep);
+    border-radius:12px; padding:10px 14px; margin-bottom:10px;
+  }
+  .slot-box .slot-code{
+    font-size:26px; font-weight:900; color:var(--gold); letter-spacing:1px;
+  }
+  .slot-box .slot-lbl{font-size:12px; color:#cfd8de; line-height:1.4;}
+  .seq-badge{
+    display:inline-block; background:var(--gold); color:var(--navy-deep);
+    font-weight:900; font-size:13px; border-radius:100px; padding:3px 12px; margin-bottom:6px;
+  }
+  .b-arrived{background:#e2d9f3; color:#4a3a7a;}
+  .arabic-note{font-size:12px; color:#8a97a1; direction:rtl; text-align:right;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>FROZINA <span>| Driver</span></h1>
-  <button class="btn btn-ghost btn-sm hidden" id="logoutBtn">Logout</button>
+  <h1>Frozina <span>| Driver</span></h1>
+  <button class="btn btn-ghost btn-sm hidden" id="logoutBtn">Sign out</button>
 </header>
 
 <div class="login-wrap" id="loginView">
   <div class="card">
-    <h2>🚗 Driver Login</h2>
+    <h2>🚗 Driver Sign In</h2>
     <div class="field">
       <label>Email</label>
       <input type="email" id="lgEmail" placeholder="driver1@frozina.com" autocomplete="email" inputmode="email">
@@ -121,7 +134,7 @@
       if(!res.ok || !data.access_token) throw new Error('login failed');
       saveSession({access_token: data.access_token, user: data.user});
       showBoard();
-    }catch(e){ err.textContent = 'Login failed — check your credentials'; err.classList.add('show'); }
+    }catch(e){ err.textContent = 'Sign in failed — check your details'; err.classList.add('show'); }
   });
   document.getElementById('logoutBtn').addEventListener('click', () => { clearSession(); location.reload(); });
 
@@ -134,22 +147,18 @@
     setInterval(loadOrders, 30000);
   }
 
-  // Find driver record linked to this account
   async function findMyDriver(){
     try{
-      // First: search by user_id link
       let res = await fetch(`${SUPABASE_URL}/rest/v1/drivers?select=*&user_id=eq.${session.user.id}`, {headers: hdrs()});
       let rows = await res.json();
       if(Array.isArray(rows) && rows.length){ myDriver = rows[0]; }
       else{
-        // Auto-link: driver1@ maps to first active driver (by order)
         const m = (session.user.email||'').match(/driver(\d+)@/);
         res = await fetch(`${SUPABASE_URL}/rest/v1/drivers?select=*&is_active=eq.true&order=id`, {headers: hdrs()});
         rows = await res.json();
         if(Array.isArray(rows) && rows.length){
           const idx = m ? (parseInt(m[1]) - 1) : 0;
           myDriver = rows[idx] || rows[0];
-          // Link account for future visits
           if(myDriver && !myDriver.user_id){
             await fetch(`${SUPABASE_URL}/rest/v1/drivers?id=eq.${myDriver.id}`, {
               method:'PATCH', headers: hdrs(), body: JSON.stringify({user_id: session.user.id})
@@ -164,41 +173,61 @@
   async function loadOrders(){
     if(!myDriver){ document.getElementById('ordersList').innerHTML = '<p class="empty">Your account is not linked to a driver — contact admin</p>'; return; }
     try{
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&driver_id=eq.${myDriver.id}&status=in.(confirmed,preparing,out_for_delivery)&order=batch_id,created_at`, {headers: hdrs()});
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=*&driver_id=eq.${myDriver.id}&status=in.(confirmed,preparing,out_for_delivery,arrived)&order=batch_id,created_at`, {headers: hdrs()});
       orders = await res.json();
       if(!Array.isArray(orders)) orders = [];
       render();
     }catch(e){
-      document.getElementById('ordersList').innerHTML = '<p class="empty">Could not load — check connection</p>';
+      document.getElementById('ordersList').innerHTML = '<p class="empty">Failed to load</p>';
     }
   }
 
   function render(){
     const list = document.getElementById('ordersList');
     if(!orders.length){ list.innerHTML = '<p class="empty">No orders assigned to you right now ✅</p>'; return; }
+    // ترتيب حسب تسلسل التوصيل
+    orders.sort((a,b) => (a.delivery_seq||99) - (b.delivery_seq||99));
     list.innerHTML = orders.map(o => {
       const mapBtn = o.location && o.location.lat
         ? `<a class="btn btn-navy" target="_blank" href="https://maps.google.com/?q=${o.location.lat},${o.location.lng}">🗺️ Map</a>`
         : `<a class="btn btn-navy" target="_blank" href="https://maps.google.com/?q=${encodeURIComponent((o.area||'')+' '+(o.address||'')+' Kuwait')}">🗺️ Map</a>`;
       const isOut = o.status === 'out_for_delivery';
+      const isArr = o.status === 'arrived';
+      const stBadge = isArr ? '<span class="badge b-arrived">📍 Arrived</span>'
+        : isOut ? '<span class="badge b-out">🚗 On the way</span>'
+        : '<span class="badge b-ready">📦 Ready for pickup</span>';
       return `
       <div class="order-card">
-        <span class="badge ${isOut?'b-out':'b-ready'}">${isOut?'🚗 On the way':'📦 Ready for pickup'}</span>
+        ${o.delivery_seq ? `<span class="seq-badge">Delivery #${o.delivery_seq}</span>` : ''}
+        ${stBadge}
+        ${o.slot ? `
+        <div class="slot-box">
+          <span class="slot-code">${o.slot}</span>
+          <span class="slot-lbl">${
+            o.slot === 'COMPANY' ? 'Company area — rear door<br>free floor space' :
+            /^G/.test(o.slot) ? 'Floor carton — rear door<br>fish / meat box' :
+            'Shelf slot — side door<br>match order no. on label'
+          }</span>
+        </div>` : ''}
         <div class="oc-top">
           <span class="inv">${o.invoice_no||''}</span>
           <span class="tot">${Number(o.total).toFixed(3)} KWD</span>
         </div>
         <div class="oc-meta">
-          <b>${o.customer_name||''}</b><br>
-          ${o.area||''} — ${o.address||''}<br>
-          ${o.notes ? '📝 ' + o.notes + '<br>' : ''}
+          <b>${o.customer_name||''}</b>${o.is_company ? ' <span class="badge b-ready">🏢 Company</span>' : ''}<br>
+          ${o.area||''} — <span class="arabic-note">${o.address||''}</span><br>
+          <b>📦 ${o.pieces_count||1} piece${(o.pieces_count||1)>1?'s':''}</b> — count from labels<br>
+          ${o.vehicle ? '🚙 <span class="arabic-note">' + o.vehicle + '</span><br>' : ''}
+          ${o.notes ? '📝 <span class="arabic-note">' + o.notes + '</span><br>' : ''}
         </div>
         <div class="row-btns">
           <a class="btn btn-gold" href="tel:${o.customer_phone}">📞 Call</a>
           ${mapBtn}
-          ${!isOut
-            ? `<button class="btn btn-ok" onclick="setStatus(${o.id}, 'out_for_delivery')">🚗 Picked up — On the way</button>`
-            : `<button class="btn btn-ok" onclick="setStatus(${o.id}, 'delivered')">✅ Delivered</button>`}
+          ${isArr
+            ? `<button class="btn btn-ok" onclick="setStatus(${o.id}, 'delivered')">✅ Delivered</button>`
+            : isOut
+              ? `<button class="btn btn-ok" onclick="setStatus(${o.id}, 'arrived')">📍 Arrived</button>`
+              : `<button class="btn btn-ok" onclick="setStatus(${o.id}, 'out_for_delivery')">🚗 Picked Up</button>`}
         </div>
       </div>`;
     }).join('');
